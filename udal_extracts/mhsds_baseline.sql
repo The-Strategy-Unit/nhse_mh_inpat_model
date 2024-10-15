@@ -22,6 +22,7 @@ IF OBJECT_ID('TempDB..#HLWSDays') IS NOT NULL DROP TABLE #HLWSDays
 IF OBJECT_ID('TempDB..#HLPSDays') IS NOT NULL DROP TABLE #HLPSDays
 IF OBJECT_ID('TempDB..#WStayLOS') IS NOT NULL DROP TABLE #WStayLOS
 IF OBJECT_ID('TempDB..#AdmOutput') IS NOT NULL DROP TABLE #AdmOutput
+IF OBJECT_ID('TempDB..#WStayOutput') IS NOT NULL DROP TABLE #WStayOutput
 
 DECLARE @StartDate DATE;
 DECLARE @EndDate DATE;
@@ -618,12 +619,6 @@ ON WSTAY.[UniqWardStayID] = HL.[UniqWardStayID]
 -- =================================================================================
 
 SELECT ADM.*
-	  --,COALESCE(DD.[Total_DD_Days], 0) AS [Total_DD_Days]
-	  --,COALESCE(DD.[Reporting_DD_Days], 0) AS [Reporting_DD_Days]
-	  --,COALESCE(CRD.[Total_CRD_Days], 0) AS [Total_CRD_Days]
-	  --,COALESCE(CRD.[Reporting_CRD_Days], 0) AS [Reporting_CRD_Days]
-	  --,COALESCE(CRD_DD_DC.[Total_DC_Days], 0) AS [Total_DC_Days]
-	  --,COALESCE(CRD_DD_DC.[Reporting_DC_Days], 0) AS [Reporting_DC_Days]
 	  ,COALESCE(DD.[Total_DD_Days], 0) + COALESCE(CRD.[Total_CRD_Days], 0) + COALESCE(CRD_DD_DC.[Total_DC_Days], 0) AS [Adj_Delay_Days]
 	  ,COALESCE(DD.[Reporting_DD_Days], 0) + COALESCE(CRD.[Reporting_CRD_Days], 0) + COALESCE(CRD_DD_DC.[Reporting_DC_Days], 0) AS [Adj_Reporting_Delay_Days]
 	  ,COALESCE(HL.[HL_Days], 0) AS [HL_Days]
@@ -678,3 +673,19 @@ AND WStay_First.[Der_WSTAY_Order] = 1
 
 WHERE ADM.[Der_Spell_Order] = 1
 AND WStay_First.[UniqWardStayID] IS NOT NULL
+
+-- =================================================================================
+-- Ward Stay Level Output
+-- =================================================================================
+
+SELECT WStay.*
+	  ,WStay_LOS.[Der_WardStayLOS]
+	  ,WStay_LOS.[Der_Reporting_WardStayLOS]
+	  ,WStay_LOS.[HL_Days]
+	  ,WStay_LOS.[HL_Days_In_RP]
+INTO #WStayOutput
+FROM #WStay AS [WStay]
+
+LEFT JOIN #WStayLOS AS [WStay_LOS]
+ON WStay.[UniqWardStayID] = WStay_LOS.[UniqWardStayID]
+
