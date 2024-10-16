@@ -50,10 +50,17 @@ SELECT HSP.[UniqMonthID]
 	  ,SP_PROS.[Region_Code] AS [Provider_Region_Code]
 	  ,ICB.[ICB_Code] AS [Provider_ICB_Code]
 	  ,ICB.[ICB_Name] AS [Provider_ICB_Name]
+	  ,CASE
+			WHEN HSP.[OrgIDProv] IS NULL THEN NULL
+			WHEN LEFT(HSP.[OrgIDProv], 1) = 'R' THEN 'NHS'
+			ELSE 'Independent'
+	   END AS [Provider_Type]
 	  ,HSP.[ServiceRequestId]
 	  ,HSP.[StartDateHospProvSpell]
 	  ,HSP.[SourceAdmMHHospProvSpell]
+	  ,ASRC.[Main_Description] AS [AdmissionSourceDesc]
 	  ,HSP.[MethAdmMHHospProvSpell]
+	  ,AMET.[Main_Description] AS [AdmissionMethodDesc]
 	  ,HSP.[DischDateHospProvSpell]
 	  ,DATEDIFF(DAY, HSP.[StartDateHospProvSpell], COALESCE(HSP.[DischDateHospProvSpell], SF.[ReportingPeriodEndDate])) AS [Der_HospProvSpell_LOS]
 	  ,CASE
@@ -65,7 +72,9 @@ SELECT HSP.[UniqMonthID]
 			ELSE 0
 		END AS [Reporting_HosProvSpell_LOS]
 	  ,HSP.[MethOfDischMHHospProvSpell]
+	  ,DMET.[Main_Description] AS [DischargeMethodDesc]
 	  ,HSP.[DestOfDischHospProvSpell]
+	  ,DDEST.[Main_Description] AS [DischargeDestDesc]
 	  ,HSP.[UniqHospProvSPellID]
 	  ,HSP.[UniqServReqID]
 	  ,HSP.[TransformingCareInd]
@@ -126,7 +135,25 @@ ON MPI.[LSOA2011] = LSOA.[LSOA11CD]
 LEFT JOIN [Internal_Reference].[CCGToICB_2425] AS ICB_LSOA
 ON LSOA.[CCG16CDH] = ICB_LSOA.[Org_Code]
 
-WHERE HSP.[OrgIDProv] = 'RXT'
+LEFT JOIN [UKHD_Data_Dictionary].[Source_Of_Admission_SCD] AS ASRC
+ON HSP.[SourceAdmMHHospProvSpell] = ASRC.[Main_Code_Text]
+AND ASRC.[Is_Latest] = 1
+
+LEFT JOIN [UKHD_Data_Dictionary].[Admission_Method_SCD] AS AMET
+ON HSP.[MethAdmMHHospProvSpell] = AMET.[Main_Code_Text]
+AND AMET.[Is_Latest] = 1
+
+LEFT JOIN [UKHD_Data_Dictionary].[Discharge_Method_SCD] AS DMET
+ON HSP.[MethOfDischMHHospProvSpell] = DMET.[Main_Code_Text]
+AND DMET.[Is_Latest] = 1
+
+LEFT JOIN [UKHD_Data_Dictionary].[Discharge_Destination_SCD] AS DDEST
+ON HSP.[DestOfDischHospProvSpell] = DDEST.[Main_Code_Text]
+AND DDEST.[Is_Latest] = 1
+
+WHERE ICB_LSOA.[ICB_Code] IN ('QGH', 'QHL', 'QJ2', 'QJM',
+							    'QK1', 'QNC', 'QOC', 'QPM',
+								'QT1', 'QUA', 'QWU')
 AND (HSP.[StartDateHospProvSpell] BETWEEN @StartDate AND @EndDate
 	 OR
 	 HSP.[DischDateHospProvSpell] BETWEEN @StartDate AND @EndDate)
@@ -217,7 +244,46 @@ SELECT CRD.[UniqHospProvSpellID]
 	  ,CRD.[UniqMonthID]
 	  ,SF.[ReportingPeriodEndDate]
 	  ,CRD.[ClinReadyforDischDelayReason]
-	  ,NULL AS [CRDReason] -- Awaiting Lookup Table
+	  ,CASE
+			WHEN CRD.[ClinReadyforDischDelayReason] = '01' THEN 'Awaiting care coordinator allocation'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '02' THEN 'Awaiting allocation of community psychiatrist'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '03' THEN 'Awaiting allocation of social worker'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '04' THEN 'Awaiting public funding or decision from funding panel'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '05' THEN 'Awaiting further community or mental health NHS Services not delivered in an acute setting including intermediate care, rehabilitation services, step down service'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '06' THEN 'Awaiting availability of placement in prison or Immigration Removal Centre'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '07' THEN 'Awaiting availability of placement in care home without nursing'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '08' THEN 'Awaiting availability of placement in care home with nursing'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '09' THEN 'Awaiting commencement of care package in usual or temporary place of residence'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '11' THEN 'Patient or Family choice'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '12' THEN 'Disputes relating to responsible commissioner for post-discharge care'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '13' THEN 'Disputes relating to post-discharge care pathway between clinical teams and/or care panels'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '14' THEN 'Housing - awaiting availability of private rented accommodation'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '15' THEN 'Housing - awaiting availability of social rented housing via council housing waiting list'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '16' THEN 'Housing - awaiting purchase/sourcing of own home'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '17' THEN 'Housing - Patient NOT eligible for funded care or support'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '18' THEN 'Housing - Awaiting supported accommodation'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '19' THEN 'Housing - Awaiting temporary accommodation from the Local Authority under housing legislation'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '20' THEN 'Awaiting availability of residential children''s home (non-secure)'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '21' THEN 'Awaiting availability of secure children''s home (welfare or non-welfare)'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '22' THEN 'Awaiting availability of placement in Youth Offender Institution'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '23' THEN 'Child or young person awaiting foster placement'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '24' THEN 'Awaiting Ministry of Justice agreement to proposed placement'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '25' THEN 'Awaiting outcome of legal proceedings under relevant Mental Health legislation'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '26' THEN 'Awaiting Court of Protection proceedings'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '27' THEN 'Awaiting Deprivation of Liberty Safeguards (DOLS) Application'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '28' THEN 'Delay due to consideration of specific court judgements'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '29' THEN 'Awaiting residential special school or college placement'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '30' THEN 'Lack of local education support'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '31' THEN 'Public safety concern unrelated to clinical treatment need (care team and/or ministry of justice)'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '32' THEN 'Highly bespoke housing and/or care arrangements not available in the community'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '33' THEN 'No lawful support available in the community excluding social care'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '34' THEN 'No social care support including social care funded placement'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '35' THEN 'Delays to NHS-led assessments in the community'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '36' THEN 'Hospital staff shortages'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '37' THEN 'Delays to non-NHS led assessments in the community'
+			WHEN CRD.[ClinReadyforDischDelayReason] = '98' THEN 'Reason not known'
+			ELSE NULL
+	  END AS [CRDReason] -- Awaiting Lookup Table
 	  ,CRD.[AttribToIndic]
 	  ,DDA.[Main_Description] AS [DelayReasonAttr]
 	  ,CRD.[StartDateClinReadyforDisch]
@@ -285,7 +351,7 @@ WHERE [Der_CRD_Order] = 1
 GROUP BY [UniqHospProvSpellID]
 
 -- =================================================================================
--- Find provider spells with both CRD AND DD records. To remove AND avoid double counting
+-- Find provider spells with both CRD and DD records. To remove and avoid double counting
 -- =================================================================================
 
 SELECT CRD.[UniqHospProvSpellID]
@@ -459,6 +525,13 @@ SELECT ADM.*
 	  ,WSTAY.[SpecialisedMHServiceCode]
 	  ,WSTAY.[SiteIDOfTreat]
 	  ,WSTAY.[SiteIDOfWard]
+	  ,TSITE.[Organisation_Name] AS [Site_Name]
+	  ,TSITE.[SourceReference] AS [Site_Reference]
+	  ,CASE
+			WHEN WSTAY.[SiteIDOfTreat] IS NULL THEN NULL
+			WHEN LEFT(WSTAY.[SiteIDOfTreat], 1) = 'R' THEN 'NHS'
+			ELSE 'Independent'
+	   END AS [Site_Type]
 	  ,WSTAY.[WardType] AS [WardType_502]
 	  ,WSTAY.[WardAge] AS [WardAge_502]
 	  ,WSTAY.[WardLocDistanceHome]
@@ -467,7 +540,6 @@ SELECT ADM.*
 	  ,WSTAY.[WardCode] AS [WardCode_502]
 	  ,WSTAY.[UniqWardCode] AS [UniqWardCode_502]
 	  ,ROW_NUMBER() OVER (PARTITION BY WSTAY.[UniqWardStayID] ORDER BY WSTAY.[UniqMonthID] DESC) AS [Der_WSTAY_Submission_Order]
-	  --,DENSE_RANK() OVER (PARTITION BY ADM.[UniqHospProvSPellID] ORDER BY WSTAY.[StartDateWardStay]) AS [Der_WSTAY_Order]
 	  ,WDET.[WardCode] AS [WardCode_903]
 	  ,WDET.[UniqWardCode] AS [UniqWardCode_903] 
 	  ,WDET.[WardType] AS [WardType_903]
@@ -476,6 +548,15 @@ SELECT ADM.*
 	  ,COALESCE(WSTAY.[WardType], WDET.[WardType]) AS [Der_WardType]
 	  ,WTYPE.[Main_Description] AS [Der_WardTypeDesc]
 	  ,COALESCE(WSTAY.[WardAge], WDET.[WardAge]) AS [Der_WardAge]
+	  ,CASE
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '10' THEN 'Child only'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '11' THEN 'Adolescent only'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '12' THEN 'Child and Adolescent'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '13' THEN 'Adult only'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '14' THEN 'Older Adult only'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '15' THEN 'Adult and Older Adult'
+			WHEN COALESCE(WSTAY.[WardAge], WDET.[WardAge]) = '99' THEN 'Any age'
+			END AS [Der_WardAgeDesc]
 	  ,COALESCE(WSTAY.[WardSecLevel], WDET.[WardSecLevel]) AS [Der_WardSecLevel]
 	  ,WSEC.[Main_Description] AS [Der_WardSecLevelDesc]
 	  ,COALESCE(WSTAY.[WardCode], WDET.[WardCode]) AS [Der_WardCode]
@@ -511,6 +592,10 @@ AND WTYPE.[Is_Latest] = 1
 LEFT JOIN [UKHD_Data_Dictionary].[Ward_Security_Level_SCD] AS WSEC
 ON COALESCE(WSTAY.[WardSecLevel], WDET.[WardSecLevel]) = WSEC.[Main_Code_Text]
 AND WSEC.[Is_Latest] = 1
+
+LEFT JOIN [Internal_Reference].[Site] as TSite
+ON WSTAY.[SiteIDOfTreat] = TSite.[Organisation_Code]
+AND TSite.[is_latest] = 1
 
 WHERE ADM.[Der_Spell_Order] = 1
 AND WSTAY.[SpecialisedMHServiceCode] IS NULL
@@ -637,6 +722,8 @@ SELECT ADM.*
 	  ,WStay_First.[HospitalBedType] AS [HospitalBedType_First]
 	  ,WStay_First.[Der_WardType] AS [Der_WardType_First]
 	  ,WStay_First.[Der_WardTypeDesc] AS [Der_WardTypeDesc_First]
+	  ,WStay_First.[Der_WardAge] AS [Der_WardAge_First]
+	  ,WStay_First.[Der_WardAgeDesc] AS [Der_WardAgeDesc_First]
 	  ,WStay_First.[Der_WardSecLevel] AS [Der_WardSecLevel_First]
 	  ,WStay_First.[Der_WardSecLevelDesc] AS [Der_WardSecLevelDesc_First]
 INTO #AdmOutput
@@ -688,4 +775,3 @@ FROM #WStay AS [WStay]
 
 LEFT JOIN #WStayLOS AS [WStay_LOS]
 ON WStay.[UniqWardStayID] = WStay_LOS.[UniqWardStayID]
-
