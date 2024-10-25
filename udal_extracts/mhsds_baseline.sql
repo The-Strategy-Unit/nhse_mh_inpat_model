@@ -21,6 +21,15 @@ IF OBJECT_ID('TempDB..#HLOrder') IS NOT NULL DROP TABLE #HLOrder
 IF OBJECT_ID('TempDB..#HLWSDays') IS NOT NULL DROP TABLE #HLWSDays
 IF OBJECT_ID('TempDB..#HLPSDays') IS NOT NULL DROP TABLE #HLPSDays
 IF OBJECT_ID('TempDB..#WStayLOS') IS NOT NULL DROP TABLE #WStayLOS
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS007') IS NOT NULL DROP TABLE #LDA_Flag_MHS007
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS101') IS NOT NULL DROP TABLE #LDA_Flag_MHS101
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS103') IS NOT NULL DROP TABLE #LDA_Flag_MHS103
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS102') IS NOT NULL DROP TABLE #LDA_Flag_MHS102
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS601') IS NOT NULL DROP TABLE #LDA_Flag_MHS601
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS604') IS NOT NULL DROP TABLE #LDA_Flag_MHS604
+IF OBJECT_ID('TempDB..#LDA_Flag_MHS605') IS NOT NULL DROP TABLE #LDA_Flag_MHS605
+IF OBJECT_ID('TempDB..#LDA_Flag_Combined') IS NOT NULL DROP TABLE #LDA_Flag_Combined
+IF OBJECT_ID('TempDB..#LDA_Flag_SU') IS NOT NULL DROP TABLE #LDA_Flag_SU
 IF OBJECT_ID('TempDB..#AdmOutput') IS NOT NULL DROP TABLE #AdmOutput
 IF OBJECT_ID('TempDB..#WStayOutput') IS NOT NULL DROP TABLE #WStayOutput
 
@@ -505,6 +514,225 @@ FROM #MHActOrder
 WHERE [Der_MHActEpisode_Submission_Order] = 1
 AND [In_RP] = 1
 
+-- =================================================================================
+-- LDA Flags: Disab Code from MHS007
+-- =================================================================================
+
+SELECT DISTYPE.[Der_Person_ID]
+	  ,DISTYPE.[RecordNumber]
+	  ,DISTYPE.[UniqMonthID]
+	  ,CAST('MHS007-DisabCode' AS VARCHAR(100)) AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,1 AS [LD_Flag]
+	  ,NULL AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY DISTYPE.[Der_Person_ID] ORDER BY DISTYPE.[UniqMonthID] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS007
+FROM [Reporting_MESH_MHSDS].[MHS007DisabilityType_Published] AS [DISTYPE]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON DISTYPE.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+WHERE [Der_Person_ID] IN (SELECT [Der_Person_ID] FROM #AdmOrder)
+AND [DisabCode] = '04'
+
+-- =================================================================================
+-- LDA Flags: Primary Referral Reason from MHS101
+-- =================================================================================
+
+SELECT REF.[Der_Person_ID]
+	  ,REF.[RecordNumber]
+	  ,REF.[UniqMonthID]
+	  ,CAST('MHS101-PrimRefReason' AS VARCHAR(100)) AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN REF.[PrimReasonReferralMH] IN ('30', '24') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN REF.[PrimReasonReferralMH] IN ('17', '25','26') THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY REF.[Der_Person_ID] ORDER BY REF.[UniqMonthID] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS101
+FROM [Reporting_MESH_MHSDS].[MHS101Referral_Published] AS [REF]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON REF.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+WHERE REF.[Der_Person_ID] IN (SELECT [Der_Person_ID] FROM #AdmOrder)
+AND REF.[PrimReasonReferralMH] IN ('17', '30', '24','25','26')
+
+-- =================================================================================
+-- LDA Flags: Other Referral Reason from MHS103
+-- =================================================================================
+
+SELECT OREF.[Der_Person_ID]
+	  ,OREF.[RecordNumber]
+	  ,OREF.[UniqMonthID]
+	  ,CAST('MHS103-ReferReasonOther' AS VARCHAR(100)) AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN OREF.[OtherReasonReferMH] IN ('30', '24') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN OREF.[OtherReasonReferMH] IN ('17', '25','26') THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY OREF.[Der_Person_ID] ORDER BY OREF.[UniqMonthID] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS103
+FROM [Reporting_MESH_MHSDS].[MHS103OtherReasonReferral_Published] AS [OREF]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON OREF.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+WHERE OREF.[Der_Person_ID] IN (SELECT [Der_Person_ID] FROM #AdmOrder)
+AND OREF.[OtherReasonReferMH] IN ('17', '30', '24','25','26')
+
+-- =================================================================================
+-- LDA Flags: Service referred to from MHS102
+-- =================================================================================
+
+SELECT SERV.[Der_Person_ID]
+	  ,SERV.[RecordNumber]
+	  ,SERV.[UniqMonthID]
+	  ,'MHS102-ReferService' AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN SERV.[ServTeamTypeRefToMH] IN ('B02', 'E01') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN SERV.[ServTeamTypeRefToMH] IN ('C01', 'C04') THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY SERV.[Der_Person_ID] ORDER BY SERV.[UniqMonthID] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS102
+FROM [Reporting_MESH_MHSDS].[MHS102ServiceTypeReferredTo_Published] AS [SERV]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON SERV.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+WHERE SERV.[Der_Person_ID] IN (SELECT [Der_Person_ID] FROM #AdmOrder)
+AND SERV.[RecordNumber] IN (SELECT [RecordNumber] FROM #AdmOrder)
+AND SERV.[ServTeamTypeRefToMH] IN ('B02', 'C01', 'C04', 'E01')
+
+-- =================================================================================
+-- LDA Flags: Previous diagnoses from MHS601
+-- =================================================================================
+
+SELECT PREV_DIAG.[Der_Person_ID]
+	  ,PREV_DIAG.[RecordNumber]
+	  ,PREV_DIAG.[UniqMonthID]
+	  ,'MHS601-PrevDiag' AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN LEFT(PREV_DIAG.[PrevDiag], 2) = 'F7' OR LEFT(PREV_DIAG.[PrevDiag], 3) IN ('F80', 'F81', 'F82') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN LEFT(PREV_DIAG.[PrevDiag], 3) = 'F84' THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY PREV_DIAG.[Der_Person_ID] ORDER BY PREV_DIAG.[UniqMonthID] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS601
+FROM [Reporting_MESH_MHSDS].[MHS601MedHistPrevDiag_Published] AS [PREV_DIAG]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON PREV_DIAG.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+WHERE PREV_DIAG.[Der_Person_ID] IN (SELECT [Der_Person_ID] FROM #AdmOrder)
+AND PREV_DIAG.[RecordNumber] IN (SELECT [RecordNumber] FROM #AdmOrder)
+AND PREV_DIAG.[DiagSchemeInUse] = '02'
+AND (LEFT(PREV_DIAG.[PrevDiag] ,2) = 'F7' OR
+	 LEFT(PREV_DIAG.[PrevDiag], 3) IN ('F80', 'F81', 'F83', 'F84'))
+
+-- =================================================================================
+-- LDA Flags: Current Primary Diagnosis from MHS604
+-- =================================================================================
+
+SELECT CURR_PDIAG.[Der_Person_ID]
+	  ,CURR_PDIAG.[RecordNumber]
+	  ,CURR_PDIAG.[UniqMonthID]
+	  ,'MHS604-CurrPDiag' AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN LEFT(CURR_PDIAG.[PrimDiag], 2) = 'F7' OR LEFT(CURR_PDIAG.[PrimDiag], 3) IN ('F80', 'F81', 'F82') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN LEFT(CURR_PDIAG.[PrimDiag], 3) = 'F84' THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY CURR_PDIAG.[Der_Person_ID] ORDER BY  CURR_PDIAG.[UniqMonthID] DESC, CURR_PDIAG.[CodedDiagTimestamp] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS604
+FROM [Reporting_MESH_MHSDS].[MHS604PrimDiag_Published] AS [CURR_PDIAG]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON CURR_PDIAG.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+INNER JOIN #AdmOrder AS ADM
+ON CURR_PDIAG.[Der_Person_ID] = ADM.[Der_Person_ID]
+AND CURR_PDIAG.[CodedDiagTimestamp] BETWEEN ADM.[StartDateHospProvSpell] AND ADM.[DischDateHospProvSpell]
+
+WHERE CURR_PDIAG.[DiagSchemeInUse] = '02'
+AND (LEFT(CURR_PDIAG.[PrimDiag] ,2) = 'F7' OR
+	 LEFT(CURR_PDIAG.[PrimDiag], 3) IN ('F80', 'F81', 'F83', 'F84'))
+
+-- =================================================================================
+-- LDA Flags: Current Secondary Diagnosis from MHS605
+-- =================================================================================
+
+SELECT CURR_SDIAG.[Der_Person_ID]
+	  ,CURR_SDIAG.[RecordNumber]
+	  ,CURR_SDIAG.[UniqMonthID]
+	  ,'MHS605-CurrSDiag' AS [Table_Source]
+	  ,1 AS [LDA_Flag]
+	  ,CASE WHEN LEFT(CURR_SDIAG.[SecDiag], 2) = 'F7' OR LEFT(CURR_SDIAG.[SecDiag], 3) IN ('F80', 'F81', 'F82') THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN LEFT(CURR_SDIAG.[SecDiag], 3) = 'F84' THEN 1 ELSE 0 END AS [Autism_Flag]
+	  ,ROW_NUMBER() OVER (PARTITION BY CURR_SDIAG.[Der_Person_ID] ORDER BY  CURR_SDIAG.[UniqMonthID] DESC, CURR_SDIAG.[CodedDiagTimestamp] DESC) AS [Der_LD_Submission_Order]
+INTO #LDA_Flag_MHS605
+FROM [Reporting_MESH_MHSDS].[MHS605SecDiag_Published] AS [CURR_SDIAG]
+
+INNER JOIN [Reporting_MESH_MHSDS].[MHSDS_SubmissionFlags_Published] AS SF
+ON CURR_SDIAG.[NHSEUniqSubmissionID] = SF.[NHSEUniqSubmissionID]
+AND SF.[Der_IsLatest] = 'Y'
+
+INNER JOIN #AdmOrder AS ADM
+ON CURR_SDIAG.[Der_Person_ID] = ADM.[Der_Person_ID]
+AND CURR_SDIAG.[CodedDiagTimestamp] BETWEEN ADM.[StartDateHospProvSpell] AND ADM.[DischDateHospProvSpell]
+
+WHERE CURR_SDIAG.[DiagSchemeInUse] = '02'
+AND (LEFT(CURR_SDIAG.[SecDiag] ,2) = 'F7' OR
+	 LEFT(CURR_SDIAG.[SecDiag], 3) IN ('F80', 'F81', 'F83', 'F84'))
+
+-- =================================================================================
+-- LDA Flags: Create Combined LDA Table
+-- =================================================================================
+
+SELECT *
+INTO #LDA_Flag_Combined
+FROM #LDA_Flag_MHS007
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS101
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS103
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS102
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS601
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS604
+WHERE [Der_LD_Submission_Order] = 1
+
+INSERT INTO  #LDA_Flag_Combined
+SELECT *
+FROM #LDA_Flag_MHS605
+WHERE [Der_LD_Submission_Order] = 1
+
+-- =================================================================================
+-- LDA Flags: Create LDA Flag Table
+-- =================================================================================
+
+
+SELECT [Der_Person_ID]
+	  ,CASE WHEN SUM([LDA_Flag]) > 0 THEN 1 ELSE 0 END AS [LDA_Flag]
+	  ,CASE WHEN SUM([LD_Flag]) > 0 THEN 1 ELSE 0 END AS [LD_Flag]
+	  ,CASE WHEN SUM([Autism_Flag]) > 0 THEN 1 ELSE 0 END AS [Autism_Flag]
+INTO #LDA_Flag_SU
+FROM #LDA_Flag_Combined
+GROUP BY [Der_Person_ID]
 
 -- =================================================================================
 -- Extract Ward Stays for Provider Spells
@@ -726,6 +954,9 @@ SELECT ADM.*
 	  ,WStay_First.[Der_WardAgeDesc] AS [Der_WardAgeDesc_First]
 	  ,WStay_First.[Der_WardSecLevel] AS [Der_WardSecLevel_First]
 	  ,WStay_First.[Der_WardSecLevelDesc] AS [Der_WardSecLevelDesc_First]
+	  ,LDA_Flag.[LDA_Flag] AS [LDA_Flag_SU]
+	  ,LDA_Flag.[LD_Flag] AS [LD_Flag_SU]
+	  ,LDA_Flag.[Autism_Flag] AS [Autism_Flag_SU]
 INTO #AdmOutput
 FROM #AdmOrder AS [ADM]
 
@@ -757,6 +988,9 @@ ON ADM.[UniqHospProvSpellID] = HL.[UniqHospProvSpellID]
 LEFT JOIN #WStay as [WStay_First]
 ON ADM.[UniqHospProvSpellID] = WStay_First.[UniqHospProvSpellID]
 AND WStay_First.[Der_WSTAY_Order] = 1
+
+LEFT JOIN #LDA_Flag_SU AS LDA_Flag
+ON ADM.[Der_Person_ID] = LDA_Flag.[Der_Person_ID]
 
 WHERE ADM.[Der_Spell_Order] = 1
 AND WStay_First.[UniqWardStayID] IS NOT NULL
