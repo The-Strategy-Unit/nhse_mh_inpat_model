@@ -932,6 +932,15 @@ ON WSTAY.[UniqWardStayID] = HL.[UniqWardStayID]
 -- =================================================================================
 
 SELECT ADM.*
+      ,CASE WHEN ADM.[IMD_Decile] IS NULL THEN NULL
+			WHEN ADM.[IMD_Decile] IN ('1', '2') THEN '1'
+			WHEN ADM.[IMD_Decile] IN ('3', '4') THEN '2'
+			WHEN ADM.[IMD_Decile] IN ('5', '6') THEN '3'
+			WHEN ADM.[IMD_Decile] IN ('7', '8') THEN '4'
+			WHEN ADM.[IMD_Decile] IN ('9', '10') THEN '5'
+			ELSE NULL END AS [IMD_Quartile]
+	  ,DATEADD(MONTH, DATEDIFF(MONTH, 0, ADM.[StartDateHospProvSpell]), 0) AS [Admission_Month]
+	  ,DATEADD(MONTH, DATEDIFF(MONTH, 0, ADM.[DischDateHospProvSpell]), 0) AS [Discharge_Month]
 	  ,COALESCE(DD.[Total_DD_Days], 0) + COALESCE(CRD.[Total_CRD_Days], 0) + COALESCE(CRD_DD_DC.[Total_DC_Days], 0) AS [Adj_Delay_Days]
 	  ,COALESCE(DD.[Reporting_DD_Days], 0) + COALESCE(CRD.[Reporting_CRD_Days], 0) + COALESCE(CRD_DD_DC.[Reporting_DC_Days], 0) AS [Adj_Reporting_Delay_Days]
 	  ,COALESCE(HL.[HL_Days], 0) AS [HL_Days]
@@ -946,6 +955,17 @@ SELECT ADM.*
 	  ,MHACT_RP_First.[EndDateMHActLegalStatusClass]
 	  ,MHACT_RP_First.[LegalStatusCode]
 	  ,MHACT_RP_First.[LegalStatusDesc]
+	  ,CASE WHEN MHACT_RP_First.[LegalStatusCode] IS NULL THEN 'Not formally detained'
+			WHEN MHACT_RP_First.[LegalStatusCode] IN ('98', '99') THEN 'Not formally detained'
+			WHEN MHACT_RP_First.[LegalStatusCode] = '01' THEN 'Informal'
+			ELSE 'Formally detained' END AS [legal_status_group]
+	  ,ICB_H.[Region_Code] AS [Residence_ICB_Region_Code]
+	  ,ICB_H.[Region_Name] AS [Residence_ICB_Region_Name]
+	  ,CASE WHEN ICB_H.[Region_Code] = 'Y60' AND ADM.[Provider_Region_Code] = 'Y60' THEN 'MidlandsRes-MidlandsProv'
+			WHEN ICB_H.[Region_Code] = 'Y60' AND ADM.[Provider_Region_Code] != 'Y60' THEN 'MidlandsRes-NonMidlandsProv'
+			WHEN ICB_H.[Region_Code] != 'Y60' AND ADM.[Provider_Region_Code] = 'Y60' THEN 'NonMidlandsRes-MidlandsProv'
+			WHEN ICB_H.[Region_Code] != 'Y60' AND ADM.[Provider_Region_Code] != 'Y60' THEN 'NonMidlandsRes-NonMidlandsProv'
+			ELSE NULL END AS [OOA_Group]
 	  ,WStay_First.[UniqWardStayID] AS [UniqWardStayID_First]
 	  ,WStay_First.[HospitalBedType] AS [HospitalBedType_First]
 	  ,WStay_First.[Der_WardType] AS [Der_WardType_First]
@@ -957,6 +977,7 @@ SELECT ADM.*
 	  ,LDA_Flag.[LDA_Flag] AS [LDA_Flag_SU]
 	  ,LDA_Flag.[LD_Flag] AS [LD_Flag_SU]
 	  ,LDA_Flag.[Autism_Flag] AS [Autism_Flag_SU]
+
 INTO #AdmOutput
 FROM #AdmOrder AS [ADM]
 
@@ -991,6 +1012,18 @@ AND WStay_First.[Der_WSTAY_Order] = 1
 
 LEFT JOIN #LDA_Flag_SU AS LDA_Flag
 ON ADM.[Der_Person_ID] = LDA_Flag.[Der_Person_ID]
+
+LEFT JOIN (SELECT [ICB_Code]
+      ,[Integrated_Care_Board_Name]
+	  ,[Region_Code]
+	  ,[Region_Name]
+  FROM [Reporting_UKHD_ODS].[Commissioner_Hierarchies_ICB]
+
+  GROUP BY [ICB_Code]
+      ,[Integrated_Care_Board_Name]
+	  ,[Region_Code]
+	  ,[Region_Name]) AS [ICB_H]
+ON ADM.[Residence_ICB_Code] = ICB_H.[ICB_Code]
 
 WHERE ADM.[Der_Spell_Order] = 1
 AND WStay_First.[UniqWardStayID] IS NOT NULL
