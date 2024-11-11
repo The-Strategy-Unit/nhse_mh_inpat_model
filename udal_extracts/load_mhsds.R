@@ -19,3 +19,7 @@ mhsds_baseline_ws <- DBI::dbGetQuery(con, statement = read_file(paste0(here(),"/
 # Drop Temps --------------------------------------------------------------
 
 DBI::dbExecute(con, statement = read_file(paste0(here(),"/udal_extracts/drop_temps.sql")), immediate=TRUE)
+
+write.csv(x = mhsds_baseline_adm, file = paste0(here(), "/udal_extracts/data/mhsds_baseline_adm.csv"), row.names = FALSE)
+write.csv(x = mhsds_baseline_ws, file = paste0(here(), "/udal_extracts/data/mhsds_baseline_ws.csv"), row.names = FALSE)
+          
