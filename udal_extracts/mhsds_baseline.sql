@@ -71,13 +71,20 @@ SELECT HSP.[UniqMonthID]
 	  ,HSP.[MethAdmMHHospProvSpell]
 	  ,AMET.[Main_Description] AS [AdmissionMethodDesc]
 	  ,HSP.[DischDateHospProvSpell]
-	  ,DATEDIFF(DAY, HSP.[StartDateHospProvSpell], COALESCE(HSP.[DischDateHospProvSpell], SF.[ReportingPeriodEndDate])) AS [Der_HospProvSpell_LOS]
+	  ,CASE
+			WHEN DATEDIFF(DAY, HSP.[StartDateHospProvSpell], COALESCE(HSP.[DischDateHospProvSpell], SF.[ReportingPeriodEndDate])) = 0 THEN 0.5
+			ELSE DATEDIFF(DAY, HSP.[StartDateHospProvSpell], COALESCE(HSP.[DischDateHospProvSpell], SF.[ReportingPeriodEndDate]))
+		END AS [Der_HospProvSpell_LOS]
 	  ,CASE
 			WHEN HSP.[StartDateHospProvSpell] <=  @EndDate AND COALESCE(HSP.[DischDateHospProvSpell], CASE WHEN SF.[ReportingPeriodEndDate] >=  @EndDate THEN  @EndDate ELSE SF.[ReportingPeriodEndDate] END) >= @StartDate THEN 
-				DATEDIFF(DAY,
+				(CASE WHEN DATEDIFF(DAY,
 					CASE WHEN HSP.[StartDateHospProvSpell] > @StartDate THEN HSP.[StartDateHospProvSpell] ELSE @StartDate END,
-					CASE WHEN HSP.[DischDateHospProvSpell] <  @EndDate THEN HSP.[DischDateHospProvSpell] ELSE  @EndDate END
-				)
+					CASE WHEN COALESCE(HSP.[DischDateHospProvSpell],  SF.[ReportingPeriodEndDate]) <  @EndDate THEN COALESCE(HSP.[DischDateHospProvSpell],  SF.[ReportingPeriodEndDate]) ELSE  @EndDate END
+				) = 0 THEN 0.5
+				ELSE DATEDIFF(DAY,
+					CASE WHEN HSP.[StartDateHospProvSpell] > @StartDate THEN HSP.[StartDateHospProvSpell] ELSE @StartDate END,
+					CASE WHEN COALESCE(HSP.[DischDateHospProvSpell],  SF.[ReportingPeriodEndDate]) <  @EndDate THEN COALESCE(HSP.[DischDateHospProvSpell],  SF.[ReportingPeriodEndDate]) ELSE  @EndDate END
+				) END)
 			ELSE 0
 		END AS [Reporting_HosProvSpell_LOS]
 	  ,HSP.[MethOfDischMHHospProvSpell]
@@ -105,7 +112,18 @@ SELECT HSP.[UniqMonthID]
 	  ,MPI.[LDAFlag]
 	  ,PIND.[AutismStatus]
 	  ,PIND.[LDStatus]
-
+	  ,REF.[ReasonOAT]
+	  ,CASE
+		WHEN REF.[ReasonOAT] = '10' THEN 'Unavailability of hospital bed at referring organisation'
+		WHEN REF.[ReasonOAT] = '11' THEN 'Safeguarding concern'
+		WHEN REF.[ReasonOAT] = '12' THEN 'Offending restrictions'
+		WHEN REF.[ReasonOAT] = '13' THEN 'Staff member or family/friend within the referring organisation'
+		WHEN REF.[ReasonOAT] = '14' THEN 'Patient choice'
+		WHEN REF.[ReasonOAT] = '15' THEN 'Patient away from home'
+		WHEN REF.[ReasonOAT] = '99' THEN 'Not known'
+		WHEN REF.[ReasonOAT] IS NULL THEN NULL
+		ELSE 'Other'
+	END AS [Ref_OAT_Reason]
 INTO #AdmOrder	 
 FROM [Reporting_MESH_MHSDS].[MHS501HospProvSpell_Published] AS HSP
 
@@ -159,6 +177,11 @@ AND DMET.[Is_Latest] = 1
 LEFT JOIN [UKHD_Data_Dictionary].[Discharge_Destination_SCD] AS DDEST
 ON HSP.[DestOfDischHospProvSpell] = DDEST.[Main_Code_Text]
 AND DDEST.[Is_Latest] = 1
+
+LEFT JOIN [Reporting_MESH_MHSDS].[MHS101Referral_Published] AS REF
+ON HSP.[Der_Person_ID] = REF.[Der_Person_ID]
+AND HSP.[RecordNumber] = REF.[RecordNumber]
+AND HSP.[UniqServReqID] = REF.[UniqServReqID]
 
 WHERE ICB_LSOA.[ICB_Code] IN ('QGH', 'QHL', 'QJ2', 'QJM',
 							    'QK1', 'QNC', 'QOC', 'QPM',
@@ -977,7 +1000,14 @@ SELECT ADM.*
 	  ,LDA_Flag.[LDA_Flag] AS [LDA_Flag_SU]
 	  ,LDA_Flag.[LD_Flag] AS [LD_Flag_SU]
 	  ,LDA_Flag.[Autism_Flag] AS [Autism_Flag_SU]
-
+	  ,ADM.[Der_HospProvSpell_LOS] - COALESCE(HL.[HL_Days], 0) AS [Der_LOS_exHL]
+	  ,ADM.[Reporting_HosProvSpell_LOS] - COALESCE(HL.[HL_Days_In_RP], 0) AS [Der_LOS_exHL_In_RP]
+	  ,CASE
+		WHEN ADM.[ReasonOAT] IS NOT NULL AND ICB_H.[Region_Code] = 'Y60' AND ADM.[Provider_Region_Code] != 'Y60' THEN 'OOA - MidlandsRes-NonMidlandsProv'
+		WHEN ADM.[ReasonOAT] IS NOT NULL AND ICB_H.[Region_Code] != 'Y60' AND ADM.[Provider_Region_Code] = 'Y60' THEN 'OOA - NonMidlandsRes-MidlandsProv'
+		WHEN ADM.[ReasonOAT] IS NULL THEN 'Non OOA'
+		ELSE 'Other'
+		END AS [OOA_REF_Flag_Group]
 INTO #AdmOutput
 FROM #AdmOrder AS [ADM]
 
