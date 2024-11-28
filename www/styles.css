@@ -1,0 +1,20 @@
+/* styles.css */
+.negative-value {
+  color: red !important;
+}
+
+.sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  z-index: 1000 !important;
+  background-color: #f8f9fa !important; /* Adjust the background color as needed */
+  padding: 15px !important;
+  border-right: 1px solid #ddd !important;
+}
+
+.main-content {
+  margin-left: 250px !important; /* Adjust this value based on the width of your sidebar */
+}

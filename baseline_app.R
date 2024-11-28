@@ -117,6 +117,12 @@ theme_SU <-   function (base_size){
 theme_set(theme_SU())
   
 # Aggregate baseline data ----
+
+
+baseline_data <- 
+  read_csv("mhsds_baseline_ws_241120.csv") |> 
+  clean_names()
+
 baseline_data <- 
   read_csv("mhsds_baseline_adm.csv") |> 
   clean_names()
@@ -152,7 +158,7 @@ baseline_aggregate <-
            provider_type,
            legal_status_group,
            lda_flag,
-           der_ward_type_desc_first
+           der_ward_type_desc_first  # ? change with new data
            ) |> 
   summarise(spell_count = n_distinct(record_number),
             bed_days = sum(reporting_hos_prov_spell_los)) |> 
@@ -509,7 +515,185 @@ calculate_growth_and_waterfall(baseline_aggregate,
   plot_waterfall_bed_days("QHL: NHS Birmingham And Solihull ICB") 
 
 
+# Project sub-group activity ----
 
+# Group data function
+group_baseline_data <- function(icb, group_variable) {
+  
+  baseline_aggregate |> 
+    filter(residence_icb_name == icb) |> 
+    group_by({{group_variable}}) |> 
+    summarise(spell_count = sum(spell_count)) |> 
+    drop_na({{group_variable}})
+  }
+
+group_baseline_data("QHL: NHS Birmingham And Solihull ICB", imd_quintile)
+group_baseline_data("QHL: NHS Birmingham And Solihull ICB", age_group_admission)
+group_baseline_data("QHL: NHS Birmingham And Solihull ICB", ethnic_category_2)
+group_baseline_data("QHL: NHS Birmingham And Solihull ICB", gender)
+
+
+
+# Annual growth factors
+growth_factors <- c(
+  demographic_growth = 0.03,
+  incidence_change = 0.05,
+  acuity_change = 0.06,
+  social_care_pressures = 0.04,
+  mha_changes = -0.02,
+  national_policy = -0.01,
+  service_models = -0.01,
+  prevention_programme = -0.02,
+  admission_avoidance = -0.06,
+  waiting_list_reduction = -0.04,
+  ooa_repat = 0.03,
+  shift_to_ip = -0.04
+)
+
+
+# Calculate the combined growth factor
+combined_growth_factor <- prod(1 + growth_factors) - 1
+
+# Function to apply growth factors iteratively
+apply_growth_factors_grouped <- function(data, growth_factor, start_year = 2024, end_year = 2028) {
+  # Calculate the number of years to project
+  years <- end_year - start_year
+  
+  # Create a copy of the data to avoid modifying the original
+  projected_data <- data 
+  
+  # Apply growth factors iteratively for each year
+  for (year in 1:years) {
+    projected_data <- projected_data %>%
+      mutate(!!paste0("x", start_year + year) := spell_count * (1 + growth_factor) ^ year)
+  }
+  
+  # Rename spell count field to x2024
+  projected_data <-
+    projected_data |> 
+    rename(x2024 = spell_count)
+  
+  return(projected_data)
+}
+
+
+apply_growth_factors_grouped(group_baseline_data("QHL: NHS Birmingham And Solihull ICB", imd_quintile), 
+                             combined_growth_factor, 
+                             start_year = 2024, end_year = 2030)
+
+apply_growth_factors_grouped(group_baseline_data("QHL: NHS Birmingham And Solihull ICB", age_group_admission), 
+                             combined_growth_factor, 
+                             start_year = 2024, end_year = 2030)
+
+
+# Plot change in spells between 2024 and 2028
+apply_growth_factors_grouped(group_baseline_data("QHL: NHS Birmingham And Solihull ICB", imd_quintile), 
+                             combined_growth_factor, 
+                             start_year = 2024, end_year = 2030) |> 
+  pivot_longer(cols = -imd_quintile) |> 
+  mutate(name = as.numeric(str_remove_all(name, "x"))) |>
+  mutate(imd_quintile = as.character(imd_quintile)) |> 
+  
+  ggplot(aes(x = name, y = value, fill = imd_quintile, group = imd_quintile)) +
+  geom_point() +
+  geom_line()
+
+
+apply_growth_factors_grouped(group_baseline_data("QHL: NHS Birmingham And Solihull ICB", gender), 
+                             combined_growth_factor, 
+                             start_year = 2024, end_year = 2030) |>
+  rename(group = 1) |> 
+  pivot_longer(cols = -group) |> 
+  mutate(name = as.numeric(str_remove_all(name, "x"))) |>
+  filter(name %in% c(2024, 2028)) |> 
+  
+  ggplot(aes(x = name, y = value, fill = name)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~group)
+
+
+plot_sub_group_function <- function(icb, group_selection) {
+  
+  apply_growth_factors_grouped(group_baseline_data(icb, {{group_selection}}), 
+                               combined_growth_factor, 
+                               start_year = 2024, end_year = 2030) |> 
+    rename(group_selection = 1) |> 
+    pivot_longer(cols = -group_selection) |> 
+    mutate(name = as.numeric(str_remove_all(name, "x"))) |>
+    filter(name %in% c(2024, 2028)) |> 
+    
+    ggplot(aes(x = name, y = value, fill = name)) +
+    geom_col(position = "dodge") +
+    facet_wrap(~group_selection)
+  
+}
+
+
+plot_sub_group_function("QHL: NHS Birmingham And Solihull ICB", gender)
+plot_sub_group_function("QHL: NHS Birmingham And Solihull ICB", imd_quintile)
+
+plot_sub_group_function("QUA: NHS Black Country ICB", gender)
+
+
+
+
+demographic_growth = 0.03
+incidence_change = 0.05
+acuity_change = 0.06
+social_care_pressures = 0.04
+mha_changes = -0.02
+national_policy = -0.01
+
+
+baseline_aggregate |> 
+  ungroup() |> 
+  mutate(year = year(discharge_month)) |> 
+  group_by(year, residence_icb_code, age_group_admission, gender, ethnic_category_2) |> 
+  summarise(spells = sum(spell_count)) |> 
+  mutate(
+    
+    demographic_growth = spells * (demographic_growth),
+    incidence_change = spells * (incidence_change),
+    acuity_change = spells * (acuity_change),
+    social_care_pressures = spells * (social_care_pressures),
+    mha_changes = spells * (mha_changes),
+    national_policy = spells * (national_policy)
+  )
+  
+
+
+
+[1] "lsoa2011"                 "discharge_month"          "residence_icb_code"       "residence_icb_name"       "age_group_admission"      "gender"                   "ethnic_category_2"       
+[8] "imd_quintile"             "provider_type"            "legal_status_group"       "lda_flag"                 "der_ward_type_desc_first" "spell_count"              "bed_days" 
+
+
+
+
+
+
+# Group by year at start
+
+
+# check language in app - growth figure is between start and finish not annual applied each year
+
+
+# Reorganise UI to show single input sidebar
+
+
+# Occupancy rate (bad days base line and target rate)
+
+# Home leave switch
+
+
+
+
+
+
+
+
+
+
+baseline_aggregate
 
 # Apply age and sex specific demographic growth projections ----
 
@@ -894,7 +1078,6 @@ ui <- navbarPage(
     "))
   ),
   
-  
   tabPanel("Introduction",
            fluidPage(
              titlePanel("Welcome to the Growth Factor Projection Tool"),
@@ -904,30 +1087,8 @@ ui <- navbarPage(
              h3("Data Requirements"),
              p("Please upload a CSV file with the following fields:"),
              
-             fluidRow(
-               column(6,
-                      tags$ul(
-                        tags$li("discharge_month"),
-                        tags$li("residence_icb_code"),
-                        tags$li("residence_icb_name"),
-                        tags$li("age_group_admission"),
-                        tags$li("gender"),
-                        tags$li("ethnic_category_2")
-                      )
-               ),
-               column(6,
-                      tags$ul(
-                        tags$li("imd_quintile"),
-                        tags$li("provider_type"),
-                        tags$li("legal_status_group"),
-                        tags$li("lda_flag"),
-                        tags$li("der_ward_type_desc_first"),
-                        tags$li("spell_count"),
-                        tags$li("bed_days")
-                      )
-               )
-             ),
-             
+             tableOutput("ExampleFormatTable_2"),
+            
              h3("Instructions"),
              p("1. Upload your CSV file using the 'Upload CSV File' button."),
              p("2. Navigate to the 'Analysis' tab to generate the plot and table."),
@@ -988,8 +1149,8 @@ ui <- navbarPage(
                           numericInput("admission_avoidance", "Admission Avoidance",       value = -0.06, step = 0.01),
                           numericInput("waiting_list_reduction", "Waiting List Reduction", value = -0.04, step = 0.01),
                           numericInput("ooa_repat", "Out of Area Repatriation",            value = 0.03, step = 0.01),
-                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -0.04, step = 0.01),
-                          actionButton("update", "Generate plot")
+                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -0.04, step = 0.01)
+                          #actionButton("update", "Generate plot")
                    )
                  )
                ),
@@ -1010,7 +1171,8 @@ ui <- navbarPage(
                sidebarPanel(
                  h3("Analysis Controls"),
                  p("Use the controls below to update the analysis."),
-                 selectInput("icb", "Select ICB", 
+                 
+                 selectInput("icb_2", "Select ICB", 
                              choices = 
                                c(
                                  "QGH: NHS Herefordshire And Worcestershire ICB",
@@ -1027,13 +1189,46 @@ ui <- navbarPage(
                                )
                  ),
                  
-                
-               ),
-               mainPanel(
+                 selectInput("group_selection", "Select grouping variable:", 
+                             choices = 
+                               c(
+                                 "Age Group Admission" = "age_group_admission",
+                                 "Gender" = "gender",
+                                 "Ethnic Category" = "ethnic_category_2",
+                                 "IMD Quintile" = "imd_quintile",
+                                 "Provider Type" = "provider_type",
+                                 "Legal Status Group" = "legal_status_group",
+                                 #"LDA Flag" = "lda_flag",
+                                 "Ward Type Description" = "der_ward_type_desc_first"
+                               )
+                             ),
                  
+                 fluidRow(
+                   column(6,
+                          numericInput("incidence_change_2", "Incidence Change",           value = 0.05, step = 0.01),
+                          numericInput("acuity_change_2", "Acuity Change",                 value = 0.06, step = 0.01),
+                          numericInput("social_care_pressures_2", "Social Care Pressures", value = 0.04, step = 0.01),
+                          numericInput("mha_changes_2", "Mental Health Act Changes",       value = -0.02, step = 0.01),
+                          numericInput("national_policy_2", "National Policy",             value = -0.01, step = 0.01),
+                          numericInput("service_models_2", "Service Models",               value = -0.01, step = 0.01)
+                   ),
+                   column(6,
+                          numericInput("prevention_programme_2", "Prevention Programme",     value = -0.02, step = 0.01),
+                          numericInput("admission_avoidance_2", "Admission Avoidance",       value = -0.06, step = 0.01),
+                          numericInput("waiting_list_reduction_2", "Waiting List Reduction", value = -0.04, step = 0.01),
+                          numericInput("ooa_repat_2", "Out of Area Repatriation",            value = 0.03, step = 0.01),
+                          numericInput("shift_to_ip_2", "Shift to Independent setting",      value = -0.04, step = 0.01)
+                          #actionButton("update_2", "Generate plot")
+                   )
+                 )
+                 
+                 ),
+               mainPanel(
+                 plotOutput("subgroupPlot")
+                 )
                )
              )
-           )),
+           ),
 )
 
 
@@ -1047,6 +1242,49 @@ server <- function(input, output) {
     read.csv(input$file$datapath)
   })
   
+  # Introduction tab ----
+  
+  output$ExampleFormatTable <- renderDT({
+    
+    tibble(
+      discharge_month = as.Date(c("2023-08-01", "2024-01-01", "2023-07-01")),
+      residence_icb_code = c("QUA", "QUA", "QUA"),
+      residence_icb_name = c("QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB"),
+      age_group_admission = c("25-64", "00-17", "25-64"),
+      gender = c(1, 2, 1),
+      ethnic_category_2 = c("White", "White", "White"),
+      imd_quintile = c(1, 2, 4),
+      provider_type = c("Independent", "Independent", "NHS"),
+      legal_status_group = c("Not formally detained", "Not formally detained", "Formally detained"),
+      lda_flag = c(NA, NA, NA),
+      der_ward_type_desc_first = c("Adult Mental Health Ward", "Child and Adolescent Mental Health Ward", "Adult Mental Health Ward"),
+      spell_count = c(27, 26, 24),
+      bed_days = c(623, 722, 288)
+    )
+  })
+  
+  output$ExampleFormatTable_2 <- renderTable({
+    
+    tibble(
+      discharge_month = as.Date(c("2023-08-01", "2024-01-01", "2023-07-01")),
+      residence_icb_code = c("QUA", "QUA", "QUA"),
+      residence_icb_name = c("QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB"),
+      age_group_admission = c("25-64", "00-17", "25-64"),
+      gender = c(1, 2, 1),
+      ethnic_category_2 = c("White", "White", "White"),
+      imd_quintile = c(1, 2, 4),
+      provider_type = c("Independent", "Independent", "NHS"),
+      legal_status_group = c("Not formally detained", "Not formally detained", "Formally detained"),
+      lda_flag = c(NA, NA, NA),
+      der_ward_type_desc_first = c("Adult Mental Health Ward", "Child and Adolescent Mental Health Ward", "Adult Mental Health Ward"),
+      spell_count = c(27, 26, 24),
+      bed_days = c(623, 722, 288)
+    )
+  },
+  width = "50px")
+  
+  # Analysis tab ----
+    
   growth_factors <- reactive({
     c(
       demographic_growth = icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb],
@@ -1068,7 +1306,7 @@ server <- function(input, output) {
     
     # Filter the baseline data based on the ICB name
     baseline_aggregate <- 
-      baseline_aggregate %>%
+      baseline_data %>%
       filter(residence_icb_name ==  icb_name) %>%
       summarise(year = as.integer(2024),
                 spell_count = as.numeric(sum(spell_count)),
@@ -1210,28 +1448,21 @@ server <- function(input, output) {
   } 
   
   output$waterfallPlot <- renderPlot({
-    req(input$update)
+    #req(input$update)
     req(input$icb)
     data <- calculate_growth_and_waterfall(baseline_data(), growth_factors(), 2025:2028, input$icb)
     plot_waterfall(data, input$icb)
   })
   
   output$waterfallPlot_bed_days <- renderPlot({
-    req(input$update)
+    #req(input$update)
     req(input$icb)
     data <- calculate_growth_and_waterfall(baseline_data(), growth_factors(), 2025:2028, input$icb)
     plot_waterfall_bed_days(data, input$icb)
   })
   
-  output$ExampleFormatTable <- renderDT({
-
-    datatable(baseline_data |> 
-                head(5) |> 
-                filter(spells > 10))
-  })
-  
   output$projectionTable <- renderDT({
-    req(input$update)
+    #req(input$update)
     req(input$icb)
     data <- calculate_growth_and_waterfall(baseline_data(), growth_factors(), 2025:2028, input$icb) %>%
       mutate(spell_count = round(spell_count, 1),
@@ -1248,9 +1479,88 @@ server <- function(input, output) {
       write.csv(data, file)
     }
   )
+  
+  # Sub-group tab ----
+  
+  growth_factors_2 <- reactive({
+    c(
+      demographic_growth = icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb],
+      incidence_change = input$incidence_change_2,
+      acuity_change = input$acuity_change_2,
+      social_care_pressures = input$social_care_pressures_2,
+      mha_changes = input$mha_changes_2,
+      national_policy = input$national_policy_2,
+      service_models = input$service_models_2,
+      prevention_programme = input$prevention_programme_2,
+      admission_avoidance = input$admission_avoidance_2,
+      waiting_list_reduction = input$waiting_list_reduction_2,
+      ooa_repat = input$ooa_repat_2,
+      shift_to_ip = input$shift_to_ip_2
+    )
+  })
+  
+  # Function to group baseline data
+  group_baseline_data <- function(data, icb_2, group_variable) {
+    data %>%
+      filter(gender %in% c(1,2),
+             residence_icb_name == icb_2) %>%
+      group_by({{group_variable}}) %>%
+      summarise(spell_count = sum(spell_count)) |> 
+      drop_na({{group_variable}})
+  }
+  
+  # Function to apply growth factors iteratively
+  apply_growth_factors_grouped <- function(data, growth_factors_2, start_year = 2024, end_year = 2028) {
+    years <- end_year - start_year
+    projected_data <- data
+    for (year in 1:years) {
+      projected_data <- projected_data %>%
+        mutate(!!paste0("x", start_year + year) := spell_count * (1 + growth_factors_2) ^ year)
+    }
+    projected_data <- projected_data %>%
+      rename(x2024 = spell_count)
+    return(projected_data)
+  }
+  
+  # Function to plot subgroup data
+  plot_sub_group_function <- function(data, icb_2, group_selection, growth_factors_2) {
+    combined_growth_factor <- prod(1 + growth_factors_2) - 1
+    
+    apply_growth_factors_grouped(group_baseline_data(data, icb_2, !!sym(group_selection)), 
+                                 combined_growth_factor, 
+                                 start_year = 2024, end_year = 2030) %>%
+      rename(group_selection = 1) %>%
+      pivot_longer(cols = -group_selection) %>%
+      mutate(name = as.numeric(str_remove_all(name, "x"))) %>%
+      filter(name %in% c(2024, 2028)) %>%
+      ggplot(aes(x = name, y = value, fill = name)) +
+      geom_col(position = "dodge") +
+      facet_wrap(~group_selection)
+  }
+  
+  # Observe changes in inputs to update plot automatically
+  observe({
+    growth_factors_2 <- c(
+      input$incidence_change,
+      input$acuity_change,
+      input$social_care_pressures,
+      input$mha_changes,
+      input$national_policy,
+      input$service_models,
+      input$prevention_programme,
+      input$admission_avoidance,
+      input$waiting_list_reduction,
+      input$ooa_repat,
+      input$shift_to_ip
+    )
+    
+    output$subgroupPlot <- renderPlot({
+      plot_sub_group_function(baseline_data(), input$icb_2, input$group_selection, growth_factors_2())
+    })
+  })
 }
 
-# Run the application ----
+# Run the application 
 shinyApp(ui = ui, server = server)
 
 
@@ -1258,7 +1568,7 @@ shinyApp(ui = ui, server = server)
 
 
 
-# To-do:
+# To-do: ----
 
 # Apply social care pressures factor to delayed discharge sub-set only (only those related to social care?)
 
