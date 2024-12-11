@@ -1278,20 +1278,31 @@ shinyApp(ui = ui, server = server)
 
 # Apply social care pressures factor to delayed discharge sub-set only (only those related to social care?)
 
-# Home leave adjustment  
-
-
-
-# Check - demographic change is combined growth over 3 years not single year 
 
 
 # check language in app - growth figure is between start and finish not annual applied each year
 
 
+# Developments
+
+# Confidence intervals around growth factors
+
+# Home leave adjustment  
 
 # Home leave switch
 
 
+# Occupancy adjusted baseline and projection in downloadable table
+# Occupancy rate inputs 
+
+# Current 92%
+# Aspirational 85%
+
+
+# Switches
+# Demographics
+# Home leave 
+# Social care pressures - applied to delayed discharge only - before baseline
 
 
 
