@@ -117,7 +117,6 @@ theme_SU <-   function (base_size){
 }
 
 theme_set(theme_SU())
-  
 
 # Define UI ----
 ui <- navbarPage(
@@ -168,20 +167,21 @@ ui <- navbarPage(
   
   tabPanel("Introduction",
            fluidPage(
-             titlePanel("Welcome to the Growth Factor Projection Tool"),
+             titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
              h3("Project Objectives"),
              p("This tool aims to project the expected volume of activity in 2028 based on various growth factors."),
              
              h3("Data Requirements"),
-             p("Please upload a CSV file with the following fields:"),
+             p("In order to establish a baseline for the tool, please upload a CSV file with the following fields (you should have been provided with a sample file for your ICB):"),
              
              tableOutput("ExampleFormatTable_2"),
             
              h3("Instructions"),
              p("1. Upload your CSV file using the 'Upload CSV File' button."),
              p("2. Navigate to the 'Analysis' tab to generate the plot and table."),
-             p("3. Adjust the growth factor values using the numeric input controls or use the default suggestions."),
-             p("4. Examine the impact of varying growth factors on activity and export using 'Download Projected Data' button"),
+             p("3. Adjust the growth factor assumptions using the numeric input controls or use the default suggestions."),
+             p("4. Examine the impact of changing assumptions on activity."),
+             p("5. Export a csv for your own post-hoc analysis using 'Download Projected Data' button"),
              
              fileInput("file", "Upload CSV File", accept = ".csv"),
              
@@ -210,11 +210,23 @@ ui <- navbarPage(
              p("The MHSDS data hosted within NCDR is our baseline datasource.
                Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exsists and has been aggregated."),
              
-             h3("Growth factor asusmptions:"),
-             p("Demographic growth facotr"),
+             h3("Growth factor assumptions:"),
              p("Demographic growth values are externally sourced from ONS population projections published at local authority level.
-               We have extracted age and gender specific population projections which are applied to our ICB populations accordingly.
-               As such, demographic growth is not modifiable in the analysis tab unlike our other growth factors.")
+               We have extracted age and gender specific population projections which are applied to our data extract and grouped to ICB level.
+               As such, demographic growth is a fixed point and not modifiable in the analysis tab unlike our other growth factors."),
+             p("Growth in incidence of high-risk admission conditions has been applied to our baselines extract prior to sharing and upload to the tool, though you can choose to include this or not in the final model. We have included uplifts of x% for x-condition, y% for y-condition and z% for z-condition based on the following data/papers...."),
+             p("We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
+             p("Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
+             p("Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
+             p("The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
+             p("National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
+             p("Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
+             p("Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
+             
+             h3("Capacity conversions:"),
+             p("Out of area repatriation - "),
+             p("Shift to independent provider provision - "),
+             p("Occupancy rates - In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desired OR of 90%.")
              )),
   
   tabPanel("Analysis",
