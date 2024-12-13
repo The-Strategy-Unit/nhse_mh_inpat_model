@@ -9,6 +9,14 @@ library(readxl)
 library(rlang)
 
 
+
+# To-do (/developments): ----
+
+# Confidence intervals around growth factors
+# Fix SU logo in top right corner
+
+
+
 # Aggregate baseline data ----
 
 baseline_data <- 
@@ -34,8 +42,13 @@ baseline_aggregate <-
          discharge_month = 
            as.Date(paste0(
              str_sub(disch_date_hosp_prov_spell, 1,8), "01"),
-             format = "%Y-%m-%d")
-  ) |>
+             format = "%Y-%m-%d"),
+         oop_flag =
+           case_when(
+             residence_icb_name != provider_icb_name ~ 1,
+             TRUE ~ 0
+             )
+         ) |>
   group_by(
     year,
     residence_icb_code,
@@ -47,17 +60,30 @@ baseline_aggregate <-
     provider_type,
     legal_status_group,
     lda_flag,
-    der_ward_type_desc_first  # ? change with new data
-  ) |> 
+    der_ward_type_desc_first,  # ? change with new data
+    oop_flag
+    ) |> 
   summarise(spell_count = n_distinct(record_number),
             bed_days = sum(reporting_hos_prov_spell_los), # including Home Leave periods
-            bed_days_exHL = sum(der_los_ex_hl_in_rp)) |>
+            bed_days_exHL = sum(der_los_ex_hl_in_rp),
+            bed_days_delayed_days = sum(adj_reporting_delay_days)  
+            ) |>
   ungroup() 
 
 # Write aggregated baseline csv to read into shiny app
 write_csv(baseline_aggregate, "baseline_aggregate.csv")
 
-baseline_aggregate <- read_csv("baseline_aggregate.csv")
+
+# Write ICB specific csv's of the baseline aggregate table ----
+
+unique_values <- unique(baseline_aggregate$residence_icb_code)
+
+# Loop through each unique value and write a CSV for each subset
+for (value in unique_values) {
+  subset_data <- baseline_aggregate %>% filter(residence_icb_code == value)
+  
+  write.csv(subset_data, paste0("icb_baseline_data/baseline_aggregate_", value, ".csv"), row.names = FALSE)
+}
 
 
 # Apply growth factors ---- 
@@ -87,35 +113,35 @@ baseline_growth <-
          sp_prevention_programme     =  spell_count * (prevention_programme),
          sp_admission_avoidance      =  spell_count * (admission_avoidance),
          sp_waiting_list_reduction   =  spell_count * (waiting_list_reduction),
-         sp_ooa_repat                =  spell_count * (ooa_repat),
-         sp_shift_to_ip              =  spell_count * (shift_to_ip),
+         sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat), TRUE ~ 0),
+         sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * (shift_to_ip), TRUE ~ 0),
          
          bd_demographic_growth       =  bed_days * (demographic_growth),
          bd_incidence_change         =  bed_days * (incidence_change),
          bd_acuity_change            =  bed_days * (acuity_change),
-         bd_social_care_pressures    =  bed_days * (social_care_pressures),
+         bd_social_care_pressures    =  bed_days_delayed_days * (social_care_pressures),  # switch to bed days - delayed discharges
          bd_mha_changes              =  bed_days * (mha_changes),
          bd_national_policy          =  bed_days * (national_policy),
          bd_service_models           =  bed_days * (service_models),
          bd_prevention_programme     =  bed_days * (prevention_programme),
          bd_admission_avoidance      =  bed_days * (admission_avoidance),
          bd_waiting_list_reduction   =  bed_days * (waiting_list_reduction),
-         bd_ooa_repat                =  bed_days * (ooa_repat),
-         bd_shift_to_ip              =  bed_days * (shift_to_ip),
+         bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat), TRUE ~ 0),
+         bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * (shift_to_ip), TRUE ~ 0),
          
          exHL_bedday_demographic_growth       =  bed_days_exHL * (demographic_growth),
          exHL_bedday_incidence_change         =  bed_days_exHL * (incidence_change),
          exHL_bedday_acuity_change            =  bed_days_exHL * (acuity_change),
-         exHL_bedday_social_care_pressures    =  bed_days_exHL * (social_care_pressures),
+         exHL_bedday_social_care_pressures    =  bed_days_delayed_days * (social_care_pressures),
          exHL_bedday_mha_changes              =  bed_days_exHL * (mha_changes),
          exHL_bedday_national_policy          =  bed_days_exHL * (national_policy),
          exHL_bedday_service_models           =  bed_days_exHL * (service_models),
          exHL_bedday_prevention_programme     =  bed_days_exHL * (prevention_programme),
          exHL_bedday_admission_avoidance      =  bed_days_exHL * (admission_avoidance),
          exHL_bedday_waiting_list_reduction   =  bed_days_exHL * (waiting_list_reduction),
-         exHL_bedday_ooa_repat                =  bed_days_exHL * (ooa_repat),
-         exHL_bedday_shift_to_ip              =  bed_days_exHL * (shift_to_ip)
-  ) |> 
+         exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat), TRUE ~ 0),
+         exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * (shift_to_ip), TRUE ~ 0)
+         ) |> 
   mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
          bed_days_proj =    bed_days + rowSums(across(contains("bd_"))),
          bed_days_exHL_proj = bed_days_exHL + rowSums(across(contains("exHL_bedday_")))
@@ -176,7 +202,8 @@ waterfall_data <-
   pivot_longer(-residence_icb_name)
 
 # Plot waterfall  
-waterfall_data |>
+test <-
+  waterfall_data |>
   select(-residence_icb_name) |> 
   filter(name == "spell_count" | 
            str_detect(name, "sp_")) |> 
@@ -198,13 +225,21 @@ waterfall_data |>
              name == "spell_proj"                  ~ "N. Projection"  
            )) |>
   arrange(name) |> 
-  
-  waterfall(calc_total = TRUE,
+  mutate(colour = 
+           case_when(name == "A. Baseline year (2024)" ~ "#686f73",
+                     value >= 0 ~ "#f9bf07",
+                     value < 0 ~ "#ec6555")) 
+
+  waterfall(test,
+            calc_total = TRUE,
             total_axis_text = "Projection (2028)",
-            rect_text_size = 2
-  ) +
+            rect_text_size = 2,
+            fill_by_sign = FALSE, 
+            fill_colours = test$colour
+            ) +
   su_theme() +
   theme(axis.text.x = element_text(angle = 90)) +
+  #scale_fill_manual(values = c("red","blue")) +
   labs(x = "Growth factor",
        y = "Spells",
        title = "Example waterfall plot",
@@ -289,20 +324,32 @@ waterfall_data |>
   )
 
 
-# Apply occupancy rate to bed days
-# Annualised (Baseline occupancy rate / occupancy rate) / 365.25 
+# Apply occupancy rate to bed days ----
+# Annualised beds (Baseline occupancy rate / occupancy rate) / 365.25 
 
 current_occupancy <- 0.95
 planned_occupancy <- 0.8
 
-waterfall_data |> 
+waterfall_data |>
+  filter(residence_icb_name == "QGH: NHS Herefordshire And Worcestershire ICB") |> 
   filter(str_detect(name, "bed_days")) |> 
-  mutate(bed_day_annualised = 
+  mutate(beds_annualised = 
            case_when(
-             name == "bed_days" ~ (value/current_occupancy)/365.25,
-             name == "bed_days_proj" ~ (value/planned_occupancy)/365.25
-           )
-  )
+             name %in% c("bed_days", "bed_days_exHL") ~ (value/current_occupancy)/365.25,
+             name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ (value/planned_occupancy)/365.25
+             )
+         ) |> 
+  mutate(name = 
+           case_when(
+             name == "bed_days" ~ "Baseline - bed days",
+             name == "bed_days_exHL" ~ "Baseline - bed days excl home leave",
+             name == "bed_days_proj" ~ "Projected - bed days",
+             name == "bed_days_exHL_proj" ~ "Projected - bed days excl home leave"
+           )) |> 
+  rename(ICB = residence_icb_name,
+         Measure = name,
+         `Bed days` = value,
+         `Annualised beds` = beds_annualised)
 
 
 

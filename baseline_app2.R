@@ -183,7 +183,24 @@ ui <- navbarPage(
              p("3. Adjust the growth factor values using the numeric input controls or use the default suggestions."),
              p("4. Examine the impact of varying growth factors on activity and export using 'Download Projected Data' button"),
              
-             fileInput("file", "Upload CSV File", accept = ".csv")
+             fileInput("file", "Upload CSV File", accept = ".csv"),
+             
+             h3("Upload growth factor parameters (optional):"),
+             p("In the first instance, we suggest you explore the mental health inpatient baseline and projections using our 
+             default growth variables (found in the Analysis tab side bar)."),
+             p("You can export the default or adjusted growth factors to save your adjustments and read them in as a csv file 
+               the next time you use the app."),
+             p("If you read in a parameters csv file, the values in the file will override our default settings but you will 
+               still be able to adjust the growth variables in the side bar."),
+             p("When reading in your own parameters, the format of the csv must match that of the downloaded 'adjusted parameters' 
+               csv file - i.e. must contain a 'Paramter' column and a 'Value' column."),
+             
+             fileInput("file1", "Choose CSV File",
+                       accept = c(
+                         "text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv")
+                       ),
            )),
   
   tabPanel("Metadata",
@@ -248,6 +265,8 @@ ui <- navbarPage(
                  
                  actionButton("reset", "Reset Growth Variables to Default"),
                  
+                 downloadButton("downloadParameters", "Download Adjusted Parameters"),
+                 
                  br(),
                  br(),
                  
@@ -307,12 +326,12 @@ ui <- navbarPage(
                     br()
                     ),
                  h6(
-                   "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                   a 95% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 80% target 
-                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
+                   "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised beds. We apply 
+                   a current occupancy rate (inputs side bar left of screen) to the baseline bed days and divide by 365.25 to calculate annualised beds. We apply an future target 
+                   occupancy rate (inputs side bar) to our bed day projection and divide by 365.25 to calculate the future annualised bed requirement.",
                    br(),
                    br(),
-                   "Calculation: Annualised bed days = (Bed days / varying occupancy rate) / 365.25"
+                   "Calculation: Annualised beds = (Bed days / variable occupancy rate) / 365.25"
                    ),
                  tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
                  
@@ -355,24 +374,41 @@ server <- function(input, output, session) {
   output$ExampleFormatTable_2 <- renderTable({
     
     tibble(
-      discharge_month = as.Date(c("2023-08-01", "2024-01-01", "2023-07-01")),
+      discharge_month = c("2023-08-01", "2024-01-01", "2023-07-01"),
       residence_icb_code = c("QUA", "QUA", "QUA"),
       residence_icb_name = c("QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB", "QUA: NHS Black Country ICB"),
       age_group_admission = c("25-64", "00-17", "25-64"),
-      gender = c(1, 2, 1),
+      gender = c("1", "2", "1"),
       ethnic_category_2 = c("White", "White", "White"),
-      imd_quintile = c(1, 2, 4),
+      imd_quintile = c("1", "2", "4"),
       provider_type = c("Independent", "Independent", "NHS"),
       legal_status_group = c("Not formally detained", "Not formally detained", "Formally detained"),
       lda_flag = c(NA, NA, NA),
       der_ward_type_desc_first = c("Adult Mental Health Ward", "Child and Adolescent Mental Health Ward", "Adult Mental Health Ward"),
-      spell_count = c(27, 26, 24),
-      bed_days = c(623, 722, 288)
+      spell_count = c("27", "26", "24"),
+      bed_days = c("623", "722", "288")
     )
   },  width = "50px")
   
   
   # Analysis tab ----
+  
+  # Look for parameters file input to set growth factors from user csv:
+  observeEvent(input$file1, {
+    req(input$file1)
+    params <- read.csv(input$file1$datapath)
+    updateNumericInput(session, "incidence_change", value = params$Value[params$Parameter == "Incidence Change"])
+    updateNumericInput(session, "acuity_change", value = params$Value[params$Parameter == "Acuity Change"])
+    updateNumericInput(session, "social_care_pressures", value = params$Value[params$Parameter == "Social Care Pressures"])
+    updateNumericInput(session, "mha_changes", value = params$Value[params$Parameter == "Mental Health Act Changes"])
+    updateNumericInput(session, "national_policy", value = params$Value[params$Parameter == "National Policy"])
+    updateNumericInput(session, "service_models", value = params$Value[params$Parameter == "Service Models"])
+    updateNumericInput(session, "prevention_programme", value = params$Value[params$Parameter == "Prevention Programme"])
+    updateNumericInput(session, "admission_avoidance", value = params$Value[params$Parameter == "Admission Avoidance"])
+    updateNumericInput(session, "waiting_list_reduction", value = params$Value[params$Parameter == "Waiting List Reduction"])
+    updateNumericInput(session, "ooa_repat", value = params$Value[params$Parameter == "Out of Area Repatriation"])
+    updateNumericInput(session, "shift_to_ip", value = params$Value[params$Parameter == "Shift to Independent setting"])
+  })
   
   # Growth factor inputs 
   demographic_growth     <- reactive({ icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb] })
@@ -404,34 +440,34 @@ server <- function(input, output, session) {
              sp_prevention_programme     = spell_count * prevention_programme(),
              sp_admission_avoidance      = spell_count * admission_avoidance(),
              sp_waiting_list_reduction   = spell_count * waiting_list_reduction(),
-             sp_ooa_repat                = spell_count * ooa_repat(),
-             sp_shift_to_ip              = spell_count * shift_to_ip(),
+             sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * ooa_repat(), TRUE ~ 0),
+             sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * shift_to_ip(), TRUE ~ 0),
              
              bd_demographic_growth       = bed_days * demographic_growth(),
              bd_incidence_change         = bed_days * incidence_change(),
              bd_acuity_change            = bed_days * acuity_change(),
-             bd_social_care_pressures    = bed_days * social_care_pressures(),
+             bd_social_care_pressures    = bed_days_delayed_days * social_care_pressures(),
              bd_mha_changes              = bed_days * mha_changes(),
              bd_national_policy          = bed_days * national_policy(),
              bd_service_models           = bed_days * service_models(),
              bd_prevention_programme     = bed_days * prevention_programme(),
              bd_admission_avoidance      = bed_days * admission_avoidance(),
              bd_waiting_list_reduction   = bed_days * waiting_list_reduction(),
-             bd_ooa_repat                = bed_days * ooa_repat(),
-             bd_shift_to_ip              = bed_days * shift_to_ip(),
+             bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * ooa_repat(), TRUE ~ 0),
+             bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * shift_to_ip(), TRUE ~ 0),
              
              exHL_bedday_demographic_growth       =  bed_days_exHL * demographic_growth(),
              exHL_bedday_incidence_change         =  bed_days_exHL * incidence_change(),
              exHL_bedday_acuity_change            =  bed_days_exHL * acuity_change(),
-             exHL_bedday_social_care_pressures    =  bed_days_exHL * social_care_pressures(),
+             exHL_bedday_social_care_pressures    =  bed_days_delayed_days * social_care_pressures(),
              exHL_bedday_mha_changes              =  bed_days_exHL * mha_changes(),
              exHL_bedday_national_policy          =  bed_days_exHL * national_policy(),
              exHL_bedday_service_models           =  bed_days_exHL * service_models(),
              exHL_bedday_prevention_programme     =  bed_days_exHL * prevention_programme(),
              exHL_bedday_admission_avoidance      =  bed_days_exHL * admission_avoidance(),
              exHL_bedday_waiting_list_reduction   =  bed_days_exHL * waiting_list_reduction(),
-             exHL_bedday_ooa_repat                =  bed_days_exHL * ooa_repat(),
-             exHL_bedday_shift_to_ip              =  bed_days_exHL * shift_to_ip(),
+             exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * ooa_repat(), TRUE ~ 0),
+             exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * shift_to_ip(), TRUE ~ 0)
              ) %>%
       mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
              bed_days_proj = bed_days + rowSums(across(contains("bd_"))),
@@ -498,7 +534,8 @@ server <- function(input, output, session) {
   # Plot waterfall - Spells and bed days
   waterfall_plot <- reactive({
     
-    waterfall_data() |> 
+    data <-
+      waterfall_data() |> 
       select(-residence_icb_name) %>%
       filter(name == "spell_count" | str_detect(name, "sp_")) %>%
       mutate(name = case_when(
@@ -518,10 +555,19 @@ server <- function(input, output, session) {
         name == "spell_proj"                 ~ "N. Projection"
         )) %>%
       mutate(value = round(value, 0)) |> 
-      arrange(name) %>%
-      waterfall(calc_total = TRUE, 
-                total_axis_text = "Projection (2028)", 
-                rect_text_size = 1.6) +
+      arrange(name) |> 
+      mutate(colour = 
+               case_when(name == "A. Baseline year (2024)" ~ "#686f73",
+                         value >= 0 ~ "#f9bf07",
+                         value < 0 ~ "#ec6555")) 
+    
+    waterfall(data,
+              calc_total = TRUE, 
+              total_axis_text = "Projection (2028)", 
+              rect_text_size = 1.6,
+              fill_by_sign = FALSE, 
+              fill_colours = data$colour
+              ) +
       su_theme() +
       theme(axis.text.x = element_text(angle = 90, size = 14),
             axis.text.y = element_text(size = 14), 
@@ -537,7 +583,8 @@ server <- function(input, output, session) {
   
   waterfall_plot_bed_days <- reactive({
     
-    waterfall_data() |> 
+    data <-
+      waterfall_data() |> 
       select(-residence_icb_name) %>%
       filter(name == "bed_days" | str_detect(name, "bd_")) %>%
       mutate(name = case_when(
@@ -557,10 +604,19 @@ server <- function(input, output, session) {
         name == "bed_day_proj"               ~ "N. Projection"
       )) %>%
       mutate(value = round(value, 0)) |> 
-      arrange(name) %>%
-      waterfall(calc_total = TRUE, 
-                total_axis_text = "Projection (2028)", 
-                rect_text_size = 1.6) +
+      arrange(name) |> 
+      mutate(colour = 
+               case_when(name == "A. Baseline year (2024)" ~ "#686f73",
+                         value >= 0 ~ "#f9bf07",
+                         value < 0 ~ "#ec6555")) 
+    
+    waterfall(data, 
+              calc_total = TRUE, 
+              total_axis_text = "Projection (2028)", 
+              rect_text_size = 1.6,
+              fill_by_sign = FALSE, 
+              fill_colours = test$colour
+              ) +
       su_theme() +
       theme(axis.text.x = element_text(angle = 90, size = 14),
             axis.text.y = element_text(size = 14), 
@@ -576,7 +632,8 @@ server <- function(input, output, session) {
   
   waterfall_plot_bed_days_ex_HL <- reactive({
     
-    waterfall_data() |> 
+    data <-
+      waterfall_data() |> 
       select(-residence_icb_name) %>%
       filter(name == "bed_days_exHL" | str_detect(name, "exHL_bedday_")) %>% 
       mutate(name = case_when(
@@ -594,12 +651,21 @@ server <- function(input, output, session) {
         name == "exHL_bedday_ooa_repat"               ~ "L. Out of area (OOA)",
         name == "exHL_bedday_shift_to_ip"             ~ "M. Shift to independent sector",
         name == "bed_day_proj"                        ~ "N. Projection"
-    )) %>%
+        )) %>%
       mutate(value = round(value, 0)) |> 
-      arrange(name) %>%
-      waterfall(calc_total = TRUE, 
-                total_axis_text = "Projection (2028)", 
-                rect_text_size = 1.6) +
+      arrange(name) |> 
+      mutate(colour = 
+               case_when(name == "A. Baseline year (2024)" ~ "#686f73",
+                         value >= 0 ~ "#f9bf07",
+                         value < 0 ~ "#ec6555")) 
+    
+    waterfall(data,
+              calc_total = TRUE, 
+              total_axis_text = "Projection (2028)", 
+              rect_text_size = 1.6,
+              fill_by_sign = FALSE, 
+              fill_colours = test$colour
+              ) +
       su_theme() +
       theme(axis.text.x = element_text(angle = 90, size = 14),
             axis.text.y = element_text(size = 14), 
@@ -667,6 +733,41 @@ server <- function(input, output, session) {
     updateNumericInput(session, "shift_to_ip", value = -0.03)
   })
     
+  # Export adjusted parameters
+  output$downloadParameters <- downloadHandler(
+    filename = function() {
+      paste("parameters-", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      params <- data.frame(
+        Parameter = c("Incidence Change", 
+                      "Acuity Change", 
+                      "Social Care Pressures", 
+                      "Mental Health Act Changes", 
+                      "National Policy", 
+                      "Service Models", 
+                      "Prevention Programme", 
+                      "Admission Avoidance", 
+                      "Waiting List Reduction", 
+                      "Out of Area Repatriation", 
+                      "Shift to Independent setting"),
+        Value = c(input$incidence_change, 
+                  input$acuity_change, 
+                  input$social_care_pressures, 
+                  input$mha_changes, 
+                  input$national_policy, 
+                  input$service_models, 
+                  input$prevention_programme, 
+                  input$admission_avoidance, 
+                  input$waiting_list_reduction, 
+                  input$ooa_repat, 
+                  input$shift_to_ip)
+      )
+      write.csv(params, file, row.names = FALSE)
+    }
+  )
+  
+  
   # Occupancy rate table ----
   
   current_occupancy   <- reactive({ input$current_occupancy })
@@ -797,44 +898,9 @@ server <- function(input, output, session) {
     }
   )
   
-  
-  
 }
 
-# Run the application 
+# Run the application ----
 shinyApp(ui = ui, server = server)
-
-
-
-
-# To-do: ----
-
-# Apply social care pressures factor to delayed discharge sub-set only (only those related to social care?)
-
-
-
-# check language in app - growth figure is between start and finish not annual applied each year
-
-
-# Developments
-
-# Confidence intervals around growth factors
-
-
-
-
-
-
-# Switches
-# Demographics
-# Home leave 
-# Social care pressures - applied to delayed discharge only - before baseline
-
-# Load in parameters 
-# Adjust code to either use default parameters or read in parameters file 
-# Send out ICB specific baseline extracts 
-# Out of area inflator 
-
-
 
 
