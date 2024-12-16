@@ -9,7 +9,6 @@ library(DT)
 library(janitor)
 library(waterfalls) # https://www.rdocumentation.org/packages/waterfalls/versions/1.0.0/topics/waterfall 
 library(shinyWidgets)
-library(bslib)
 library(readxl)
 library(rlang)
 
@@ -293,8 +292,8 @@ waterfall_data |>
 # Apply occupancy rate to bed days
 # Annualised (Baseline occupancy rate / occupancy rate) / 365.25 
 
-current_occupancy <- 0.95
-planned_occupancy <- 0.8
+current_occupancy <- 0.92
+planned_occupancy <- 0.85
 
 waterfall_data |> 
   filter(str_detect(name, "bed_days")) |> 
@@ -845,19 +844,19 @@ ui <- navbarPage(
                  
                  fluidRow(
                    column(6,
-                          numericInput("incidence_change", "Incidence Change",           value = 0.07, step = 0.01),
-                          numericInput("acuity_change", "Acuity Change",                 value = 0.08, step = 0.01),
-                          numericInput("social_care_pressures", "Social Care Pressures", value = 0.05, step = 0.01),
-                          numericInput("mha_changes", "Mental Health Act Changes",       value = -0.01, step = 0.01),
-                          numericInput("national_policy", "National Policy",             value = -0.01, step = 0.01),
-                          numericInput("service_models", "Service Models",               value = -0.01, step = 0.01)
+                          numericInput("incidence_change", "Incidence Change",           value = 0.070, step = 0.001),
+                          numericInput("acuity_change", "Acuity Change",                 value = 0.067, step = 0.001),
+                          numericInput("social_care_pressures", "Social Care Pressures", value = 0.066, step = 0.001),
+                          numericInput("mha_changes", "Mental Health Act Changes",       value = -0.050, step = 0.001),
+                          numericInput("national_policy", "National Policy",             value = -0.030, step = 0.001),
+                          numericInput("service_models", "Service Models",               value = -0.015, step = 0.001)
                    ),
                    column(6,
-                          numericInput("prevention_programme", "Prevention Programme",     value = -0.03, step = 0.01),
-                          numericInput("admission_avoidance", "Admission Avoidance",       value = -0.04, step = 0.01),
-                          numericInput("waiting_list_reduction", "Waiting List Reduction", value = -0.04, step = 0.01),
-                          numericInput("ooa_repat", "Out of Area Repatriation",            value = 0.04, step = 0.01),
-                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -0.03, step = 0.01)
+                          numericInput("prevention_programme", "Prevention Programme",     value = -0.015, step = 0.001),
+                          numericInput("admission_avoidance", "Admission Avoidance",       value = -0.015, step = 0.001),
+                          numericInput("waiting_list_reduction", "Waiting List Reduction", value = -0.02, step = 0.001),
+                          numericInput("ooa_repat", "Out of Area Repatriation",            value = 0.4, step = 0.001),
+                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -0.03, step = 0.001)
                           #actionButton("update", "Generate plot")
                           )
                    ),
@@ -1181,8 +1180,8 @@ server <- function(input, output) {
         mutate(value = round(value, 1)) |> 
         mutate(bed_day_annualised = 
                  case_when(
-                   name == "bed_days" ~ round((value/0.95)/365.25,1),
-                   name == "bed_days_proj" ~ round((value/0.8)/365.25,1)
+                   name == "bed_days" ~ round((value/0.92)/365.25,1),
+                   name == "bed_days_proj" ~ round((value/0.85)/365.25,1)
                  )
         ) |> 
         rename(ICB = residence_icb_name,
