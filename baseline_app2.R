@@ -366,7 +366,6 @@ ui <- navbarPage(
 
 
 #### Define server logic ####
-# Define server logic ----
 server <- function(input, output, session) {
   
   # Set up ----
@@ -794,8 +793,8 @@ server <- function(input, output, session) {
         mutate(value = round(value,0)) |> 
         mutate(beds_annualised = 
                  case_when(
-                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/(current_occupancy()/100)/365.25, 0)),
-                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/(future_occupancy()/100)/365.25,0))
+                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/(current_occupancy()/100)/365.25), 0),
+                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/(future_occupancy()/100)/365.25),0)
                  )
         ) |> 
         mutate(name = 
