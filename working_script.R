@@ -90,15 +90,15 @@ for (value in unique_values) {
 
 demographic_growth = 0.03
 incidence_change = 0.07 
-acuity_change = 0.08
-social_care_pressures = 0.05 
-mha_changes = -0.01
-national_policy = -0.01
-service_models = -0.01
-prevention_programme = -0.03
-admission_avoidance = -0.04
-waiting_list_reduction = -0.04
-ooa_repat = 0.04
+acuity_change = 0.067
+social_care_pressures = 0.066 
+mha_changes = -0.05
+national_policy = -0.03
+service_models = -0.015
+prevention_programme = -0.015
+admission_avoidance = -0.015
+waiting_list_reduction = -0.02
+ooa_repat = 0.4
 shift_to_ip = -0.03
 
 baseline_growth <-

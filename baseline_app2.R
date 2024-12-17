@@ -14,7 +14,7 @@ library(rlang)
 
 setwd("C:/Users/alexander.lawless/OneDrive - Midlands and Lancashire CSU/Work/1. Projects/2024_25/mental_health_shiny_app/nhse_mh_inpat_model")
 
-# Set SU theme ----
+#### Set SU theme ####
 SU_colours <- c (
   `orange`                     = grDevices::rgb(248,191,7, maxColorValue = 255),# "#f9bf07",
   `charcoal`                   = grDevices::rgb(44,40,37, maxColorValue = 255),# "#2c2825",
@@ -118,7 +118,7 @@ theme_SU <-   function (base_size){
 
 theme_set(theme_SU())
   
-# Define UI ----
+#### Define UI ####
 ui <- navbarPage(
   "Mental health inpatient strategy",
   theme = bs_theme(bootswatch = "united",
@@ -225,7 +225,7 @@ ui <- navbarPage(
              p("Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
              
              h3("Capacity conversions:"),
-             p("Out of area repatriation - This applies only to patients resident in your ICB but receiving care outside. A starting assumption is to repatriate 50% of this activity to in-area beds over 3 years."),
+             p("Out of area repatriation - This applies only to patients resident in your ICB but receiving care outside. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
              p("Shift to independent provider provision - Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down in whole bed units to adjust your future bed requirements."),
              p("Occupancy rates - In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desired OR of 85%.")
              )),
@@ -367,6 +367,7 @@ ui <- navbarPage(
   )
 
 
+#### Define server logic ####
 # Define server logic ----
 server <- function(input, output, session) {
   
@@ -731,15 +732,15 @@ server <- function(input, output, session) {
   # Reset growth factor variables to default position
   observeEvent(input$reset, {
     updateNumericInput(session, "incidence_change", value = 0.07)
-    updateNumericInput(session, "acuity_change", value = 0.08)
-    updateNumericInput(session, "social_care_pressures", value = 0.05)
-    updateNumericInput(session, "mha_changes", value = -0.01)
-    updateNumericInput(session, "national_policy", value = -0.01)
-    updateNumericInput(session, "service_models", value = -0.01)
-    updateNumericInput(session, "prevention_programme", value = -0.03)
-    updateNumericInput(session, "admission_avoidance", value = -0.04)
-    updateNumericInput(session, "waiting_list_reduction", value = -0.04)
-    updateNumericInput(session, "ooa_repat", value = 0.04)
+    updateNumericInput(session, "acuity_change", value = 0.067)
+    updateNumericInput(session, "social_care_pressures", value = 0.066)
+    updateNumericInput(session, "mha_changes", value = -0.05)
+    updateNumericInput(session, "national_policy", value = -0.03)
+    updateNumericInput(session, "service_models", value = -0.015)
+    updateNumericInput(session, "prevention_programme", value = -0.015)
+    updateNumericInput(session, "admission_avoidance", value = -0.015)
+    updateNumericInput(session, "waiting_list_reduction", value = -0.02)
+    updateNumericInput(session, "ooa_repat", value = 0.4)
     updateNumericInput(session, "shift_to_ip", value = -0.03)
   })
   
