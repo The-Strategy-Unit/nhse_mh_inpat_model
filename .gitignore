@@ -48,7 +48,10 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# Raw data
+# csv files
+*.csv
+
+# Specific Raw data
 mhsds_baseline_adm_241120.csv
 mhsds_baseline_adm.csv
 baseline_aggregate.csv
