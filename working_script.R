@@ -8,7 +8,7 @@ library(waterfalls) # https://www.rdocumentation.org/packages/waterfalls/version
 library(readxl)
 library(rlang)
 
-
+setwd("C:/Users/alexander.lawless/OneDrive - Midlands and Lancashire CSU/Work/1. Projects/2024_25/mental_health_shiny_app/nhse_mh_inpat_model")
 
 # To-do (/developments): ----
 

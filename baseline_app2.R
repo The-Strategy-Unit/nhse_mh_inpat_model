@@ -12,8 +12,6 @@ library(shinyWidgets)
 library(readxl)
 library(rlang)
 
-setwd("C:/Users/alexander.lawless/OneDrive - Midlands and Lancashire CSU/Work/1. Projects/2024_25/mental_health_shiny_app/nhse_mh_inpat_model")
-
 #### Set SU theme ####
 SU_colours <- c (
   `orange`                     = grDevices::rgb(248,191,7, maxColorValue = 255),# "#f9bf07",
