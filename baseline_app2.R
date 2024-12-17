@@ -257,19 +257,19 @@ ui <- navbarPage(
                  
                  fluidRow(
                    column(6,
-                          numericInput("incidence_change", "Incidence Change",           value = 0.070, step = 0.001),
-                          numericInput("acuity_change", "Acuity Change",                 value = 0.067, step = 0.001),
-                          numericInput("social_care_pressures", "Social Care Pressures", value = 0.066, step = 0.001),
-                          numericInput("mha_changes", "Mental Health Act Changes",       value = -0.050, step = 0.001),
-                          numericInput("national_policy", "National Policy",             value = -0.030, step = 0.001),
-                          numericInput("service_models", "Service Models",               value = -0.015, step = 0.001)
+                          numericInput("incidence_change", "Incidence Change",           value = 7, step = 0.1),
+                          numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
+                          numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
+                          numericInput("mha_changes", "Mental Health Act Changes",       value = -5, step = 0.1),
+                          numericInput("national_policy", "National Policy",             value = -3, step = 0.1),
+                          numericInput("service_models", "Service Models",               value = -1.5, step = 0.1)
                    ),
                    column(6,
-                          numericInput("prevention_programme", "Prevention Programme",     value = -0.015, step = 0.001),
-                          numericInput("admission_avoidance", "Admission Avoidance",       value = -0.015, step = 0.001),
-                          numericInput("waiting_list_reduction", "Waiting List Reduction", value = -0.02, step = 0.001),
-                          numericInput("ooa_repat", "Out of Area Repatriation",            value = 0.4, step = 0.001),
-                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -0.03, step = 0.001)
+                          numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
+                          numericInput("admission_avoidance", "Admission Avoidance",       value = -1.5, step = 0.1),
+                          numericInput("waiting_list_reduction", "Waiting List Reduction", value = -2, step = 0.1),
+                          numericInput("ooa_repat", "Out of Area Repatriation",            value = 40, step = 0.1),
+                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -3, step = 0.1)
                           )
                    ),
                  
@@ -283,8 +283,8 @@ ui <- navbarPage(
                  h5("Adjust Occupancy rate:"),
                  
                  fluidRow(
-                   numericInput("current_occupancy", "Current occupancy rate",           value = 0.92, step = 0.01),
-                   numericInput("future_occupancy", "Future occupancy rate",             value = 0.85, step = 0.01)
+                   numericInput("current_occupancy", "Current occupancy rate",           value = 92, step = 0.1),
+                   numericInput("future_occupancy", "Future occupancy rate",             value = 85, step = 0.1)
                  ),
                  
                  actionButton("reset_occupancy", "Reset Occupancy Rates to Default"),
@@ -441,44 +441,44 @@ server <- function(input, output, session) {
     
     baseline_aggregate() %>%
       filter(residence_icb_name == input$icb) %>%
-      mutate(sp_demographic_growth       = spell_count * demographic_growth(),
-             sp_incidence_change         = spell_count * incidence_change(),
-             sp_acuity_change            = spell_count * acuity_change(),
-             sp_social_care_pressures    = spell_count * social_care_pressures(),
-             sp_mha_changes              = spell_count * mha_changes(),
-             sp_national_policy          = spell_count * national_policy(),
-             sp_service_models           = spell_count * service_models(),
-             sp_prevention_programme     = spell_count * prevention_programme(),
-             sp_admission_avoidance      = spell_count * admission_avoidance(),
-             sp_waiting_list_reduction   = spell_count * waiting_list_reduction(),
-             sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * ooa_repat(), TRUE ~ 0),
-             sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * shift_to_ip(), TRUE ~ 0),
+      mutate(sp_demographic_growth       = spell_count * (demographic_growth()/100),
+             sp_incidence_change         = spell_count * (incidence_change()/100),
+             sp_acuity_change            = spell_count * (acuity_change()/100),
+             sp_social_care_pressures    = spell_count * (social_care_pressures()/100),
+             sp_mha_changes              = spell_count * (mha_changes()/100),
+             sp_national_policy          = spell_count * (national_policy()/100),
+             sp_service_models           = spell_count * (service_models()/100),
+             sp_prevention_programme     = spell_count * (prevention_programme()/100),
+             sp_admission_avoidance      = spell_count * (admission_avoidance()/100),
+             sp_waiting_list_reduction   = spell_count * (waiting_list_reduction()/100),
+             sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat()/100), TRUE ~ 0),
+             sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * (shift_to_ip()/100), TRUE ~ 0),
              
-             bd_demographic_growth       = bed_days * demographic_growth(),
-             bd_incidence_change         = bed_days * incidence_change(),
-             bd_acuity_change            = bed_days * acuity_change(),
-             bd_social_care_pressures    = bed_days_delayed_days * social_care_pressures(),
-             bd_mha_changes              = bed_days * mha_changes(),
-             bd_national_policy          = bed_days * national_policy(),
-             bd_service_models           = bed_days * service_models(),
-             bd_prevention_programme     = bed_days * prevention_programme(),
-             bd_admission_avoidance      = bed_days * admission_avoidance(),
-             bd_waiting_list_reduction   = bed_days * waiting_list_reduction(),
-             bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * ooa_repat(), TRUE ~ 0),
-             bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * shift_to_ip(), TRUE ~ 0),
+             bd_demographic_growth       = bed_days * (demographic_growth()/100),
+             bd_incidence_change         = bed_days * (incidence_change()/100),
+             bd_acuity_change            = bed_days * (acuity_change()/100),
+             bd_social_care_pressures    = bed_days_delayed_days * (social_care_pressures()/100),
+             bd_mha_changes              = bed_days * (mha_changes()/100),
+             bd_national_policy          = bed_days * (national_policy()/100),
+             bd_service_models           = bed_days * (service_models()/100),
+             bd_prevention_programme     = bed_days * (prevention_programme()/100),
+             bd_admission_avoidance      = bed_days * (admission_avoidance()/100),
+             bd_waiting_list_reduction   = bed_days * (waiting_list_reduction()/100),
+             bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat()/100), TRUE ~ 0),
+             bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * (shift_to_ip()/100), TRUE ~ 0),
              
-             exHL_bedday_demographic_growth       =  bed_days_exHL * demographic_growth(),
-             exHL_bedday_incidence_change         =  bed_days_exHL * incidence_change(),
-             exHL_bedday_acuity_change            =  bed_days_exHL * acuity_change(),
-             exHL_bedday_social_care_pressures    =  bed_days_delayed_days * social_care_pressures(),
-             exHL_bedday_mha_changes              =  bed_days_exHL * mha_changes(),
-             exHL_bedday_national_policy          =  bed_days_exHL * national_policy(),
-             exHL_bedday_service_models           =  bed_days_exHL * service_models(),
-             exHL_bedday_prevention_programme     =  bed_days_exHL * prevention_programme(),
-             exHL_bedday_admission_avoidance      =  bed_days_exHL * admission_avoidance(),
-             exHL_bedday_waiting_list_reduction   =  bed_days_exHL * waiting_list_reduction(),
-             exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * ooa_repat(), TRUE ~ 0),
-             exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * shift_to_ip(), TRUE ~ 0)
+             exHL_bedday_demographic_growth       =  bed_days_exHL * (demographic_growth()/100),
+             exHL_bedday_incidence_change         =  bed_days_exHL * (incidence_change()/100),
+             exHL_bedday_acuity_change            =  bed_days_exHL * (acuity_change()/100),
+             exHL_bedday_social_care_pressures    =  bed_days_delayed_days * (social_care_pressures()/100),
+             exHL_bedday_mha_changes              =  bed_days_exHL * (mha_changes()/100),
+             exHL_bedday_national_policy          =  bed_days_exHL * (national_policy()/100),
+             exHL_bedday_service_models           =  bed_days_exHL * (service_models()/100),
+             exHL_bedday_prevention_programme     =  bed_days_exHL * (prevention_programme()/100),
+             exHL_bedday_admission_avoidance      =  bed_days_exHL * (admission_avoidance()/100),
+             exHL_bedday_waiting_list_reduction   =  bed_days_exHL * (waiting_list_reduction()/100),
+             exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat()/100), TRUE ~ 0),
+             exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * (shift_to_ip()/100), TRUE ~ 0)
       ) %>%
       mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
              bed_days_proj = bed_days + rowSums(across(contains("bd_"))),
@@ -731,17 +731,17 @@ server <- function(input, output, session) {
   
   # Reset growth factor variables to default position
   observeEvent(input$reset, {
-    updateNumericInput(session, "incidence_change", value = 0.07)
-    updateNumericInput(session, "acuity_change", value = 0.067)
-    updateNumericInput(session, "social_care_pressures", value = 0.066)
-    updateNumericInput(session, "mha_changes", value = -0.05)
-    updateNumericInput(session, "national_policy", value = -0.03)
-    updateNumericInput(session, "service_models", value = -0.015)
-    updateNumericInput(session, "prevention_programme", value = -0.015)
-    updateNumericInput(session, "admission_avoidance", value = -0.015)
-    updateNumericInput(session, "waiting_list_reduction", value = -0.02)
-    updateNumericInput(session, "ooa_repat", value = 0.4)
-    updateNumericInput(session, "shift_to_ip", value = -0.03)
+    updateNumericInput(session, "incidence_change", value = 7)
+    updateNumericInput(session, "acuity_change", value = 6.7)
+    updateNumericInput(session, "social_care_pressures", value = 6.6)
+    updateNumericInput(session, "mha_changes", value = -5)
+    updateNumericInput(session, "national_policy", value = -3)
+    updateNumericInput(session, "service_models", value = -1.5)
+    updateNumericInput(session, "prevention_programme", value = -1.5)
+    updateNumericInput(session, "admission_avoidance", value = -1.5)
+    updateNumericInput(session, "waiting_list_reduction", value = -2)
+    updateNumericInput(session, "ooa_repat", value = 40)
+    updateNumericInput(session, "shift_to_ip", value = -3)
   })
   
   # Export adjusted parameters
@@ -796,8 +796,8 @@ server <- function(input, output, session) {
         mutate(value = round(value,0)) |> 
         mutate(beds_annualised = 
                  case_when(
-                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/current_occupancy())/365.25, 0),
-                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/future_occupancy())/365.25,0)
+                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/(current_occupancy()/100)/365.25, 0)),
+                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/(future_occupancy()/100)/365.25,0))
                  )
         ) |> 
         mutate(name = 
@@ -821,8 +821,8 @@ server <- function(input, output, session) {
   
   # Reset occupancy rates to default position
   observeEvent(input$reset_occupancy, {
-    updateNumericInput(session, "current_occupancy", value = 0.92)
-    updateNumericInput(session, "future_occupancy", value = 0.85)
+    updateNumericInput(session, "current_occupancy", value = 92)
+    updateNumericInput(session, "future_occupancy", value = 85)
     
   })
   
