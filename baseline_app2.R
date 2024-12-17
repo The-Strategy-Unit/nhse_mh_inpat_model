@@ -899,7 +899,7 @@ ui <- navbarPage(
                     ),
                  h6(
                    "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                   a 95% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 80% target 
+                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
                    occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
                    br(),
                    br(),
