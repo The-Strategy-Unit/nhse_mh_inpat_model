@@ -188,7 +188,11 @@ ui <- navbarPage(
              h3("Data Requirements"),
              p("In order to establish a baseline for the tool, please upload a CSV file with the following fields (you should have been provided with a sample file for your ICB):"),
              
-             tableOutput("ExampleFormatTable_2"),
+             #tableOutput("ExampleFormatTable_2"),
+             
+             tags$div(
+                 tags$img(src = "data_format_image.png", height = 200)  # Adjust the height as needed
+               ),
             
              h3("Instructions"),
              p("1. Upload your CSV file using the 'Upload CSV File' button."),
@@ -199,6 +203,9 @@ ui <- navbarPage(
              p("6. Export a csv of the modelled data for your own post-hoc analysis using 'Download Projected Data' button"),
              
              fileInput("file", "Upload CSV File", accept = ".csv"),
+             
+             br(),
+             br(),
              
              h3("Upload growth factor parameters (optional):"),
              p("In the first instance, we suggest you explore the mental health inpatient baseline and projections using our 
@@ -409,11 +416,14 @@ server <- function(input, output, session) {
       legal_status_group = c("Not formally detained", "Not formally detained", "Formally detained"),
       lda_flag = c(NA, NA, NA),
       der_ward_type_desc_first = c("Adult Mental Health Ward", "Child and Adolescent Mental Health Ward", "Adult Mental Health Ward"),
+      oop_flag = c("0","1","0"),
+      
       spell_count = c("27", "26", "24"),
-      bed_days = c("623", "722", "288")
-    )
+      bed_days = c("623", "722", "288"),
+      bed_days_exHL = c("620", "718", "276")	,
+      bed_days_delayed_days = c("619", "710", "257")
+      )
   },  width = "50px")
-  
   
   # Analysis tab ----
   
