@@ -419,7 +419,7 @@ server <- function(input, output, session) {
   })
   
   # Growth factor inputs 
-  demographic_growth     <- reactive({ icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb] })
+  demographic_growth     <- reactive({ icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb] * 100})
   incidence_change       <- reactive({ input$incidence_change })
   acuity_change          <- reactive({ input$acuity_change })
   social_care_pressures  <- reactive({ input$social_care_pressures })
