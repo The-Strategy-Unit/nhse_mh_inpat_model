@@ -583,7 +583,7 @@ server <- function(input, output, session) {
       ) +
       labs(x = "Growth factor",
            y = "Spells",
-           title = "Example waterfall plot",
+           title = "Demand factor changes to baseline activity",
            #subtitle = paste0("Mental health inpatient model | ", input$icb)
            subtitle = "Mental health inpatient model | 2024 baseline projection to 2028"
       )
@@ -623,7 +623,7 @@ server <- function(input, output, session) {
               total_axis_text = "Projection (2028)", 
               rect_text_size = 1.6,
               fill_by_sign = FALSE, 
-              fill_colours = test$colour
+              fill_colours = data$colour
     ) +
       su_theme() +
       theme(axis.text.x = element_text(angle = 90, size = 14),
@@ -632,7 +632,7 @@ server <- function(input, output, session) {
       )+
       labs(x = "Growth factor",
            y = "Bed days",
-           title = "Example waterfall plot",
+           title = "Demand factor changes to baseline activity",
            #subtitle = paste0("Mental health inpatient model | ", input$icb)
            subtitle = "Mental health inpatient model | 2024 baseline projection to 2028"
       )
@@ -672,7 +672,7 @@ server <- function(input, output, session) {
               total_axis_text = "Projection (2028)", 
               rect_text_size = 1.6,
               fill_by_sign = FALSE, 
-              fill_colours = test$colour
+              fill_colours = data$colour
     ) +
       su_theme() +
       theme(axis.text.x = element_text(angle = 90, size = 14),
@@ -681,7 +681,7 @@ server <- function(input, output, session) {
       )+
       labs(x = "Growth factor",
            y = "Bed days",
-           title = "Example waterfall plot",
+           title = "Demand factor changes to baseline activity",
            #subtitle = paste0("Mental health inpatient model | ", input$icb)
            subtitle = "Mental health inpatient model | 2024 baseline projection to 2028"
       )
