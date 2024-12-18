@@ -124,43 +124,59 @@ ui <- navbarPage(
                    secondary = "#686f73"),
   tags$head(
     tags$style(HTML("
-      .negative-value {
-        color: red !important;
-      }
+    .negative-value {
+      color: red !important;
+    }
 
-      .sidebar {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        height: 100% !important;
-        overflow-y: auto !important;
-        z-index: 1000 !important;
-        background-color: #f8f9fa !important; /* Adjust the background color as needed */
-        padding: 15px !important;
-        border-right: 1px solid #ddd !important;
-      }
+    .sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      height: 100% !important;
+      overflow-y: auto !important;
+      z-index: 1000 !important;
+      background-color: #f8f9fa !important; /* Adjust the background color as needed */
+      padding: 15px !important;
+      border-right: 1px solid #ddd !important;
+    }
 
-      .main-content {
-        margin-left: 250px !important; /* Adjust this value based on the width of your sidebar */
-      }
-    ")),
+    .main-content {
+      margin-left: 250px !important; /* Adjust this value based on the width of your sidebar */
+    }
+
+    .top-panel {
+      background-color: #f8f9fa !important; /* Adjust the background color as needed */
+      padding: 15px !important;
+      border-bottom: 1px solid #ddd !important;
+      position: relative !important;
+    }
+
+    .logo {
+      position: absolute !important;
+      top: -53px !important;
+      right: 15px !important;
+    }
+  ")),
     tags$script(HTML("
-      $(document).ready(function() {
-        var sidebar = $('.sidebar');
-        var offset = sidebar.offset();
-        $(window).scroll(function() {
-          if ($(window).scrollTop() > offset.top) {
-            sidebar.css('top', $(window).scrollTop() - offset.top);
-          } else {
-            sidebar.css('top', '0');
-          }
-        });
+    $(document).ready(function() {
+      var sidebar = $('.sidebar');
+      var offset = sidebar.offset();
+      $(window).scroll(function() {
+        if ($(window).scrollTop() > offset.top) {
+          sidebar.css('top', $(window).scrollTop() - offset.top);
+        } else {
+          sidebar.css('top', '0');
+        }
       });
-    "))
+    });
+  "))
   ),
   tags$div(
-    class = "logo",
-    tags$img(src = "www/tsu_logo_yellow_screen_transparent.png", height = 70)
+    class = "top-panel",
+    tags$div(
+      class = "logo",
+      tags$img(src = "tsu_logo_black.png", height = 50)
+    )
   ),
   
   tabPanel("Introduction",
