@@ -25,8 +25,7 @@ baseline_data <-
 
 baseline_aggregate <- 
   baseline_data |>
-  mutate(year = year(disch_date_hosp_prov_spell),
-         imd_quintile = 
+  mutate(imd_quintile = 
            case_when(
              imd_decile %in% c(1, 2) ~ 1,
              imd_decile %in% c(3, 4) ~ 2,
@@ -50,7 +49,6 @@ baseline_aggregate <-
              )
          ) |>
   group_by(
-    year,
     residence_icb_code,
     residence_icb_name,
     age_group_admission,
