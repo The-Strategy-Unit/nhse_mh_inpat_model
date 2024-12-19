@@ -6,7 +6,8 @@ rsconnect::deployApp(
     "app.R",
     "demographic_projections/icb_weighted_demographic_change.csv",
     "www/styles.css",
-    "www/tsu_logo_black.png"
+    "www/tsu_logo_black.png",
+    "www/data_format_image.PNG"
     
   ),
   

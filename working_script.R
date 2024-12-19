@@ -42,8 +42,10 @@ baseline_aggregate <-
            as.Date(paste0(
              str_sub(disch_date_hosp_prov_spell, 1,8), "01"),
              format = "%Y-%m-%d"),
-         oop_flag =
+         oap_flag =
            case_when(
+             residence_icb_name == provider_icb_name ~ 0,
+             
              residence_icb_name != provider_icb_name ~ 1,
              TRUE ~ 0
              )
@@ -51,6 +53,8 @@ baseline_aggregate <-
   group_by(
     residence_icb_code,
     residence_icb_name,
+    provider_icb_code,
+    provider_icb_name,
     age_group_admission,
     gender,
     ethnic_category_2,
@@ -59,7 +63,7 @@ baseline_aggregate <-
     legal_status_group,
     lda_flag,
     der_ward_type_desc_first,  # ? change with new data
-    oop_flag
+    oap_flag
     ) |> 
   summarise(spell_count = n_distinct(record_number),
             bed_days = sum(reporting_hos_prov_spell_los), # including Home Leave periods
@@ -72,16 +76,151 @@ baseline_aggregate <-
 write_csv(baseline_aggregate, "baseline_aggregate.csv")
 
 
+# Out of area flag / table ----
+oop_flag_tb <-
+  baseline_data |> 
+  select(record_number, residence_icb_name, provider_icb_name) |>
+  mutate(oop_flag =
+           case_when(
+             provider_icb_name == residence_icb_name ~ "not oop",
+             provider_icb_name != residence_icb_name ~ "oop",
+             is.na(provider_icb_name) ~ "Unknown" 
+           ))
+
+midlands_icb_spells <-
+  oop_flag_tb |> 
+  group_by(residence_icb_name) |> 
+  summarise(spells = n_distinct(record_number))
+
+
+# All oops by icb of residence
+midlands_icb_oop_flag <-
+  oop_flag_tb |> 
+  #filter(!is.na(provider_icb_name)) |> 
+  filter(residence_icb_name %in% midlands_icb_spells$residence_icb_name) |> 
+  group_by(residence_icb_name, oop_flag) |> 
+  summarise(spells = n_distinct(record_number)) |> 
+  pivot_wider(id_cols = residence_icb_name, 
+              names_from = oop_flag,
+              values_from = spells)
+
+
+# outgoing oop's
+oop_outgoing <-
+  oop_flag_tb |> 
+  filter(residence_icb_name %in% midlands_icb_spells$residence_icb_name) |> 
+  filter(oop_flag == "oop") |> 
+  mutate(midlands_provider = 
+           case_when(provider_icb_name %in% midlands_icb_spells$residence_icb_name ~ "outgoing_oop_midlands",
+                     TRUE ~ "outgoing_oop_non_midlands")) |> 
+  group_by(residence_icb_name, midlands_provider) |> 
+  summarise(spells = n_distinct(record_number)) |> 
+  pivot_wider(id_cols = residence_icb_name, 
+              names_from = midlands_provider,
+              values_from = spells)
+
+
+#incoming oop's
+oop_incoming <-
+  oop_flag_tb |>
+  filter(oop_flag == "oop",
+         #provider_icb_name %in% midlands_icb_spells$residence_icb_name
+         ) |> 
+  mutate(midlands_transfer = 
+           case_when(
+             residence_icb_name %in% midlands_icb_spells$residence_icb_name ~ "incoming_midlands_transfer",
+             TRUE ~ "incoming_non_midlands_transfer"
+           )) |> 
+  group_by(provider_icb_name, midlands_transfer) |> 
+  summarise(spells = n_distinct(record_number)) |> 
+  pivot_wider(id_cols = provider_icb_name, 
+              names_from = midlands_transfer,
+              values_from = spells)
+
+# left joins
+midlands_icb_spells |> 
+  left_join(midlands_icb_oop_flag, by = "residence_icb_name") |> 
+  left_join(oop_outgoing, by = "residence_icb_name") |> 
+  left_join(oop_incoming, by = c("residence_icb_name" = "provider_icb_name"))
+
+
+# Provider side
+midlands_provider_icb_spells <-
+  oop_flag_tb |> 
+  group_by(provider_icb_name) |> 
+  summarise(spells = n_distinct(record_number)) |> 
+  arrange(desc(spells)) 
+
+midlands_provider_icb_spells |> 
+  filter(provider_icb_name %in% midlands_icb_spells$residence_icb_name)
+
+
+
+midlands_icb_oop_flag <-
+  oop_flag_tb |> 
+  drop_na(provider_icb_name) |> 
+  group_by(provider_icb_name, residence_icb_name, oop_flag) |> 
+  summarise(spells = n_distinct(record_number)) 
+
+
+midlands_icb_oop_flag |> 
+  filter(oop_flag == "oop")
+  
+
+
+midlands_provider_icb_spells |> 
+  left_join(midlands_icb_oop_flag, by = "provider_icb_name") 
+
+
+baseline_data |> 
+  select(residence_icb_name) |> 
+  distinct()
+
+
+baseline_data |> 
+  #filter(residence_icb_name != provider_icb_name) |> 
+  filter(!residence_icb_name %in% midlands_icb_spells$residence_icb_name)
+
+
+baseline_data |> 
+  mutate(icb_region = 
+           case_when(residence_icb_name %in% midlands_icb_spells$residence_icb_name ~ "Midlands",
+                     TRUE ~ "Non-Midlands" 
+                     )) |> 
+  filter(icb)
+
+
+# Table design
+# icb - count - internal spells, outgoing and incoming
+  
+  
+  
+baseline_data
+
 # Write ICB specific csv's of the baseline aggregate table ----
 
 unique_values <- unique(baseline_aggregate$residence_icb_code)
 
 # Loop through each unique value and write a CSV for each subset
 for (value in unique_values) {
-  subset_data <- baseline_aggregate %>% filter(residence_icb_code == value)
+  subset_data <- 
+    baseline_aggregate |> 
+    filter(
+      (residence_icb_code == value) |
+        (provider_icb_code == value & oap_flag == 1)
+    )
   
   write.csv(subset_data, paste0("icb_baseline_data/baseline_aggregate_", value, ".csv"), row.names = FALSE)
 }
+
+
+baseline_aggregate <-
+  baseline_aggregate |> 
+  filter(
+    residence_icb_code == "QGH" |
+      (provider_icb_code == "QGH" & oap_flag == 1)
+  )
+  
 
 
 # Apply growth factors ---- 
@@ -100,7 +239,13 @@ ooa_repat = 0.4
 shift_to_ip = -0.03
 
 baseline_growth <-
-  baseline_aggregate |> 
+  baseline_aggregate |>
+  mutate(ooa_group = 
+           case_when(
+             oap_flag == 0 ~ "not_oap",
+             oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
+             oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+           )) |> 
   mutate(sp_demographic_growth       =  spell_count * (demographic_growth),
          sp_incidence_change         =  spell_count * (incidence_change),
          sp_acuity_change            =  spell_count * (acuity_change),
@@ -111,7 +256,9 @@ baseline_growth <-
          sp_prevention_programme     =  spell_count * (prevention_programme),
          sp_admission_avoidance      =  spell_count * (admission_avoidance),
          sp_waiting_list_reduction   =  spell_count * (waiting_list_reduction),
-         sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat), TRUE ~ 0),
+         #sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat), TRUE ~ 0),
+         sp_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ spell_count*ooa_repat, TRUE ~ 0),
+         sp_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ spell_count*(ooa_repat*-1), TRUE ~ 0),
          sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * (shift_to_ip), TRUE ~ 0),
          
          bd_demographic_growth       =  bed_days * (demographic_growth),
@@ -124,7 +271,9 @@ baseline_growth <-
          bd_prevention_programme     =  bed_days * (prevention_programme),
          bd_admission_avoidance      =  bed_days * (admission_avoidance),
          bd_waiting_list_reduction   =  bed_days * (waiting_list_reduction),
-         bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat), TRUE ~ 0),
+         #bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat), TRUE ~ 0),
+         bd_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days*ooa_repat, TRUE ~ 0),
+         bd_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days*(ooa_repat*-1), TRUE ~ 0),
          bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * (shift_to_ip), TRUE ~ 0),
          
          exHL_bedday_demographic_growth       =  bed_days_exHL * (demographic_growth),
@@ -137,7 +286,10 @@ baseline_growth <-
          exHL_bedday_prevention_programme     =  bed_days_exHL * (prevention_programme),
          exHL_bedday_admission_avoidance      =  bed_days_exHL * (admission_avoidance),
          exHL_bedday_waiting_list_reduction   =  bed_days_exHL * (waiting_list_reduction),
-         exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat), TRUE ~ 0),
+         #exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat), TRUE ~ 0),
+         exHL_bedday_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days_exHL*ooa_repat, TRUE ~ 0),
+         exHL_bedday_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days_exHL*(ooa_repat*-1), TRUE ~ 0),
+         
          exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * (shift_to_ip), TRUE ~ 0)
          ) |> 
   mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
@@ -145,11 +297,36 @@ baseline_growth <-
          bed_days_exHL_proj = bed_days_exHL + rowSums(across(contains("exHL_bedday_")))
   ) 
 
+
+baseline_aggregate |> 
+  mutate(ooa_group = 
+           case_when(
+             oap_flag == 0 ~ "not_oap",
+             oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
+             oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+           )) |> 
+  group_by(ooa_group) |> 
+  summarise(spells = sum(spell_count)) |> 
+  mutate(ooa_group = 
+           case_when(
+             ooa_group == "not_oap" ~ "1. Not OOA Placement",
+             ooa_group == "oap_incoming" ~ "3. Incoming OOAP",
+             ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP"
+           )) |> 
+  mutate(icb = "icb") |> 
+  pivot_wider(id_cols = icb,
+              names_from = ooa_group,
+              values_from = spells)
+  
+
+baseline_growth 
+
+
 # Summarise growth at ICB level
 waterfall_data <-
   baseline_growth |> 
-  filter(residence_icb_code == "QGH") |> # function input
-  group_by(residence_icb_name) |>
+  #filter(residence_icb_code == "QGH") |> # function input
+  #group_by(residence_icb_name) |>
   summarise(spell_count = sum(spell_count),
             bed_days = sum(bed_days),
             bed_days_exHL = sum(bed_days_exHL),
@@ -164,7 +341,8 @@ waterfall_data <-
             sp_prevention_programme   = sum(sp_prevention_programme  ),
             sp_admission_avoidance    = sum(sp_admission_avoidance   ),
             sp_waiting_list_reduction = sum(sp_waiting_list_reduction),
-            sp_ooa_repat              = sum(sp_ooa_repat             ),
+            sp_ooa_repat_outgoing     = sum(sp_oap_repat_outgoing    ),
+            sp_ooa_repat_incoming     = sum(sp_oap_repat_incoming    ),
             sp_shift_to_ip            = sum(sp_shift_to_ip           ),
             
             bd_demographic_growth     = sum(bd_demographic_growth    ),
@@ -177,7 +355,8 @@ waterfall_data <-
             bd_prevention_programme   = sum(bd_prevention_programme  ),
             bd_admission_avoidance    = sum(bd_admission_avoidance   ),
             bd_waiting_list_reduction = sum(bd_waiting_list_reduction),
-            bd_ooa_repat              = sum(bd_ooa_repat             ),
+            bd_ooa_repat_outgoing     = sum(bd_oap_repat_outgoing ),
+            bd_ooa_repat_incoming     = sum(bd_oap_repat_incoming ),
             bd_shift_to_ip            = sum(bd_shift_to_ip           ),
             
             exHL_bedday_demographic_growth     = sum(exHL_bedday_demographic_growth    ),
@@ -190,19 +369,21 @@ waterfall_data <-
             exHL_bedday_prevention_programme   = sum(exHL_bedday_prevention_programme  ),
             exHL_bedday_admission_avoidance    = sum(exHL_bedday_admission_avoidance   ),
             exHL_bedday_waiting_list_reduction = sum(exHL_bedday_waiting_list_reduction),
-            exHL_bedday_ooa_repat              = sum(exHL_bedday_ooa_repat             ),
+            exHL_bedday_ooa_repat_outgoing     = sum(exHL_bedday_oap_repat_outgoing    ),
+            exHL_bedday_ooa_repat_incoming     = sum(exHL_bedday_oap_repat_incoming    ),
             exHL_bedday_shift_to_ip            = sum(exHL_bedday_shift_to_ip           ),
             
             spell_proj = sum(spell_proj),
             bed_days_proj = sum(bed_days_proj),
             bed_days_exHL_proj = sum(bed_days_exHL_proj)
   ) |> 
-  pivot_longer(-residence_icb_name)
+  mutate(icb_dummy = "ICB") |> 
+  pivot_longer(cols = -icb_dummy)
 
 # Plot waterfall  
-test <-
+data <-
   waterfall_data |>
-  select(-residence_icb_name) |> 
+  select(-icb_dummy) |> 
   filter(name == "spell_count" | 
            str_detect(name, "sp_")) |> 
   mutate(name = 
@@ -218,9 +399,10 @@ test <-
              name == "sp_prevention_programme"     ~ "I. Prevention programme",
              name == "sp_admission_avoidance"      ~ "J. Admission avoidance",
              name == "sp_waiting_list_reduction"   ~ "K. Waiting list reduction",
-             name == "sp_ooa_repat"                ~ "L. Out of area (OOA)",
-             name == "sp_shift_to_ip"              ~ "M. Shift to independent sector",
-             name == "spell_proj"                  ~ "N. Projection"  
+             name == "sp_ooa_repat_outgoing"       ~ "L. Out of area repatriation - outgoing",
+             name == "sp_ooa_repat_incoming"       ~ "M. Out of area repatriation - incoming",
+             name == "sp_shift_to_ip"              ~ "N. Shift to independent sector",
+             name == "spell_proj"                  ~ "O. Projection"  
            )) |>
   arrange(name) |> 
   mutate(colour = 
@@ -228,12 +410,12 @@ test <-
                      value >= 0 ~ "#f9bf07",
                      value < 0 ~ "#ec6555")) 
 
-  waterfall(test,
+  waterfall(data,
             calc_total = TRUE,
             total_axis_text = "Projection (2028)",
             rect_text_size = 2,
             fill_by_sign = FALSE, 
-            fill_colours = test$colour
+            fill_colours = data$colour
             ) +
   su_theme() +
   theme(axis.text.x = element_text(angle = 90)) +
@@ -244,12 +426,10 @@ test <-
        #subtitle = paste0("Mental health inpatient model | ", icb_filter)
   )
 
-
 # Plot waterfall for bed days:
 waterfall_data |>
-  filter(residence_icb_name == "QGH: NHS Herefordshire And Worcestershire ICB") |> 
-  select(-residence_icb_name) %>%
-  filter(name == "bed_days" | str_detect(name, "bd_")) %>% View()
+  select(-icb_dummy) %>%
+  filter(name == "bed_days" | str_detect(name, "bd_")) %>% 
   mutate(name = case_when(
     name == "bed_days"                ~ "A. Baseline year (2024)",
     name == "bd_demographic_growth"      ~ "B. Demographic growth",
@@ -262,9 +442,10 @@ waterfall_data |>
     name == "bd_prevention_programme"    ~ "I. Prevention programme",
     name == "bd_admission_avoidance"     ~ "J. Admission avoidance",
     name == "bd_waiting_list_reduction"  ~ "K. Waiting list reduction",
-    name == "bd_ooa_repat"               ~ "L. Out of area (OOA)",
-    name == "bd_shift_to_ip"             ~ "M. Shift to independent sector",
-    name == "bed_day_proj"               ~ "N. Projection"
+    name == "bd_ooa_repat_outgoing"      ~ "L. Out of area repatriation - outgoing",
+    name == "bd_ooa_repat_incoming"      ~ "M. Out of area repatriation - incoming",
+    name == "bd_shift_to_ip"             ~ "N. Shift to independent sector",
+    name == "bed_day_proj"               ~ "O. Projection"
   )) %>%
   mutate(value = round(value, 1)) |> 
   arrange(name) %>%
@@ -285,7 +466,6 @@ waterfall_data |>
 
 # Plot waterfall excluding Home Leave:
 waterfall_data |> 
-  filter(residence_icb_name == "QGH: NHS Herefordshire And Worcestershire ICB") |>
   select(-residence_icb_name) %>% 
   filter(name == "bed_days_exHL" | str_detect(name, "exHL_bedday_")) %>% View()
   mutate(name = case_when(
