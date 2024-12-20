@@ -339,8 +339,10 @@ ui <- navbarPage(
                           
                           h6(
                             br(),
-                            "The waterfall chart (right) displays the baseline number of spells or bed days and the progressive change from the baseline 
-                   when each demand factor (from the modelling assumptions tab) is applied. The final bar represents the projected activity level that is the sum of the baseline
+
+                            "The waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
+                   when each growth factor (modelling assumptions tab) is applied. The final bar represents the projected activity level that is the sum of the baseline
+
                    and the combined growth factor changes.",
                             br(),
                    
@@ -359,70 +361,81 @@ ui <- navbarPage(
                             tabPanel("Spells", plotOutput("waterfall_Plot", height = "700px", width = "1000px")),
                             tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "700px", width = "1000px")),
                             tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "700px", width = "1000px")),
-                            tabPanel("Projection Table", DTOutput("dataTable"))
+                            #tabPanel("Projection Table", DTOutput("dataTable"))
                           ),
                           
                           h6(
                             br(),
-                            "The above waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
-                   when each growth factor (left) is applied. The final bar represents the projected activity level that is the sum of the baseline
-                   and the combined growth factor changes.",
+                            "",
                             br()
-                          ),
-                          
-                          h5(br(),
-                             "Occupancy rate adjusted",
-                             br()
-                          ),
-                          h6(
-                            "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
-                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
-                            br(),
-                            br(),
-                            "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
-                          ),
-                          tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
-                          
-                          
-                          
-                          h5(br(),
-                             "Out-Of-Area Placements",
-                             br()
-                          ),
-                          h6(
-                            "...",
-                            br(),
-                            br(),
-                          ),
-                          
-                          DTOutput("dataTable_oap"),
-                          
-                          
-                          h3(br(),
-                             "Sub-group Analysis"
-                          ),
-                          h6(
-                            "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
-                   'grouping variable' control (left) to change the sub-group measure by which we present the baseline and projected activity. Switch between 
-                   the output tabs to view either the graph plot or the underlying data.",
-                            br(),
-                            br()
-                          ),
-                          tabsetPanel(
-                            tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px")),
-                            tabPanel("Sub-group Table", DTOutput("dataTable_subplot"))
                           )
-                          
-                          
+                          )
                         )
                       )
-                    ))
+                    )
            ),
   
   
   tabPanel("Supplementary outputs",
            fluidPage(
+             sidebarLayout(
+               sidebarPanel(
+                 
+                 h5(br(),
+                    "Occupancy rate adjusted:",
+                    br()
+                    ),
+                 h6(
+                   "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
+                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
+                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
+                   br(),
+                   br(),
+                   "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
+                   ),
+                 h5(br(),
+                    "Out-Of-Area Placements:",
+                    br()
+                    ),
+                 h6(
+                   "...",
+                   br(),
+                   br(),
+                   ),
+                 h5(br(),
+                    "Sub-group Analysis:"
+                 ),
+                 h6(
+                   "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
+                   'grouping variable' control (Modelling assumptions tab) to change the sub-group measure by which we present the baseline and projected activity.",
+                   br(),
+                   br()
+                 ),
+                 
+                 
+               ),
+               
+               mainPanel(
+                 #h3("ICB Outputs"),
+                 
+                 h5(br(),
+                    "Occupancy rate adjusted",
+                    br()
+                    ),
+                 tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
+                 
+                 h5(br(),
+                    "Out-Of-Area Placements",
+                    br()
+                    ),
+                 DTOutput("dataTable_oap"),
+                 
+                 h5(br(),
+                    "Sub-group Analysis"
+                    ),
+                 tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px"))
+                 )
+               )
              )
            ),
   
@@ -659,20 +672,37 @@ server <- function(input, output, session) {
       mutate(colour = 
                case_when(name == "A. Baseline year (2024)" ~ "#686f73",
                          value >= 0 ~ "#f9bf07",
-                         value < 0 ~ "#ec6555")) 
+                         value < 0 ~ "#ec6555")) %>% 
+      mutate(value = round(value,0))
     
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
               rect_text_size = 1.6,
+              rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
-    ) +
+              ) +
+      geom_label(data = data, 
+                 aes(x = name,
+                     #y = -100,
+                     y = (max(value) * 0.07)*-1,
+                     #y = max(value) + max(value)*0.7, 
+                     label = round(value,1),
+                     colour = case_when(value == max(value) ~ "baseline",
+                                        value > 0 ~ "positive",
+                                        value < 0 ~ "negative"),
+                     
+                     fill = case_when(value == max(value) ~ "baseline",
+                                      value > 0 ~ "positive",
+                                      value < 0 ~ "negative")
+                     )
+                 ) +
+      scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
+      scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
       su_theme() +
-      theme(axis.text.x = element_text(angle = 90, size = 14),
-            axis.text.y = element_text(size = 14), 
-            axis.title = element_text(size = 18)
-      ) +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+            legend.position = "none") +
       labs(x = "Growth factor",
            y = "Spells",
            title = "Demand factor changes to baseline activity",
