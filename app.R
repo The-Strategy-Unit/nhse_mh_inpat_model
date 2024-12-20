@@ -260,10 +260,10 @@ ui <- navbarPage(
                             ),
                             column(6,
                                    numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
-                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -1.5, step = 0.1),
+                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
                                    numericInput("waiting_list_reduction", "Waiting List Management", value = -2,   step = 0.1),
                                    numericInput("ooa_repat", "Out of Area Repatriation",            value = 40,   step = 0.1),
-                                   numericInput("shift_to_ip", "Shift to Independent setting",      value = -3,   step = 0.1)
+                                   numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1)
                             )
                           ),
                           
@@ -323,7 +323,7 @@ ui <- navbarPage(
                
                h3("Indicative Capacity conversions:"),
                p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
-               p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of activity you might want to commission (internal) IP beds for in the future."),
+               p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of NHS activity you might want to commission (in-area) IP beds for in the future."),
                p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.")
                           )
                         )
