@@ -242,8 +242,8 @@ ui <- navbarPage(
                     fluidPage(
                       sidebarLayout(
                         sidebarPanel(
-                          h3("Analysis Controls"),
-                          p("After confirming your ICB from the drop-down box, use the controls below to change each parameter in turn using either the step arrows or typing over the values. Every parameter is a percentage change value allowing for 1 decimal place accuracy."),
+                          h3("Adjust model parameters"),
+                          p("After confirming your ICB from the drop-down box, use the controls below to change each parameter in turn using either the step arrows or typing over the values. Every parameter is a percentage change value allowing for 1 decimal place accuracy that estimates total changes over the next 3 years."),
                           
                           selectInput("icb", "Select ICB:", choices = NULL),
                           
@@ -303,9 +303,6 @@ ui <- navbarPage(
                           ),
                           
                           br(),
-                          
-                          h5("Export Projections"),
-                          downloadButton("downloadData", "Download Projected Data")
                         ),
                         
             mainPanel(
@@ -315,19 +312,19 @@ ui <- navbarPage(
                As such, demographic growth is a fixed point and not modifiable in the analysis tab unlike our other growth factors."),
                br(),
                
-               p("Incidence change: Growth in incidence of high-risk admission conditions has been applied to our baselines extract prior to sharing and upload to the tool, though you can choose to include this or not in the final model. We have included uplifts of x% for x-condition, y% for y-condition and z% for z-condition based on the following data/papers...."),
-               p("Acuity change: We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
-               p("Social care pressures: Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
-               p("MHA changes: Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
-               p("National Policy: The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
-               p("Admission avoidance: National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
-               p("Service Models: Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
-               p("Waiting list management: Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
+               p(strong("Incidence change"),": Growth in incidence of high-risk admission conditions has been applied to our baselines extract prior to sharing and upload to the tool, though you can choose to include this or not in the final model. We have included uplifts of x% for x-condition, y% for y-condition and z% for z-condition based on the following data/papers...."),
+               p(strong("Acuity change"),": We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
+               p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
+               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
+               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
+               p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
+               p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
+               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
                
                h3("Indicative Capacity conversions:"),
-               p("Out of area repatriation: This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
-               p("Shift to independent setting: Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of activity you might want to commission (internal) IP beds for in the future."),
-               p("Occupancy rates: In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.")
+               p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
+               p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of activity you might want to commission (internal) IP beds for in the future."),
+               p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.")
                           )
                         )
                     ))
@@ -345,7 +342,13 @@ ui <- navbarPage(
                             "The waterfall chart (right) displays the baseline number of spells or bed days and the progressive change from the baseline 
                    when each demand factor (from the modelling assumptions tab) is applied. The final bar represents the projected activity level that is the sum of the baseline
                    and the combined growth factor changes.",
-                            br()
+                            br(),
+                   
+                            "Once you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using the button below.",
+                            br(),
+                   
+                   h5("Export Projections"),
+                   downloadButton("downloadData", "Download Projected Data")
                           )
                           
                         ),
