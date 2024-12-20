@@ -212,7 +212,7 @@ ui <- navbarPage(
              p("If you read in a parameters csv file, the values in the file will override our default settings but you will 
                still be able to adjust the growth variables in the side bar."),
              p("When reading in your own parameters, the format of the csv must match that of the downloaded 'adjusted parameters' 
-               csv file - i.e. must contain a 'Paramter' column and a 'Value' column."),
+               csv file - i.e. must contain a 'Parameter' column and a 'Value' column."),
              
              fileInput("file1", "Choose CSV File",
                        accept = c(
@@ -409,18 +409,13 @@ ui <- navbarPage(
              p("Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
              p("Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
              
-             h3("Capacity conversions:"),
+             h3("Indicative Capacity conversions:"),
              p("Out of area repatriation - This applies only to patients resident in your ICB but receiving care outside. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
              p("Shift to independent provider provision - Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down in whole bed units to adjust your future bed requirements."),
              p("Occupancy rates - In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desired OR of 85%.")
              
            )
-           ),
-  
-  
-
-  
-  
+           )
   )
 
 
