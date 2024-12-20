@@ -273,35 +273,6 @@ ui <- navbarPage(
                           
                           br(),
                           br(),
-                          
-                          h5("Adjust Occupancy rate:"),
-                          
-                          fluidRow(
-                            numericInput("current_occupancy", "Current occupancy rate",           value = 92, step = 0.1),
-                            numericInput("future_occupancy", "Desirable occupancy rate",             value = 85, step = 0.1)
-                          ),
-                          
-                          actionButton("reset_occupancy", "Reset Occupancy Rates to Default"),
-                          
-                          br(),
-                          br(),
-                          
-                          h5("Sub-group Analysis"),
-                          
-                          selectInput("group_selection", "Select grouping variable:", 
-                                      choices = 
-                                        c(
-                                          "Age Group Admission" = "age_group_admission",
-                                          "Gender" = "gender",
-                                          "Ethnic Category" = "ethnic_category_2",
-                                          "IMD Quintile" = "imd_quintile",
-                                          "Provider Type" = "provider_type",
-                                          "Legal Status Group" = "legal_status_group",
-                                          #"LDA Flag" = "lda_flag",
-                                          "Ward Type Description" = "der_ward_type_desc_first"
-                                        )
-                          ),
-                          
                           br(),
                         ),
                         
@@ -337,9 +308,9 @@ ui <- navbarPage(
                       sidebarLayout(
                         sidebarPanel(
                           
+                          h5("Demand factor changes:"),
+                          
                           h6(
-                            br(),
-
                             "The waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
                    when each growth factor (modelling assumptions tab) is applied. The final bar represents the projected activity level that is the sum of the baseline
 
@@ -348,9 +319,31 @@ ui <- navbarPage(
                    
                             "Once you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using the button below.",
                             br(),
-                   
-                   h5("Export Projections"),
-                   downloadButton("downloadData", "Download Projected Data")
+                            
+                            h5("Adjust Occupancy rate:"),
+                            
+                            h6(
+                              "Opposite we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
+                              a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
+                              occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
+                              br(),
+                              br(),
+                              "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
+                            ),
+                            
+                            fluidRow(
+                              numericInput("current_occupancy", "Current occupancy rate",           value = 92, step = 0.1),
+                              numericInput("future_occupancy", "Desirable occupancy rate",             value = 85, step = 0.1)
+                              ),
+                            
+                            actionButton("reset_occupancy", "Reset Occupancy Rates to Default"),
+                            
+                            br(),
+                            br(),
+                            
+                            
+                            h5("Export Projections"),
+                            downloadButton("downloadData", "Download Projected Data")
                           )
                           
                         ),
@@ -364,11 +357,11 @@ ui <- navbarPage(
                             #tabPanel("Projection Table", DTOutput("dataTable"))
                           ),
                           
-                          h6(
-                            br(),
-                            "",
-                            br()
-                          )
+                          h5(br(),
+                             "Occupancy rate adjusted",
+                             br()
+                          ),
+                          tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
                           )
                         )
                       )
@@ -381,18 +374,7 @@ ui <- navbarPage(
              sidebarLayout(
                sidebarPanel(
                  
-                 h5(br(),
-                    "Occupancy rate adjusted:",
-                    br()
-                    ),
-                 h6(
-                   "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
-                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
-                   br(),
-                   br(),
-                   "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
-                   ),
+                 
                  h5(br(),
                     "Out-Of-Area Placements:",
                     br()
@@ -409,20 +391,27 @@ ui <- navbarPage(
                    "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
                    'grouping variable' control (Modelling assumptions tab) to change the sub-group measure by which we present the baseline and projected activity.",
                    br(),
-                   br()
-                 ),
+                   br(),
+                   selectInput("group_selection", "Select grouping variable:", 
+                               choices = 
+                                 c(
+                                   "Age Group Admission" = "age_group_admission",
+                                   "Gender" = "gender",
+                                   "Ethnic Category" = "ethnic_category_2",
+                                   "IMD Quintile" = "imd_quintile",
+                                   "Provider Type" = "provider_type",
+                                   "Legal Status Group" = "legal_status_group",
+                                   #"LDA Flag" = "lda_flag",
+                                   "Ward Type Description" = "der_ward_type_desc_first"
+                                 )
+                               )
+                   ),
                  
                  
                ),
                
                mainPanel(
                  #h3("ICB Outputs"),
-                 
-                 h5(br(),
-                    "Occupancy rate adjusted",
-                    br()
-                    ),
-                 tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
                  
                  h5(br(),
                     "Out-Of-Area Placements",
@@ -701,7 +690,7 @@ server <- function(input, output, session) {
       scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
       scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
       su_theme() +
-      theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
             legend.position = "none") +
       labs(x = "Growth factor",
            y = "Spells",
