@@ -297,27 +297,67 @@ data <-
   mutate(colour = 
            case_when(name == "A. Baseline year (2024)" ~ "#686f73",
                      value >= 0 ~ "#f9bf07",
-                     value < 0 ~ "#ec6555")) 
+                     value < 0 ~ "#ec6555")) %>% 
+  mutate(value = round(value,0))
 
   waterfall(data,
             calc_total = TRUE,
             total_axis_text = "Projection (2028)",
-            rect_text_size = 1,
-            rect_text_labels_anchor = "above",
+            put_rect_text_outside_when_value_below = 1,
+            rect_text_size = 1.2,
             fill_by_sign = FALSE, 
             fill_colours = data$colour
             ) +
-    geom_text(data = data, aes(x = name, y = value + 0.05 * max(value), label = value), size = 3, vjust = 0) +
-  su_theme() +
-  theme(axis.text.x = element_text(angle = 90)) +
-  #scale_fill_manual(values = c("red","blue")) +
-  labs(x = "Growth factor",
-       y = "Spells",
-       title = "Example waterfall plot",
-       #subtitle = paste0("Mental health inpatient model | ", icb_filter)
-  ) 
+    su_theme() +
+    theme(axis.text.x = element_text(angle = 90)) +
+    labs(x = "Growth factor",
+         y = "Spells",
+         title = "Example waterfall plot",
+         #subtitle = paste0("Mental health inpatient model | ", icb_filter)
+         ) 
+  
+  # v2 - moved axis labels
+  waterfall(data,
+            calc_total = TRUE,
+            total_axis_text = "Projection (2028)",
+            rect_text_size = 2,
+            rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
+            fill_by_sign = FALSE, 
+            fill_colours = data$colour
+            ) +
+    geom_label(data = data, 
+               aes(x = name,
+                   #y = -100,
+                   y = (max(value) * 0.07)*-1,
+                   #y = max(value) + max(value)*0.7, 
+                   label = round(value,1),
+                   colour = case_when(value == max(value) ~ "baseline",
+                                      value > 0 ~ "positive",
+                                      value < 0 ~ "negative"),
+                   
+                   fill = case_when(value == max(value) ~ "baseline",
+                                      value > 0 ~ "positive",
+                                      value < 0 ~ "negative")
+                   )
+               ) +
+    #scale_color_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
+    scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
+    scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
+    su_theme() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+          legend.position = "none") +
+    labs(x = "Growth factor",
+         y = "Spells",
+         title = "Example waterfall plot"
+         )
   
   
+  
+    
+    
+    
+    
+    
  
 
 # Plot waterfall for bed days:
