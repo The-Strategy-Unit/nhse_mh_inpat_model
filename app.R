@@ -996,6 +996,9 @@ server <- function(input, output, session) {
     req(baseline_growth(), input$group_selection)
     
     baseline_growth() |> 
+      mutate(gender = case_when(gender == "1" ~ "Male", 
+                                gender == "2" ~ "Female")) %>% 
+      mutate(imd_quintile = as.character(imd_quintile)) %>% 
       group_by(!!sym(input$group_selection)) |> 
       summarise(spell_count = sum(spell_count),
                 bed_days = sum(bed_days),
@@ -1004,6 +1007,7 @@ server <- function(input, output, session) {
                 bed_days_proj = sum(bed_days_proj)
       ) |>
       rename(group_name = 1) |> 
+      drop_na(group_name) %>% 
       pivot_longer(-group_name) |> 
       mutate(flag = case_when(str_detect(name, "spell_") ~ "1. Spells", TRUE ~ "2. Bed days"),
              current_projection = case_when(str_detect(name, "proj") ~ "Projection", TRUE ~ "Current")
@@ -1019,6 +1023,7 @@ server <- function(input, output, session) {
       facet_wrap(~flag, scale = "free_y") +
       scale_fill_SU() +
       scale_y_continuous(labels = scales::comma) +
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(strip.background = element_rect(fill = NA, colour = "grey"),
             axis.text = element_text(size = 12),
             axis.title.x = element_text(size = 15),
