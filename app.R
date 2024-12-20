@@ -358,9 +358,9 @@ ui <- navbarPage(
                         mainPanel(
                           h3("Modelled change in demand"),
                           tabsetPanel(
-                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "700px", width = "1000px")),
-                            tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "700px", width = "1000px")),
-                            tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "700px", width = "1000px")),
+                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "800px", width = "1200px")),
+                            tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "800px", width = "1200px")),
+                            tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "800px", width = "1200px")),
                             #tabPanel("Projection Table", DTOutput("dataTable"))
                           ),
                           
@@ -686,7 +686,7 @@ server <- function(input, output, session) {
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
-              rect_text_size = 1.6,
+              rect_text_size = 1.8,
               rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
@@ -704,7 +704,8 @@ server <- function(input, output, session) {
                      fill = case_when(value == max(value) ~ "baseline",
                                       value > 0 ~ "positive",
                                       value < 0 ~ "negative")
-                     )
+                     ),
+                 size = 6
                  ) +
       scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
       scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
@@ -756,7 +757,7 @@ server <- function(input, output, session) {
     waterfall(data, 
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
-              rect_text_size = 1.6,
+              rect_text_size = 1.8,
               rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
@@ -774,7 +775,8 @@ server <- function(input, output, session) {
                       fill = case_when(value == max(value) ~ "baseline",
                                        value > 0 ~ "positive",
                                        value < 0 ~ "negative")
-                      )
+                      ),
+                 size = 6
                  ) +
       scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
       scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
@@ -826,7 +828,7 @@ server <- function(input, output, session) {
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
-              rect_text_size = 1.6,
+              rect_text_size = 1.8,
               rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
@@ -843,7 +845,8 @@ server <- function(input, output, session) {
                      fill = case_when(value == max(value) ~ "baseline",
                                       value > 0 ~ "positive",
                                       value < 0 ~ "negative")
-                     )
+                     ),
+                 size = 6
                  ) +
       scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
       scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
