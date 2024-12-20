@@ -182,26 +182,41 @@ ui <- navbarPage(
   tabPanel("Introduction",
            fluidPage(
              titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
-             h3("Project Objectives"),
-             p("This tool aims to project the expected volume of inpatient activity and therefore bed requirements to 2028 based on various adjustable growth factors. The tool takes a recent 12 month baseline of data and allows users to change parameters that are believed to affect future demand."),
+             h3("Background"),
+             p("Integrated Care Boards (ICB) are required to submit 3-year plans for inpatient bed provision to NHS England. This tool development has been commissioned by NHSE Midlands to support ICBs to that end and fundamentally aims to predict the expected volume of inpatient activity and therefore bed requirements to 2028"),
+             
+             h3("Who the tool is for"),
+             p("The tool is specifically designed for use by ICB commissioners to help develop their system-wide medium-term plans for mental health beds. It may be best used collaboratively by mental health commissioners, analysts and other relevant stakeholders though can in theory be used by anyone in isolation. It is likely that analysts will be required to take and manipulate the outputs of the model alongside other local information and bespoke assumptions to support the overall strategic plan - this model is an approximation of the factors likely to impact on demand in the future and does not account for everything nor take into account local circumstances. All of our default assumptions should be screened and adjusted (or omitted)."),
+             
+             h3("What the model does"),
+             p("The model takes a 12-month baseline of data (July 2023 to June 2024) and applies a set of adjustments to that for a range of parameters to estimate future demand for inpatient beds. These parameters cover population change, service changes, indirect impacts, external factors and specific policies on bed management."),
+             
+             h3("How the tool works"),
+             p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The paramters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and developing alternative scenario using the tool."),
              )
            ),
   
   tabPanel("Instructions & Data",
            fluidPage(
-             titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
+             titlePanel("Loading data and navigating through the tool"),
+             p("The below instructions provide a brief set of instructions to get you going with the tool. We have recorded a tutorial video (link when video ready and posted) that walks through in detail all the functions and quirks that you can expect when using the tool. It's advised that you watch this before your first use."),
             
               h3("Instructions"),
-             p("1. Upload your CSV file using the 'Upload CSV File' button."),
-             p("2. Navigate to the 'Analysis' tab to generate the plot and table."),
-             p("3. Adjust the growth factor assumptions using the numeric input controls or use the default suggestions."),
-             p("4. Examine the impact of changing assumptions on activity."),
-             p("5. Save the model parameters in your scenario for future use."),
-             p("6. Export a csv of the modelled data for your own post-hoc analysis using 'Download Projected Data' button"),
+             p("Before you start using the tool for the first time, you may want to scan the information on the 'Metadata and glossary' tab so you know more about what underlying data that is being used within the baseline, how the aggregate file you were sent is generated and what some of the terms used in the tool mean."),
+             
+             p("1. Upload the CSV file provided to your ICB using the 'Upload CSV File' button below."),
+             br(),
              
              fileInput("file", "Upload CSV File", accept = ".csv"),
-             
              br(),
+             
+             p("2a. Navigate to the 'Modelling Assumptions' tab to view the parameters and change as required (skip to step 3 if accepting the defaults)."),
+             p("2b. If you change the parameters from the default ones, download and save them to reload later - the server session does time out after 1 hour of inactivity and will start as fresh default session when you next access the app!"),
+             p("3. Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand and relevant capacity conversion."),
+             p("4. Navigate to the 'Supplemetary outputs' tab to view sub-group level changes according to the model and other useful information."),
+             p("5. When happy the model reflects your local position on the assumptions, export a csv of the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in that tab"),
+             br(),
+             p("If you want to generate multiple models with different assumptions e.g. demographics only, high or low growth scenario etc... then please repeat steps 2-5 after loading the baseline data. REMEMBER to save your model outputs AND your parameter file if you want to revisit/recreate these in the tool later!"),
              br(),
              
              h3("Upload growth factor parameters (optional):"),
@@ -384,7 +399,7 @@ ui <- navbarPage(
            ),
   
   
-  tabPanel("Suplementary outputs",
+  tabPanel("Supplementary outputs",
            fluidPage(
              )
            ),
