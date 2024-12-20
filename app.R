@@ -311,24 +311,31 @@ ui <- navbarPage(
                           h5("Demand factor changes:"),
                           
                           h6(
-                            "The waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
-                   when each growth factor (modelling assumptions tab) is applied. The final bar represents the projected activity level that is the sum of the baseline
-
-                   and the combined growth factor changes.",
+                            "The waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline when each 
+                            growth factor (modelling assumptions tab) is applied.", 
                             br(),
-                   
-                            "Once you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using the button below.",
+                            br(),
+                            "The final bar represents the projected activity level that is the sum of the baseline and the combined growth factor changes.",
+                            br(),
+                            br(),
+                            "When you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using 
+                            the button below.",
+                            br(),
+                            br(),
                             br(),
                             
                             h5("Adjust Occupancy rate:"),
                             
                             h6(
-                              "Opposite we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                              a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
+                              "Below the waterfall chart, we convert the bed days measure from our baseline extract and projected activity counts to annualised 
+                              bed days.",
+                              br(),
+                              br(),
+                              "We apply a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
                               occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
                               br(),
                               br(),
-                              "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
+                              "Calculation: Annualised beds = (Bed days / variable occupancy rate) / 365.25"
                             ),
                             
                             fluidRow(
@@ -380,16 +387,28 @@ ui <- navbarPage(
                     br()
                     ),
                  h6(
-                   "...",
+                   "For the selected ICB, we present the number of spells by whether they were (1.) not Out-of-area placements (OAP)  (resident in ICB 
+                   and treated in ICB), (2.) Outgoing OAP (residents in selected ICB but treated elsewhere) or (3.) Incoming OAP (resident outside of selected 
+                   ICB and treated within).",
                    br(),
+                   br(),
+                   "For outgoing OAP's, the out-of-area reparation growth factor (Model assumptions) is applied as an inflator to illustrate the increased activity 
+                   demand if outgoing OAP's were treated within the ICB.", 
+                   br(),
+                   br(),
+                   "For incoming OAP's, the out-of-area reparation is applied as a reduction in demand, applying the assumption that external ICB's would reduce 
+                   the number of patients from outside the selected ICB being treated by the selected ICB, as such a reduction in demand for care would be seen.",
                    br(),
                    ),
                  h5(br(),
                     "Sub-group Analysis:"
                  ),
                  h6(
-                   "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
-                   'grouping variable' control (Modelling assumptions tab) to change the sub-group measure by which we present the baseline and projected activity.",
+                   "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
+                   br(),
+                   br(),
+                   "Cycle through the 'grouping variable' control (below) to change the sub-group measure by which we present the baseline and 
+                   projected activity.",
                    br(),
                    br(),
                    selectInput("group_selection", "Select grouping variable:", 
@@ -689,8 +708,11 @@ server <- function(input, output, session) {
                  ) +
       scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
       scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
+      scale_y_continuous(labels = scales::comma) +
       su_theme() +
-      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 10),
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 15),
+            axis.text.y = element_text(size = 15),
+            axis.title = element_text(size = 16),
             legend.position = "none") +
       labs(x = "Growth factor",
            y = "Spells",
@@ -728,20 +750,40 @@ server <- function(input, output, session) {
       mutate(colour = 
                case_when(name == "A. Baseline year (2024)" ~ "#686f73",
                          value >= 0 ~ "#f9bf07",
-                         value < 0 ~ "#ec6555")) 
+                         value < 0 ~ "#ec6555")) %>% 
+      mutate(value = round(value,0))
     
     waterfall(data, 
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
               rect_text_size = 1.6,
+              rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
-    ) +
+              ) +
+      geom_label(data = data, 
+                  aes(x = name,
+                      #y = -100,
+                      y = (max(value) * 0.07)*-1,
+                      #y = max(value) + max(value)*0.7, 
+                      label = round(value,1),
+                      colour = case_when(value == max(value) ~ "baseline",
+                                         value > 0 ~ "positive",
+                                         value < 0 ~ "negative"),
+                      
+                      fill = case_when(value == max(value) ~ "baseline",
+                                       value > 0 ~ "positive",
+                                       value < 0 ~ "negative")
+                      )
+                 ) +
+      scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
+      scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
+      scale_y_continuous(labels = scales::comma) +
       su_theme() +
-      theme(axis.text.x = element_text(angle = 90, size = 14),
-            axis.text.y = element_text(size = 14), 
-            axis.title = element_text(size = 18)
-      )+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 15),
+            axis.text.y = element_text(size = 15),
+            axis.title = element_text(size = 16),
+            legend.position = "none") +
       labs(x = "Growth factor",
            y = "Bed days",
            title = "Demand factor changes to baseline activity",
@@ -778,20 +820,39 @@ server <- function(input, output, session) {
       mutate(colour = 
                case_when(name == "A. Baseline year (2024)" ~ "#686f73",
                          value >= 0 ~ "#f9bf07",
-                         value < 0 ~ "#ec6555")) 
+                         value < 0 ~ "#ec6555")) %>% 
+      mutate(value = round(value,0))
     
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
               rect_text_size = 1.6,
+              rect_text_labels = rep("", nrow(data)),  # This will hide the value labels
               fill_by_sign = FALSE, 
               fill_colours = data$colour
-    ) +
+              ) +
+      geom_label(data = data, 
+                 aes(x = name,
+                     #y = -100,
+                     y = (max(value) * 0.07)*-1,
+                     #y = max(value) + max(value)*0.7, 
+                     label = round(value,1),
+                     colour = case_when(value == max(value) ~ "baseline",
+                                        value > 0 ~ "positive",
+                                        value < 0 ~ "negative"),
+                     fill = case_when(value == max(value) ~ "baseline",
+                                      value > 0 ~ "positive",
+                                      value < 0 ~ "negative")
+                     )
+                 ) +
+      scale_color_manual(values = c("baseline" = "black","positive" = "black", "negative" = "black")) +
+      scale_fill_manual(values = c("baseline" = "#686f73","positive" = "#f9bf07", "negative" = "#ec6555")) +
+      scale_y_continuous(labels = scales::comma) +
       su_theme() +
-      theme(axis.text.x = element_text(angle = 90, size = 14),
-            axis.text.y = element_text(size = 14), 
-            axis.title = element_text(size = 18)
-      )+
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 15),
+            axis.text.y = element_text(size = 15),
+            axis.title = element_text(size = 16),
+            legend.position = "none") +
       labs(x = "Growth factor",
            y = "Bed days",
            title = "Demand factor changes to baseline activity",
@@ -917,7 +978,10 @@ server <- function(input, output, session) {
                    name == "bed_days_proj" ~ "Projected",
                    name == "bed_days_exHL_proj" ~ "Projected - excl home leave"
                  )) |>
-        select(-icb_dummy) |> 
+        select(-icb_dummy) |>
+        mutate(value = scales::comma(value)
+               #beds_annualised = scales::comma(beds_annualised)
+        ) %>% 
         rename(#ICB = residence_icb_name,
                Measure = name,
                `Bed days` = value,
@@ -947,20 +1011,26 @@ server <- function(input, output, session) {
       summarise(baseline_spells = sum(spell_count)) |> 
       mutate(ooa_group = 
                case_when(
-                 ooa_group == "not_oap" ~ "1. Not OOA Placement",
-                 ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP",
-                 ooa_group == "oap_incoming" ~ "3. Incoming OOAP"
+                 ooa_group == "not_oap" ~ "1. Not Out-of-area placement",
+                 ooa_group == "oap_outgoing" ~ "2. Outgoing OAP",
+                 ooa_group == "oap_incoming" ~ "3. Incoming OAP"
                )) |>
       mutate(projected_spells = 
                case_when(
-                 ooa_group == "2. Outgoing OOAP" ~ baseline_spells * 0.4,
-                 ooa_group == "3. Incoming OOAP" ~ baseline_spells * (0.4*-1)
+                 ooa_group == "2. Outgoing OAP" ~ baseline_spells * 0.4,
+                 ooa_group == "3. Incoming OAP" ~ baseline_spells * (0.4*-1)
                )) |> 
       pivot_longer(-ooa_group) |> 
       arrange(ooa_group) |> 
       pivot_wider(id_cols = name,
                   names_from = ooa_group,
-                  values_from = value) 
+                  values_from = value) %>% 
+      mutate(name = 
+               case_when(
+                 name == "baseline_spells" ~ "Baseline - spells",
+                 name == "projected_spells" ~ "Projected change - spells"
+               )) %>% 
+      rename(Measure = name)
     
     })
     

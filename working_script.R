@@ -352,14 +352,6 @@ data <-
          )
   
   
-  
-    
-    
-    
-    
-    
- 
-
 # Plot waterfall for bed days:
 waterfall_data |>
   select(-icb_dummy) %>%
@@ -443,7 +435,7 @@ current_occupancy <- 0.95
 planned_occupancy <- 0.8
 
 waterfall_data |>
-  filter(residence_icb_name == "QGH: NHS Herefordshire And Worcestershire ICB") |> 
+  #filter(residence_icb_name == "QGH: NHS Herefordshire And Worcestershire ICB") |> 
   filter(str_detect(name, "bed_days")) |> 
   mutate(beds_annualised = 
            case_when(
@@ -457,7 +449,10 @@ waterfall_data |>
              name == "bed_days_exHL" ~ "Baseline - bed days excl home leave",
              name == "bed_days_proj" ~ "Projected - bed days",
              name == "bed_days_exHL_proj" ~ "Projected - bed days excl home leave"
-           )) |> 
+           )) |>
+  mutate(value = scales::comma(value),
+         beds_annualised = scales::comma(beds_annualised)
+         )
   rename(ICB = residence_icb_name,
          Measure = name,
          `Bed days` = value,
