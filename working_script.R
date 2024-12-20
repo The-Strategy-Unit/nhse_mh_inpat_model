@@ -77,125 +77,38 @@ write_csv(baseline_aggregate, "baseline_aggregate.csv")
 
 
 # Out of area flag / table ----
-oop_flag_tb <-
-  baseline_data |> 
-  select(record_number, residence_icb_name, provider_icb_name) |>
-  mutate(oop_flag =
-           case_when(
-             provider_icb_name == residence_icb_name ~ "not oop",
-             provider_icb_name != residence_icb_name ~ "oop",
-             is.na(provider_icb_name) ~ "Unknown" 
-           ))
-
-midlands_icb_spells <-
-  oop_flag_tb |> 
-  group_by(residence_icb_name) |> 
-  summarise(spells = n_distinct(record_number))
-
-
-# All oops by icb of residence
-midlands_icb_oop_flag <-
-  oop_flag_tb |> 
-  #filter(!is.na(provider_icb_name)) |> 
-  filter(residence_icb_name %in% midlands_icb_spells$residence_icb_name) |> 
-  group_by(residence_icb_name, oop_flag) |> 
-  summarise(spells = n_distinct(record_number)) |> 
-  pivot_wider(id_cols = residence_icb_name, 
-              names_from = oop_flag,
-              values_from = spells)
-
-
-# outgoing oop's
-oop_outgoing <-
-  oop_flag_tb |> 
-  filter(residence_icb_name %in% midlands_icb_spells$residence_icb_name) |> 
-  filter(oop_flag == "oop") |> 
-  mutate(midlands_provider = 
-           case_when(provider_icb_name %in% midlands_icb_spells$residence_icb_name ~ "outgoing_oop_midlands",
-                     TRUE ~ "outgoing_oop_non_midlands")) |> 
-  group_by(residence_icb_name, midlands_provider) |> 
-  summarise(spells = n_distinct(record_number)) |> 
-  pivot_wider(id_cols = residence_icb_name, 
-              names_from = midlands_provider,
-              values_from = spells)
-
-
-#incoming oop's
-oop_incoming <-
-  oop_flag_tb |>
-  filter(oop_flag == "oop",
-         #provider_icb_name %in% midlands_icb_spells$residence_icb_name
-         ) |> 
-  mutate(midlands_transfer = 
-           case_when(
-             residence_icb_name %in% midlands_icb_spells$residence_icb_name ~ "incoming_midlands_transfer",
-             TRUE ~ "incoming_non_midlands_transfer"
-           )) |> 
-  group_by(provider_icb_name, midlands_transfer) |> 
-  summarise(spells = n_distinct(record_number)) |> 
-  pivot_wider(id_cols = provider_icb_name, 
-              names_from = midlands_transfer,
-              values_from = spells)
-
-# left joins
-midlands_icb_spells |> 
-  left_join(midlands_icb_oop_flag, by = "residence_icb_name") |> 
-  left_join(oop_outgoing, by = "residence_icb_name") |> 
-  left_join(oop_incoming, by = c("residence_icb_name" = "provider_icb_name"))
-
-
-# Provider side
-midlands_provider_icb_spells <-
-  oop_flag_tb |> 
-  group_by(provider_icb_name) |> 
-  summarise(spells = n_distinct(record_number)) |> 
-  arrange(desc(spells)) 
-
-midlands_provider_icb_spells |> 
-  filter(provider_icb_name %in% midlands_icb_spells$residence_icb_name)
-
-
-
-midlands_icb_oop_flag <-
-  oop_flag_tb |> 
-  drop_na(provider_icb_name) |> 
-  group_by(provider_icb_name, residence_icb_name, oop_flag) |> 
-  summarise(spells = n_distinct(record_number)) 
-
-
-midlands_icb_oop_flag |> 
-  filter(oop_flag == "oop")
-  
-
-
-midlands_provider_icb_spells |> 
-  left_join(midlands_icb_oop_flag, by = "provider_icb_name") 
-
-
-baseline_data |> 
-  select(residence_icb_name) |> 
-  distinct()
-
-
-baseline_data |> 
-  #filter(residence_icb_name != provider_icb_name) |> 
-  filter(!residence_icb_name %in% midlands_icb_spells$residence_icb_name)
-
-
-baseline_data |> 
-  mutate(icb_region = 
-           case_when(residence_icb_name %in% midlands_icb_spells$residence_icb_name ~ "Midlands",
-                     TRUE ~ "Non-Midlands" 
-                     )) |> 
-  filter(icb)
-
 
 # Table design
 # icb - count - internal spells, outgoing and incoming
   
+baseline_oap_activity_icb <-
+  baseline_aggregate |> 
+  #filter(residence_icb_code == "QGH") |> 
+  mutate(ooa_group = 
+           case_when(
+             oap_flag == 0 ~ "not_oap",
+             oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
+             oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+           )) |> 
+  group_by(ooa_group) |> 
+  summarise(baseline_spells = sum(spell_count)) |> 
+  mutate(ooa_group = 
+           case_when(
+             ooa_group == "not_oap" ~ "1. Not OOA Placement",
+             ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP",
+             ooa_group == "oap_incoming" ~ "3. Incoming OOAP"
+           )) |>
+  mutate(project_spells = 
+           case_when(
+             ooa_group == "2. Outgoing OOAP" ~ baseline_spells * 0.4,
+             ooa_group == "3. Incoming OOAP" ~ baseline_spells * (0.4*-1)
+           )) |> 
+  pivot_longer(-ooa_group) |>
+  arrange(ooa_group) |> 
+  pivot_wider(id_cols = name,
+              names_from = ooa_group,
+              values_from = value) 
   
-  
-baseline_data
 
 # Write ICB specific csv's of the baseline aggregate table ----
 
@@ -212,15 +125,6 @@ for (value in unique_values) {
   
   write.csv(subset_data, paste0("icb_baseline_data/baseline_aggregate_", value, ".csv"), row.names = FALSE)
 }
-
-
-baseline_aggregate <-
-  baseline_aggregate |> 
-  filter(
-    residence_icb_code == "QGH" |
-      (provider_icb_code == "QGH" & oap_flag == 1)
-  )
-  
 
 
 # Apply growth factors ---- 
@@ -297,29 +201,6 @@ baseline_growth <-
          bed_days_exHL_proj = bed_days_exHL + rowSums(across(contains("exHL_bedday_")))
   ) 
 
-
-baseline_aggregate |> 
-  mutate(ooa_group = 
-           case_when(
-             oap_flag == 0 ~ "not_oap",
-             oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-             oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
-           )) |> 
-  group_by(ooa_group) |> 
-  summarise(spells = sum(spell_count)) |> 
-  mutate(ooa_group = 
-           case_when(
-             ooa_group == "not_oap" ~ "1. Not OOA Placement",
-             ooa_group == "oap_incoming" ~ "3. Incoming OOAP",
-             ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP"
-           )) |> 
-  mutate(icb = "icb") |> 
-  pivot_wider(id_cols = icb,
-              names_from = ooa_group,
-              values_from = spells)
-  
-
-baseline_growth 
 
 
 # Summarise growth at ICB level

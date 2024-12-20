@@ -350,6 +350,21 @@ ui <- navbarPage(
                    ),
                  tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
                  
+                 
+                 
+                 h5(br(),
+                    "Out-Of-Area Placements",
+                    br()
+                 ),
+                 h6(
+                   "...",
+                   br(),
+                   br(),
+                 ),
+                 
+                 DTOutput("dataTable_oap"),
+                 
+                 
                  h3(br(),
                     "Sub-group Analysis"
                     ),
@@ -846,38 +861,57 @@ server <- function(input, output, session) {
   })
   
   # Out of area table
-  #output$dataTable_ooap <- renderDT({
-  #  req(baseline_growth())
-  #  
-  #  DT::datatable(
-  #    baseline_growth() |> 
-  #      baseline_aggregate |> 
-  #      mutate(ooa_group = 
-  #               case_when(
-  #                 oap_flag == 0 ~ "not_oap",
-  #                 oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-  #                 oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
-  #               )) |> 
-  #      group_by(ooa_group) |> 
-  #      summarise(spells = sum(spell_count)) |> 
-  #      mutate(ooa_group = 
-  #               case_when(
-  #                 ooa_group == "not_oap" ~ "1. Not OOA Placement",
-  #                 ooa_group == "oap_incoming" ~ "3. Incoming OOAP",
-  #                 ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP"
-  #               )) |> 
-  #      mutate(icb = "icb") |> 
-  #      pivot_wider(id_cols = icb,
-  #                  names_from = ooa_group,
-  #                  values_from = spells) |> 
-  #      select(-icb),
-  #    extensions = 'Buttons',
-  #    options = list(dom = 'Bfrtip',
-  #                   buttons = c('copy', 'csv')
-  #                   )
-  #    )
-  #  })
+  baseline_oap_activity_icb <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+        )
+    
+    baseline_aggregate() |> 
+      mutate(ooa_group = 
+               case_when(
+                 oap_flag == 0 ~ "not_oap",
+                 oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
+                 oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+               )) |> 
+      group_by(ooa_group) |> 
+      summarise(baseline_spells = sum(spell_count)) |> 
+      mutate(ooa_group = 
+               case_when(
+                 ooa_group == "not_oap" ~ "1. Not OOA Placement",
+                 ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP",
+                 ooa_group == "oap_incoming" ~ "3. Incoming OOAP"
+               )) |>
+      mutate(projected_spells = 
+               case_when(
+                 ooa_group == "2. Outgoing OOAP" ~ baseline_spells * 0.4,
+                 ooa_group == "3. Incoming OOAP" ~ baseline_spells * (0.4*-1)
+               )) |> 
+      pivot_longer(-ooa_group) |> 
+      arrange(ooa_group) |> 
+      pivot_wider(id_cols = name,
+                  names_from = ooa_group,
+                  values_from = value) 
+    
+    })
+    
   
+  
+  output$dataTable_oap <- renderDT({
+    req(baseline_oap_activity_icb()
+    )
+    
+    DT::datatable(
+      baseline_oap_activity_icb(),
+      extensions = 'Buttons',
+      options = list(dom = 'Bfrtip',
+                     buttons = c('copy', 'csv')
+                     )
+      )
+    
+    
+  })
+  
+
   # Reset occupancy rates to default position
   observeEvent(input$reset_occupancy, {
     updateNumericInput(session, "current_occupancy", value = 92)
