@@ -129,6 +129,14 @@ for (value in unique_values) {
 
 # Apply growth factors ---- 
 
+# Create single ICB baseline aggregate data object to test on
+baseline_aggregate <-
+  baseline_aggregate %>% 
+  filter(
+    (residence_icb_code == "QGH") |
+      (provider_icb_code == "QGH" & oap_flag == 1)
+  )
+
 demographic_growth = 0.03
 incidence_change = 0.07 
 acuity_change = 0.067
@@ -294,10 +302,12 @@ data <-
   waterfall(data,
             calc_total = TRUE,
             total_axis_text = "Projection (2028)",
-            rect_text_size = 2,
+            rect_text_size = 1,
+            rect_text_labels_anchor = "above",
             fill_by_sign = FALSE, 
             fill_colours = data$colour
             ) +
+    geom_text(data = data, aes(x = name, y = value + 0.05 * max(value), label = value), size = 3, vjust = 0) +
   su_theme() +
   theme(axis.text.x = element_text(angle = 90)) +
   #scale_fill_manual(values = c("red","blue")) +
@@ -305,7 +315,10 @@ data <-
        y = "Spells",
        title = "Example waterfall plot",
        #subtitle = paste0("Mental health inpatient model | ", icb_filter)
-  )
+  ) 
+  
+  
+ 
 
 # Plot waterfall for bed days:
 waterfall_data |>

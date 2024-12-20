@@ -184,15 +184,14 @@ ui <- navbarPage(
              titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
              h3("Project Objectives"),
              p("This tool aims to project the expected volume of inpatient activity and therefore bed requirements to 2028 based on various adjustable growth factors. The tool takes a recent 12 month baseline of data and allows users to change parameters that are believed to affect future demand."),
-             
-             h3("Data Requirements"),
-             p("In order to establish a baseline for the tool, please upload a CSV file with the following fields (you should have been provided with a sample file for your ICB):"),
-             
-             tags$div(
-                 tags$img(src = "data_format_image.PNG", height = 200)  # Adjust the height as needed
-               ),
+             )
+           ),
+  
+  tabPanel("Instructions & Data",
+           fluidPage(
+             titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
             
-             h3("Instructions"),
+              h3("Instructions"),
              p("1. Upload your CSV file using the 'Upload CSV File' button."),
              p("2. Navigate to the 'Analysis' tab to generate the plot and table."),
              p("3. Adjust the growth factor assumptions using the numeric input controls or use the default suggestions."),
@@ -223,7 +222,174 @@ ui <- navbarPage(
              ),
            )),
   
-  tabPanel("Metadata",
+  tabPanel("Modelling assumptions",
+           tabPanel("Analysis",
+                    fluidPage(
+                      sidebarLayout(
+                        sidebarPanel(
+                          h3("Analysis Controls"),
+                          p("Use the controls below to update the analysis."),
+                          
+                          selectInput("icb", "Select ICB:", choices = NULL),
+                          
+                          h5("Adjust Growth Variables:"),
+                          
+                          fluidRow(
+                            column(6,
+                                   numericInput("incidence_change", "Incidence Change",           value = 7,   step = 0.1),
+                                   numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
+                                   numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
+                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
+                                   numericInput("national_policy", "National Policy",             value = -3,  step = 0.1),
+                                   numericInput("service_models", "Service Models",               value = -1.5,step = 0.1)
+                            ),
+                            column(6,
+                                   numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
+                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -1.5, step = 0.1),
+                                   numericInput("waiting_list_reduction", "Waiting List Reduction", value = -2,   step = 0.1),
+                                   numericInput("ooa_repat", "Out of Area Repatriation",            value = 40,   step = 0.1),
+                                   numericInput("shift_to_ip", "Shift to Independent setting",      value = -3,   step = 0.1)
+                            )
+                          ),
+                          
+                          actionButton("reset", "Reset Growth Variables to Default"),
+                          
+                          downloadButton("downloadParameters", "Download Adjusted Parameters"),
+                          
+                          br(),
+                          br(),
+                          
+                          h5("Adjust Occupancy rate:"),
+                          
+                          fluidRow(
+                            numericInput("current_occupancy", "Current occupancy rate",           value = 92, step = 0.1),
+                            numericInput("future_occupancy", "Future occupancy rate",             value = 85, step = 0.1)
+                          ),
+                          
+                          actionButton("reset_occupancy", "Reset Occupancy Rates to Default"),
+                          
+                          br(),
+                          br(),
+                          
+                          h5("Sub-group Analysis"),
+                          
+                          selectInput("group_selection", "Select grouping variable:", 
+                                      choices = 
+                                        c(
+                                          "Age Group Admission" = "age_group_admission",
+                                          "Gender" = "gender",
+                                          "Ethnic Category" = "ethnic_category_2",
+                                          "IMD Quintile" = "imd_quintile",
+                                          "Provider Type" = "provider_type",
+                                          "Legal Status Group" = "legal_status_group",
+                                          #"LDA Flag" = "lda_flag",
+                                          "Ward Type Description" = "der_ward_type_desc_first"
+                                        )
+                          ),
+                          
+                          br(),
+                          
+                          h5("Export Projections"),
+                          downloadButton("downloadData", "Download Projected Data")
+                        ),
+                        
+                        mainPanel()
+                        )
+                    ))
+           
+           
+           ),
+  
+  tabPanel("Main outputs",
+           tabPanel("Analysis",
+                    fluidPage(
+                      sidebarLayout(
+                        sidebarPanel(
+                          
+                          h6(
+                            br(),
+                            "The above waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
+                   when each growth factor (left) is applied. The final bar represents the projected activity level that is the sum of the baseline
+                   and the combined growth factor changes.",
+                            br()
+                          )
+                          
+                        ),
+                        
+                        mainPanel(
+                          h3("ICB Outputs"),
+                          tabsetPanel(
+                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "700px", width = "1000px")),
+                            tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "700px", width = "1000px")),
+                            tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "700px", width = "1000px")),
+                            tabPanel("Projection Table", DTOutput("dataTable"))
+                          ),
+                          
+                          h6(
+                            br(),
+                            "The above waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
+                   when each growth factor (left) is applied. The final bar represents the projected activity level that is the sum of the baseline
+                   and the combined growth factor changes.",
+                            br()
+                          ),
+                          
+                          h5(br(),
+                             "Occupancy rate adjusted",
+                             br()
+                          ),
+                          h6(
+                            "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
+                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
+                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
+                            br(),
+                            br(),
+                            "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
+                          ),
+                          tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
+                          
+                          
+                          
+                          h5(br(),
+                             "Out-Of-Area Placements",
+                             br()
+                          ),
+                          h6(
+                            "...",
+                            br(),
+                            br(),
+                          ),
+                          
+                          DTOutput("dataTable_oap"),
+                          
+                          
+                          h3(br(),
+                             "Sub-group Analysis"
+                          ),
+                          h6(
+                            "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
+                   'grouping variable' control (left) to change the sub-group measure by which we present the baseline and projected activity. Switch between 
+                   the output tabs to view either the graph plot or the underlying data.",
+                            br(),
+                            br()
+                          ),
+                          tabsetPanel(
+                            tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px")),
+                            tabPanel("Sub-group Table", DTOutput("dataTable_subplot"))
+                          )
+                          
+                          
+                        )
+                      )
+                    ))
+           ),
+  
+  
+  tabPanel("Suplementary outputs",
+           fluidPage(
+             )
+           ),
+  
+  tabPanel("Metadata and glossary",
            fluidPage(
              titlePanel("Metadata and underlying assumptions:"),
              h3("Metadata"),
@@ -247,143 +413,14 @@ ui <- navbarPage(
              p("Out of area repatriation - This applies only to patients resident in your ICB but receiving care outside. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
              p("Shift to independent provider provision - Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down in whole bed units to adjust your future bed requirements."),
              p("Occupancy rates - In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desired OR of 85%.")
-             )),
+             
+           )
+           ),
   
-  tabPanel("Analysis",
-           fluidPage(
-             sidebarLayout(
-               sidebarPanel(
-                 h3("Analysis Controls"),
-                 p("Use the controls below to update the analysis."),
-                 
-                 selectInput("icb", "Select ICB:", choices = NULL),
-                 
-                 h5("Adjust Growth Variables:"),
-                 
-                 fluidRow(
-                   column(6,
-                          numericInput("incidence_change", "Incidence Change",           value = 7,   step = 0.1),
-                          numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
-                          numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
-                          numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
-                          numericInput("national_policy", "National Policy",             value = -3,  step = 0.1),
-                          numericInput("service_models", "Service Models",               value = -1.5,step = 0.1)
-                   ),
-                   column(6,
-                          numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
-                          numericInput("admission_avoidance", "Admission Avoidance",       value = -1.5, step = 0.1),
-                          numericInput("waiting_list_reduction", "Waiting List Reduction", value = -2,   step = 0.1),
-                          numericInput("ooa_repat", "Out of Area Repatriation",            value = 40,   step = 0.1),
-                          numericInput("shift_to_ip", "Shift to Independent setting",      value = -3,   step = 0.1)
-                          )
-                   ),
-                 
-                 actionButton("reset", "Reset Growth Variables to Default"),
-                 
-                 downloadButton("downloadParameters", "Download Adjusted Parameters"),
-                 
-                 br(),
-                 br(),
-                 
-                 h5("Adjust Occupancy rate:"),
-                 
-                 fluidRow(
-                   numericInput("current_occupancy", "Current occupancy rate",           value = 92, step = 0.1),
-                   numericInput("future_occupancy", "Future occupancy rate",             value = 85, step = 0.1)
-                 ),
-                 
-                 actionButton("reset_occupancy", "Reset Occupancy Rates to Default"),
-                 
-                 br(),
-                 br(),
-                 
-                 h5("Sub-group Analysis"),
-                 
-                 selectInput("group_selection", "Select grouping variable:", 
-                             choices = 
-                               c(
-                                 "Age Group Admission" = "age_group_admission",
-                                 "Gender" = "gender",
-                                 "Ethnic Category" = "ethnic_category_2",
-                                 "IMD Quintile" = "imd_quintile",
-                                 "Provider Type" = "provider_type",
-                                 "Legal Status Group" = "legal_status_group",
-                                 #"LDA Flag" = "lda_flag",
-                                 "Ward Type Description" = "der_ward_type_desc_first"
-                                 )
-                             ),
-                 
-                 br(),
-                 
-                 h5("Export Projections"),
-                 downloadButton("downloadData", "Download Projected Data")
-               ),
-               
-               mainPanel(
-                 h3("ICB Outputs"),
-                 tabsetPanel(
-                   tabPanel("Spells", plotOutput("waterfall_Plot", height = "700px", width = "1000px")),
-                   tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "700px", width = "1000px")),
-                   tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "700px", width = "1000px")),
-                   tabPanel("Projection Table", DTOutput("dataTable"))
-                 ),
-                 
-                 h6(
-                   br(),
-                   "The above waterfall chart displays the baseline number of spells or bed days and the progressive change from the baseline 
-                   when each growth factor (left) is applied. The final bar represents the projected activity level that is the sum of the baseline
-                   and the combined growth factor changes.",
-                   br()
-                 ),
-                 
-                 h5(br(),
-                    "Occupancy rate adjusted",
-                    br()
-                    ),
-                 h6(
-                   "Below we convert the bed days measure from our baseline extract and projected activity counts to annualised bed days. We apply 
-                   a 92% occupancy rate to the baseline bed days and divide by 365.25 to calculate annualised bed days. We apply an 85% 'target' 
-                   occupancy rate to our bed day projection and divide by 365.25 to calculate the future annualised bed day requirement.",
-                   br(),
-                   br(),
-                   "Calculation: Annualised beds = (Bed days / varyiable occupancy rate) / 365.25"
-                   ),
-                 tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
-                 
-                 
-                 
-                 h5(br(),
-                    "Out-Of-Area Placements",
-                    br()
-                 ),
-                 h6(
-                   "...",
-                   br(),
-                   br(),
-                 ),
-                 
-                 DTOutput("dataTable_oap"),
-                 
-                 
-                 h3(br(),
-                    "Sub-group Analysis"
-                    ),
-                 h6(
-                   "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days. Cycle through the 
-                   'grouping variable' control (left) to change the sub-group measure by which we present the baseline and projected activity. Switch between 
-                   the output tabs to view either the graph plot or the underlying data.",
-                   br(),
-                   br()
-                 ),
-                 tabsetPanel(
-                   tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px")),
-                   tabPanel("Sub-group Table", DTOutput("dataTable_subplot"))
-                 )
-                 
-                 
-               )
-             )
-           ))
+  
+
+  
+  
   )
 
 
