@@ -123,6 +123,9 @@ ui <- navbarPage(
                    primary = "#f9bf07",
                    secondary = "#686f73"),
   tags$head(
+    
+    tags$link(rel = "stylesheet", type = "text/css", href = "styles.css"),
+    
     tags$style(HTML("
     .negative-value {
       color: red !important;
@@ -251,30 +254,51 @@ ui <- navbarPage(
                           
                           fluidRow(
                             column(6,
+                                   h6(strong("Population changes:")),
                                    numericInput("incidence_change", "Incidence Change",           value = 7,   step = 0.1),
                                    numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
-                                   numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
-                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
-                                   numericInput("national_policy", "National Policy",             value = -3,  step = 0.1),
-                                   numericInput("service_models", "Service Models",               value = -1.5,step = 0.1)
-                            ),
-                            column(6,
-                                   numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
-                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
+                                   
+                                   h6(strong("Indirect changes:")),
                                    numericInput("waiting_list_reduction", "Waiting List Management", value = -2,   step = 0.1),
+                                   numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
+                                   
+                                   h6(strong("External influences:")),
+                                   numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
+                                   numericInput("national_policy", "National Policy",             value = -3,  step = 0.1)
+                                   ),
+                            column(6,
+                                   
+                                   h6(strong("Direct changes:")),
+                                   numericInput("service_models", "Service Models",               value = -1.5,step = 0.1),
+                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
+                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
+                                   
+                                   h6(strong("Bed policy:")),
                                    numericInput("ooa_repat", "Out of Area Repatriation",            value = 40,   step = 0.1),
-                                   numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1)
-                            )
-                          ),
+                                   numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1),
+                                   
+                                   br(),
+                                   
+                                   actionButton("reset", "Reset Growth Variables to Default")
+                                  )
+                            ),
                           
-                          actionButton("reset", "Reset Growth Variables to Default"),
+                          br(),
+                          
+                          h5("Export paramters:"),
+                          h6("Click to download the paramaters at the levels set above for the next time you use the app. Upload your parameters 
+                             on the `Instructions & Data` tab to apply parameters from a previous session."),
                           
                           downloadButton("downloadParameters", "Download Adjusted Parameters"),
                           
                           br(),
                           br(),
                           br(),
-                        ),
+                          
+                          ),
+                        
+                        
+                        
                         
             mainPanel(
                 h3("Demand factor assumptions:"),
@@ -283,14 +307,35 @@ ui <- navbarPage(
                As such, demographic growth is a fixed point and not modifiable in the analysis tab unlike our other growth factors."),
                br(),
                
+               "For reference, the demographic growth factor for the selected ICB is:",
+               
+               DTOutput("icb_demographic_growth"),
+               
+               br(),
+               
+               h5(strong("Population changes:")),
                p(strong("Incidence change"),": Growth in incidence of high-risk admission conditions has been applied to our baselines extract prior to sharing and upload to the tool, though you can choose to include this or not in the final model. We have included uplifts of x% for x-condition, y% for y-condition and z% for z-condition based on the following data/papers...."),
                p(strong("Acuity change"),": We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
-               p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
-               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
-               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
-               p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
+               
+               #br(),
+               
+               h5(strong("Direct changes:")),
                p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
+               p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
+               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
+               
+               #br(),
+               
+               h5(strong("Indirect changes:")),
                p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
+               
+               #br(),
+               
+               h5(strong("External influences:")),
+               p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
+               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
+               
+               br(),
                
                h3("Indicative Capacity conversions:"),
                p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
@@ -320,7 +365,7 @@ ui <- navbarPage(
                             br(),
                             "When you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using 
                             the button below.",
-                            br(),
+                            
                             br(),
                             br(),
                             
@@ -358,9 +403,9 @@ ui <- navbarPage(
                         mainPanel(
                           h3("Modelled change in demand"),
                           tabsetPanel(
-                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "800px", width = "1200px")),
                             tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "800px", width = "1200px")),
                             tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "800px", width = "1200px")),
+                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "800px", width = "1200px")),
                             #tabPanel("Projection Table", DTOutput("dataTable"))
                           ),
                           
@@ -454,6 +499,8 @@ ui <- navbarPage(
              p("The MHSDS data hosted within NCDR is our baseline datasource.
                Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exsists and has been aggregated."),
              
+             DTOutput("baseline_extract_meta")
+             
              )
            )
   )
@@ -465,6 +512,20 @@ server <- function(input, output, session) {
   # Set up ----
   # Read in demographic factor
   icb_weighted_demographic_change <- read_csv("demographic_projections/icb_weighted_demographic_change.csv")
+  
+  output$icb_demographic_growth <- renderDT({
+    req(icb_weighted_demographic_change)
+    req(input$icb)
+    
+    DT::datatable(
+      icb_weighted_demographic_change %>% 
+        filter(residence_icb_name == input$icb) %>% 
+        mutate(`Demographic growth projection` = paste0(round(weighted_perc_change * 100,1), "%")) %>% 
+        select(residence_icb_name, `Demographic growth projection`) %>% 
+        rename(ICB = residence_icb_name)
+      )
+    })
+  
   
   # Read in grouped data
   baseline_aggregate <- reactive({
@@ -1149,6 +1210,18 @@ server <- function(input, output, session) {
       write.csv(data, file)
     }
   )
+  
+  # Meta data table
+  baseline_extract_meta <- read_excel("reference files/baseline_extract_meta.xlsx")
+    
+  
+  output$baseline_extract_meta <- renderDT({
+    req(icb_weighted_demographic_change)
+    
+    DT::datatable(
+      baseline_extract_meta
+    )
+  })
   
 }
 

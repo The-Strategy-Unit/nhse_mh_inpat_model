@@ -13,7 +13,6 @@ setwd("C:/Users/alexander.lawless/OneDrive - Midlands and Lancashire CSU/Work/1.
 # To-do (/developments): ----
 
 # Confidence intervals around growth factors
-# Fix SU logo in top right corner
 
 
 
@@ -585,8 +584,6 @@ pop_projections_la_2018_based_females <-
   clean_names()
 
 
-
-
 pop_projections_la_2018_based_males |> 
   filter(!area %in% c("England",
                       "North East",
@@ -742,11 +739,11 @@ lsoa_icb_lad <-
 
 # Aggregate to demographic change figure for each ICB - projections weighted according to LA overlap in each ICB
 icb_lad_baseline_spells <-
-  baseline_aggregate |>
+  baseline_data |>
   left_join(lsoa_lookup, by = c("lsoa2011" = "lsoa11cd")) |> 
   left_join(lsoa_icb_lad, by = c("lsoa21cd")) |> 
   group_by(residence_icb_name, lad23nm, age_group_admission, gender) |> 
-  summarise(spell_count = sum(spell_count)) |> 
+  summarise(spell_count = n_distinct(record_number)) |> 
   ungroup()
 
 icb_weighted_demographic_change <-
@@ -809,7 +806,9 @@ icb_lad_baseline_spells |>
   summarise(weighted_perc_change = sum(perc_change_projection * spell_count) / sum(spell_count))
 
 
+icb_weighted_demographic_change %>% 
 
+  mutate(check = weighted_perc_change * 100)
 
 
 
@@ -824,48 +823,6 @@ write.csv(icb_weighted_demographic_change,
 
 
 
-calculate_growth_and_waterfall <- function(baseline_data, growth_factors, years, icb_name) {
-  baseline_aggregate <- baseline_data %>%
-    filter(residence_icb_name == icb_name) %>%
-    summarise(year = as.integer(2024),
-              spell_count = as.numeric(sum(spell_count)),
-              bed_days = sum(bed_days))
-  
-  calculate_annual_growth <- function(initial_value, growth_rate, years) {
-    initial_value * (1 + growth_rate) ^ years
-  }
-  
-  # Calculate the contributions for each year
-  for (year in years[-1]) {
-    previous_year_data <- results %>% filter(year == year - 1)
-    new_data <- previous_year_data
-    
-    for (factor in names(growth_factors)) {
-      new_data <- new_data %>%
-        mutate(
-          spell_count = calculate_annual_growth(spell_count, growth_factors[factor]),
-          bed_days = calculate_annual_growth(bed_days, growth_factors[factor])
-        )
-    }
-    
-    new_data <- new_data %>% mutate(year = year)
-    results <- bind_rows(results, new_data)
-  }
-  
-  waterfall_data <- baseline_aggregate %>%
-    mutate(factor = "Baseline year (2024)") %>%
-    union_all(
-      results %>%
-        pivot_longer(cols = -year, names_to = c("factor", ".value"), names_pattern = "(.*)_(.*)") %>%
-        rename(bed_days = days, spell_count = spells)
-    )
-  
-  return(waterfall_data)
-}
-
-
-
-calculate_growth_and_waterfall(baseline_aggregate, growth_factors, 2024:2028, "QHL: NHS Birmingham And Solihull ICB")
 
 
 

@@ -18,3 +18,28 @@
 .main-content {
   margin-left: 250px !important; /* Adjust this value based on the width of your sidebar */
 }
+
+/* Add this section to change the button color */
+#reset {
+  background-color: #ec6555; 
+  color: white;
+  border: none;
+}
+
+#reset_occupancy {
+  background-color: #ec6555; 
+  color: white;
+  border: none;
+}
+
+#downloadParameters {
+  background-color: #f9bf07; 
+  color: white;
+  border: none;
+}
+
+#downloadData {
+  background-color: #f9bf07; 
+  color: white;
+  border: none;
+}
