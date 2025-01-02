@@ -106,8 +106,15 @@ SELECT HSP.[UniqMonthID]
 	  ,MPI.[LSOA2011]
 	  ,MPI.[LSOA2021]
 	  ,MPI.[Der_Postcode_LSOA_Code]
-	  ,ICB_LSOA.[ICB_Code] AS [Residence_ICB_Code]
-	  ,ICB_LSOA.[ICB_Name] AS [Residence_ICB_Name]
+	  --,ICB_LSOA.[ICB_Code] AS [Residence_ICB_Code]
+	  --,ICB_LSOA.[ICB_Name] AS [Residence_ICB_Name]
+	  --,COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]) AS [Final_Res_ICB_Code]
+	  --,COALESCE(ICB_LSOA.[ICB_Name], MPI.[ICRECICBName]) AS [Final_Res_ICB_Name]
+	  ,COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]) AS [Residence_ICB_Code]
+	  ,COALESCE(ICB_RES.[ICB_Name], CASE WHEN LEFT(COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]),1) = 'N' THEN 'Northern Ireland'
+										 WHEN LEFT(COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]),1) = 'S' THEN 'Scotland'
+										 WHEN LEFT(COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]),1) = 'W' THEN 'Wales'
+										 ELSE COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]) END) AS [Residence_ICB_Name]
 	  ,IMD.[IMD_Decile]
 	  ,MPI.[LDAFlag]
 	  ,PIND.[AutismStatus]
@@ -183,9 +190,14 @@ ON HSP.[Der_Person_ID] = REF.[Der_Person_ID]
 AND HSP.[RecordNumber] = REF.[RecordNumber]
 AND HSP.[UniqServReqID] = REF.[UniqServReqID]
 
-WHERE ICB_LSOA.[ICB_Code] IN ('QGH', 'QHL', 'QJ2', 'QJM',
+LEFT JOIN [Internal_Reference].[CCGToICB_2425] AS ICB_RES
+ON COALESCE(ICB_LSOA.[ICB_Code], MPI.[ICRECICB]) = ICB_RES.[ICB_Code]
+
+WHERE (ICB_LSOA.[ICB_Code] IN ('QGH', 'QHL', 'QJ2', 'QJM',
 							    'QK1', 'QNC', 'QOC', 'QPM',
-								'QT1', 'QUA', 'QWU')
+								'QT1', 'QUA', 'QWU') OR
+       SP_PROS.[Region_Code] = 'Y60')
+
 AND (HSP.[StartDateHospProvSpell] BETWEEN @StartDate AND @EndDate
 	 OR
 	 HSP.[DischDateHospProvSpell] BETWEEN @StartDate AND @EndDate)
@@ -982,8 +994,12 @@ SELECT ADM.*
 			WHEN MHACT_RP_First.[LegalStatusCode] IN ('98', '99') THEN 'Not formally detained'
 			WHEN MHACT_RP_First.[LegalStatusCode] = '01' THEN 'Informal'
 			ELSE 'Formally detained' END AS [legal_status_group]
-	  ,ICB_H.[Region_Code] AS [Residence_ICB_Region_Code]
-	  ,ICB_H.[Region_Name] AS [Residence_ICB_Region_Name]
+	  ,COALESCE(ICB_H.[Region_Code], CASE WHEN ADM.[Residence_ICB_Name] = 'Northern Ireland' THEN 'NI'
+										 WHEN ADM.[Residence_ICB_Name] = 'Scotland' THEN 'S'
+										 WHEN ADM.[Residence_ICB_Name] = 'Wales' THEN 'W'
+										 WHEN ADM.[Residence_ICB_Name] = 'Unknown' THEN 'Unknown'
+										 ELSE ADM.[Residence_ICB_Code] END) AS [Residence_ICB_Region_Code]
+	  ,COALESCE(ICB_H.[Region_Name], ADM.[Residence_ICB_Name]) AS [Residence_ICB_Region_Name]
 	  ,CASE WHEN ICB_H.[Region_Code] = 'Y60' AND ADM.[Provider_Region_Code] = 'Y60' THEN 'MidlandsRes-MidlandsProv'
 			WHEN ICB_H.[Region_Code] = 'Y60' AND ADM.[Provider_Region_Code] != 'Y60' THEN 'MidlandsRes-NonMidlandsProv'
 			WHEN ICB_H.[Region_Code] != 'Y60' AND ADM.[Provider_Region_Code] = 'Y60' THEN 'NonMidlandsRes-MidlandsProv'
@@ -1072,3 +1088,4 @@ FROM #WStay AS [WStay]
 
 LEFT JOIN #WStayLOS AS [WStay_LOS]
 ON WStay.[UniqWardStayID] = WStay_LOS.[UniqWardStayID]
+
