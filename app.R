@@ -255,26 +255,26 @@ ui <- navbarPage(
                           fluidRow(
                             column(6,
                                    h6(strong("Population changes:")),
-                                   numericInput("incidence_change", "Incidence Change",           value = 7,   step = 0.1),
+                                   numericInput("incidence_change", "Incidence Change",           value = 3.5,   step = 0.1),
                                    numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
                                    
                                    h6(strong("Indirect changes:")),
-                                   numericInput("waiting_list_reduction", "Waiting List Management", value = -2,   step = 0.1),
-                                   numericInput("prevention_programme", "Prevention Programme",     value = -1.5, step = 0.1),
+                                   numericInput("waiting_list_reduction", "Waiting List Management", value = -3.7,   step = 0.1),
+                                   numericInput("prevention_programme", "Prevention Programme",     value = -4, step = 0.1),
                                    
                                    h6(strong("External influences:")),
                                    numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
-                                   numericInput("national_policy", "National Policy",             value = -3,  step = 0.1)
+                                   numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1)
                                    ),
                             column(6,
                                    
                                    h6(strong("Direct changes:")),
-                                   numericInput("service_models", "Service Models",               value = -1.5,step = 0.1),
+                                   numericInput("service_models", "Service Models",               value = -5,step = 0.1),
                                    numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
                                    numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
                                    
                                    h6(strong("Bed policy:")),
-                                   numericInput("ooa_repat", "Out of Area Repatriation",            value = 40,   step = 0.1),
+                                   numericInput("ooa_repat", "Out of Area Repatriation",            value = 50,   step = 0.1),
                                    numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1),
                                    
                                    br(),
@@ -314,26 +314,26 @@ ui <- navbarPage(
                br(),
                
                h5(strong("Population changes:")),
-               p(strong("Incidence change"),": Growth in incidence of high-risk admission conditions has been applied to our baselines extract prior to sharing and upload to the tool, though you can choose to include this or not in the final model. We have included uplifts of x% for x-condition, y% for y-condition and z% for z-condition based on the following data/papers...."),
+               p(strong("Incidence change"),": The most likely diagnoses for admissions are Psychosis, PTSD, Severe Anxiety and Drug dependence. Average growth in incidence of these (sourced from APMS, QOF and published prevalence studies) for a 3-year period is estimated at 10.7%. Assuming these conditions make up 2/3 of all admissions and that 50% will have feature in multiple groups, we arrive at an adjusted estimate of 3.5% for impact of incidence changes over 3 years."),
                p(strong("Acuity change"),": We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
                
                #br(),
                
                h5(strong("Direct changes:")),
-               p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We start with a notional 1.5% bedday reduction over 3 years for each of these transformational activities."),
+               p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We propose a notional 5% bedday reduction over 3 years for each of these transformational activities."),
                p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
-               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely and increase the frequency of assessment. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
+               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely, increase the frequency of assessment and reduce detention time for those with LD or autism. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
                
                #br(),
                
                h5(strong("Indirect changes:")),
-               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate by a modest 2% decrease for ED and EIP inpatient cases over 3 years given workforce challenges."),
+               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate for a 10% waiting list reduction, 3.7% fewer emergency admissions may occur over 3 years."),
                
                #br(),
                
                h5(strong("External influences:")),
                p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
-               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment, we estimate this may reduce admissions by 3% over the next 3 years."),
+               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment relative to overall budgets (£2.3bn vs £12bn, https://www.kingsfund.org.uk/insight-and-analysis/long-reads/mental-health-360-funding-costs) and indicative impacts (https://pmc.ncbi.nlm.nih.gov/articles/PMC10753954/), we estimate this may reduce admissions by 4.8% over the next 3 years."),
                
                br(),
                
@@ -966,17 +966,17 @@ server <- function(input, output, session) {
   
   # Reset growth factor variables to default position
   observeEvent(input$reset, {
-    updateNumericInput(session, "incidence_change", value = 7)
+    updateNumericInput(session, "incidence_change", value = 3.5)
     updateNumericInput(session, "acuity_change", value = 6.7)
     updateNumericInput(session, "social_care_pressures", value = 6.6)
     updateNumericInput(session, "mha_changes", value = -5)
-    updateNumericInput(session, "national_policy", value = -3)
-    updateNumericInput(session, "service_models", value = -1.5)
-    updateNumericInput(session, "prevention_programme", value = -1.5)
-    updateNumericInput(session, "admission_avoidance", value = -1.5)
-    updateNumericInput(session, "waiting_list_reduction", value = -2)
-    updateNumericInput(session, "ooa_repat", value = 40)
-    updateNumericInput(session, "shift_to_ip", value = -3)
+    updateNumericInput(session, "national_policy", value = -4.8)
+    updateNumericInput(session, "service_models", value = -5)
+    updateNumericInput(session, "prevention_programme", value = -4)
+    updateNumericInput(session, "admission_avoidance", value = -4)
+    updateNumericInput(session, "waiting_list_reduction", value = -3.7)
+    updateNumericInput(session, "ooa_repat", value = 50)
+    updateNumericInput(session, "shift_to_ip", value = 0)
   })
   
   # Export adjusted parameters
