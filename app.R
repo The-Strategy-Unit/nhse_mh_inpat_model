@@ -186,7 +186,7 @@ ui <- navbarPage(
            fluidPage(
              titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
              h3("Background"),
-             p("Integrated Care Boards (ICB) are required to submit 3-year plans for inpatient bed provision to NHS England. This tool development has been commissioned by NHSE Midlands to support ICBs to that end and fundamentally aims to predict the expected volume of inpatient activity and therefore bed requirements to 2028"),
+             p("Integrated Care Boards (ICB) are required to submit 3-year plans for inpatient bed provision to NHS England. This tool development has been commissioned by NHSE Midlands to support ICBs to that end and fundamentally aims to predict the expected volume of inpatient activity and therefore bed requirements to 2028."),
              
              h3("Who the tool is for"),
              p("The tool is specifically designed for use by ICB commissioners to help develop their system-wide medium-term plans for mental health beds. It may be best used collaboratively by mental health commissioners, analysts and other relevant stakeholders though can in theory be used by anyone in isolation. It is likely that analysts will be required to take and manipulate the outputs of the model alongside other local information and bespoke assumptions to support the overall strategic plan - this model is an approximation of the factors likely to impact on demand in the future and does not account for everything nor take into account local circumstances. All of our default assumptions should be screened and adjusted (or omitted)."),
@@ -195,17 +195,17 @@ ui <- navbarPage(
              p("The model takes a 12-month baseline of data (July 2023 to June 2024) and applies a set of adjustments to that for a range of parameters to estimate future demand for inpatient beds. These parameters cover population change, service changes, indirect impacts, external factors and specific policies on bed management."),
              
              h3("How the tool works"),
-             p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The paramters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and developing alternative scenario using the tool."),
+             p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The parameters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and developing alternative scenario using the tool."),
              )
            ),
   
   tabPanel("Instructions & Data",
            fluidPage(
              titlePanel("Loading data and navigating through the tool"),
-             p("The below instructions provide a brief set of instructions to get you going with the tool. We have recorded a tutorial video (link when video ready and posted) that walks through in detail all the functions and quirks that you can expect when using the tool. It's advised that you watch this before your first use."),
+             p("The below instructions provide a brief set of instructions to get you going with the tool. We have recorded a tutorial video (link when video ready and posted) that walks through in detail all the functions (and quirks) that you can expect when using the tool. It's advised that you watch this before your first use."),
             
               h3("Instructions"),
-             p("Before you start using the tool for the first time, you may want to scan the information on the 'Metadata and glossary' tab so you know more about what underlying data that is being used within the baseline, how the aggregate file you were sent is generated and what some of the terms used in the tool mean."),
+             p("Before you start using the tool for the first time, you may also want to scan the information on the 'Metadata and glossary' tab so you know more about what underlying data that is being used within the baseline, how the aggregate file you were sent is generated and what some of the terms used in the tool mean."),
              
              p("1. Upload the CSV file provided to your ICB using the 'Upload CSV File' button below."),
              br(),
@@ -224,7 +224,7 @@ ui <- navbarPage(
              
              h3("Upload growth factor parameters (optional):"),
              p("In the first instance, we suggest you explore the mental health inpatient baseline and projections using our 
-             default growth variables (found in the Analysis tab side bar)."),
+             default growth variables (found in the Modelling Assumptions tab)."),
              p("You can export the default or adjusted growth factors to save your adjustments and read them in as a csv file 
                the next time you use the app."),
              p("If you read in a parameters csv file, the values in the file will override our default settings but you will 
@@ -264,14 +264,14 @@ ui <- navbarPage(
                                    
                                    h6(strong("External influences:")),
                                    numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
-                                   numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1)
+                                   numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1),
+                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
                                    ),
                             column(6,
                                    
                                    h6(strong("Direct changes:")),
                                    numericInput("service_models", "Service Models",               value = -5,step = 0.1),
                                    numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
-                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
                                    
                                    h6(strong("Bed policy:")),
                                    numericInput("ooa_repat", "Out of Area Repatriation",            value = 50,   step = 0.1),
@@ -304,7 +304,7 @@ ui <- navbarPage(
                 h3("Demand factor assumptions:"),
                 p("Demographic growth values are externally sourced from ONS population projections published at local authority level.
                We have extracted age and gender specific population projections which are applied to our data extract and grouped to ICB level.
-               As such, demographic growth is a fixed point and not modifiable in the analysis tab unlike our other growth factors."),
+               As such, demographic growth is a fixed point and not modifiable unlike our other growth factors."),
                br(),
                
                "For reference, the demographic growth factor for the selected ICB is:",
@@ -314,7 +314,7 @@ ui <- navbarPage(
                br(),
                
                h5(strong("Population changes:")),
-               p(strong("Incidence change"),": The most likely diagnoses for admissions are Psychosis, PTSD, Severe Anxiety and Drug dependence. Average growth in incidence of these (sourced from APMS, QOF and published prevalence studies) for a 3-year period is estimated at 10.7%. Assuming these conditions make up 2/3 of all admissions and that 50% will have feature in multiple groups, we arrive at an adjusted estimate of 3.5% for impact of incidence changes over 3 years."),
+               p(strong("Incidence change"),": The most likely diagnoses for admissions are Psychosis, PTSD, Severe Anxiety and Drug dependence. Average growth in incidence of these (sourced from APMS, QOF and published prevalence studies) for a 3-year period is estimated at 10.7%. Assuming these conditions make up 2/3 of all admissions and that 50% will feature in multiple groups, we arrive at an adjusted estimate of 3.5% for impact of incidence changes over 3 years."),
                p(strong("Acuity change"),": We have assumed a general change in acuity (length of stay as a proxy) for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
                
                #br(),
@@ -322,7 +322,6 @@ ui <- navbarPage(
                h5(strong("Direct changes:")),
                p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We propose a notional 5% bedday reduction over 3 years for each of these transformational activities."),
                p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
-               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely, increase the frequency of assessment and reduce detention time for those with LD or autism. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased admissions so have adjusted to 5%."),
                
                #br(),
                
@@ -334,13 +333,14 @@ ui <- navbarPage(
                h5(strong("External influences:")),
                p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
                p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment relative to overall budgets (£2.3bn vs £12bn, https://www.kingsfund.org.uk/insight-and-analysis/long-reads/mental-health-360-funding-costs) and indicative impacts (https://pmc.ncbi.nlm.nih.gov/articles/PMC10753954/), we estimate this may reduce admissions by 4.8% over the next 3 years."),
+               p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely, increase the frequency of assessment and reduce detention time for those with LD or autism. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased informal/planned admissions so have adjusted to 5%."),
                
                br(),
                
-               h3("Indicative Capacity conversions:"),
+               h3("Bed Policy and Capacity conversions:"),
                p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
                p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of NHS activity you might want to commission (in-area) IP beds for in the future."),
-               p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.")
+               p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.", strong("THESE VALUES CAN BE CHANGED ON THE MAIN RESULTS TAB."))
                           )
                         )
                     ))
@@ -364,7 +364,7 @@ ui <- navbarPage(
                             br(),
                             br(),
                             "When you are happy with the parameters and these model projections you can download the data for your own post-hoc analysis using 
-                            the button below.",
+                            the yellow button below.",
                             
                             br(),
                             br(),
