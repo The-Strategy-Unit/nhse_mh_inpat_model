@@ -196,6 +196,14 @@ ui <- navbarPage(
              
              h3("How the tool works"),
              p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The parameters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and developing alternative scenario using the tool."),
+             
+             h4("Acknowledgements"),
+             p("This tool has been developed with a range of input (data extraction, tool dev't, advice, QA) from the following people:"),
+             p("Andy Hood, Alex Lawless, Anya Ferguson, Andy Wilson, Diane Domenico, Hannah Bedford, Sarah Fellows, Jake Parsons, Sarah Lucas."),
+             
+             br(),
+             
+             p("Kind thanks to Matt Dray in the Strategy Unit data sicence team for technical support on workflow and hosting arrangements for the tool."),
              )
            ),
   
@@ -432,13 +440,12 @@ ui <- navbarPage(
                     br()
                     ),
                  h6(
-                   "For the selected ICB, we present the number of spells by whether they were (1.) not Out-of-area placements (OAP)  (resident in ICB 
-                   and treated in ICB), (2.) Outgoing OAP (residents in selected ICB but treated elsewhere) or (3.) Incoming OAP (resident outside of selected 
-                   ICB and treated within).",
+                   "For the selected ICB, the following table present the number of beddays by whether they were [1] Residence and Provider are in ICB boundary (i.e. not OAP), [2] Outgoing OAP (residence in selected ICB but treated elsewhere) or [3] Incoming OAP (residence outside of selected 
+                   ICB and treated within). Groups [1] and [3] are counted within the baseline bed demand; Groups [1], [2] and [3] are counted in future demand depending on the OPA repatriation assumption specified.",
                    br(),
                    br(),
                    "For outgoing OAP's, the out-of-area reparation growth factor (Model assumptions) is applied as an inflator to illustrate the increased activity 
-                   demand if outgoing OAP's were treated within the ICB.", 
+                   demand if outgoing OAP's were treated within the ICB in the future.", 
                    br(),
                    br(),
                    "For incoming OAP's, the out-of-area reparation is applied as a reduction in demand, applying the assumption that external ICB's would reduce 
@@ -449,7 +456,7 @@ ui <- navbarPage(
                     "Sub-group Analysis:"
                  ),
                  h6(
-                   "Finally, we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
+                   "In order to inform patient and service demand perspectives, below we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
                    br(),
                    br(),
                    "Cycle through the 'grouping variable' control (below) to change the sub-group measure by which we present the baseline and 
@@ -496,8 +503,8 @@ ui <- navbarPage(
            fluidPage(
              titlePanel("Metadata and glossary:"),
              h3("Metadata"),
-             p("The MHSDS data hosted within NCDR is our baseline datasource.
-               Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exsists and has been aggregated."),
+             p("The MHSDS data hosted within NCDR is our baseline datasource. Data in the raw extract is for the 1-year period 1st July 2023 to 30th June 2024. All admissions are included where not recorded as a specialised commissioning category and where the patient was either resident or treated within the Midlands region (11 ICB boundaries).
+               Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exsists and has been aggregated to generate the ICB files used to feed into the model."),
              
              DTOutput("baseline_extract_meta")
              
