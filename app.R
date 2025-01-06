@@ -203,7 +203,7 @@ ui <- navbarPage(
              
              br(),
              
-             p("Kind thanks to Matt Dray in the Strategy Unit data sicence team for technical support on workflow and hosting arrangements for the tool."),
+             p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on workflow and hosting arrangements for the tool."),
              )
            ),
   
