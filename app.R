@@ -591,47 +591,46 @@ server <- function(input, output, session) {
   ooa_repat              <- reactive({ input$ooa_repat })
   shift_to_ip            <- reactive({ input$shift_to_ip })
   
-  # Apply growth inflators to grouped activity counts - separately
-  baseline_growth <- reactive({
-    req(baseline_aggregate()#, input$icb
-        )
+  
+  # Baseline growth function
+  baseline_growth_function <- function(oap_filter) {
     
-    baseline_aggregate() %>%
-      #filter(residence_icb_name == input$icb) %>%
+    baseline_aggregate() |>
       mutate(ooa_group = 
                case_when(
                  oap_flag == 0 ~ "not_oap",
-                 oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-                 oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+                 oap_flag == 1 & residence_icb_name == input$icb ~ "oap_outgoing",
+                 oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
                )) |> 
-      mutate(sp_demographic_growth       = spell_count * (demographic_growth()/100),
-             sp_incidence_change         = spell_count * (incidence_change()/100),
-             sp_acuity_change            = spell_count * (acuity_change()/100),
-             sp_social_care_pressures    = spell_count * (social_care_pressures()/100),
-             sp_mha_changes              = spell_count * (mha_changes()/100),
-             sp_national_policy          = spell_count * (national_policy()/100),
-             sp_service_models           = spell_count * (service_models()/100),
-             sp_prevention_programme     = spell_count * (prevention_programme()/100),
-             sp_admission_avoidance      = spell_count * (admission_avoidance()/100),
-             sp_waiting_list_reduction   = spell_count * (waiting_list_reduction()/100),
-             #sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat()/100), TRUE ~ 0),
-             sp_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ spell_count * (ooa_repat()/100), TRUE ~ 0),
-             sp_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ spell_count * ((ooa_repat()*-1)/100), TRUE ~ 0),
+      filter(ooa_group == {{oap_filter}}) %>% 
+      mutate(sp_demographic_growth       =  spell_count * (demographic_growth()/100),
+             sp_incidence_change         =  spell_count * (incidence_change()/100),
+             sp_acuity_change            =  spell_count * (acuity_change()/100),
+             sp_social_care_pressures    =  spell_count * (social_care_pressures()/100),
+             sp_mha_changes              =  spell_count * (mha_changes()/100),
+             sp_national_policy          =  spell_count * (national_policy()/100),
+             sp_service_models           =  spell_count * (service_models()/100),
+             sp_prevention_programme     =  spell_count * (prevention_programme()/100),
+             sp_admission_avoidance      =  spell_count * (admission_avoidance()/100),
+             sp_waiting_list_reduction   =  spell_count * (waiting_list_reduction()/100),
+             #sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat), TRUE ~ 0),
+             #sp_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ spell_count*(ooa_repat/100), TRUE ~ 0),
+             #sp_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ spell_count*((ooa_repat/100)*-1), TRUE ~ 0),
              sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * (shift_to_ip()/100), TRUE ~ 0),
              
-             bd_demographic_growth       = bed_days * (demographic_growth()/100),
-             bd_incidence_change         = bed_days * (incidence_change()/100),
-             bd_acuity_change            = bed_days * (acuity_change()/100),
-             bd_social_care_pressures    = bed_days_delayed_days * (social_care_pressures()/100),
-             bd_mha_changes              = bed_days * (mha_changes()/100),
-             bd_national_policy          = bed_days * (national_policy()/100),
-             bd_service_models           = bed_days * (service_models()/100),
-             bd_prevention_programme     = bed_days * (prevention_programme()/100),
-             bd_admission_avoidance      = bed_days * (admission_avoidance()/100),
-             bd_waiting_list_reduction   = bed_days * (waiting_list_reduction()/100),
-             #bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat()/100), TRUE ~ 0),
-             bd_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days *(ooa_repat()/100), TRUE ~ 0),
-             bd_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days *((ooa_repat()*-1)/100), TRUE ~ 0),
+             bd_demographic_growth       =  bed_days * (demographic_growth()/100),
+             bd_incidence_change         =  bed_days * (incidence_change()/100),
+             bd_acuity_change            =  bed_days * (acuity_change()/100),
+             bd_social_care_pressures    =  bed_days_delayed_days * (social_care_pressures()/100),  # switch to bed days - delayed discharges
+             bd_mha_changes              =  bed_days * (mha_changes()/100),
+             bd_national_policy          =  bed_days * (national_policy()/100),
+             bd_service_models           =  bed_days * (service_models()/100),
+             bd_prevention_programme     =  bed_days * (prevention_programme()/100),
+             bd_admission_avoidance      =  bed_days * (admission_avoidance()/100),
+             bd_waiting_list_reduction   =  bed_days * (waiting_list_reduction()/100),
+             #bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat), TRUE ~ 0),
+             #bd_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days*(ooa_repat/100), TRUE ~ 0),
+             #bd_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days*((ooa_repat/100)*-1), TRUE ~ 0),
              bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * (shift_to_ip()/100), TRUE ~ 0),
              
              exHL_bedday_demographic_growth       =  bed_days_exHL * (demographic_growth()/100),
@@ -644,19 +643,90 @@ server <- function(input, output, session) {
              exHL_bedday_prevention_programme     =  bed_days_exHL * (prevention_programme()/100),
              exHL_bedday_admission_avoidance      =  bed_days_exHL * (admission_avoidance()/100),
              exHL_bedday_waiting_list_reduction   =  bed_days_exHL * (waiting_list_reduction()/100),
-             #exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat()/100), TRUE ~ 0),
-             exHL_bedday_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days_exHL * (ooa_repat()/100), TRUE ~ 0),
-             exHL_bedday_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days_exHL * ((ooa_repat()*-1)/100), TRUE ~ 0),
+             #exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat), TRUE ~ 0),
+             #exHL_bedday_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days_exHL*(ooa_repat/100), TRUE ~ 0),
+             #exHL_bedday_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days_exHL*((ooa_repat/100)*-1), TRUE ~ 0),
              exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * (shift_to_ip()/100), TRUE ~ 0)
-             ) %>%
+             ) |> 
       mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
-             bed_days_proj = bed_days + rowSums(across(contains("bd_"))),
+             bed_days_proj =    bed_days + rowSums(across(contains("bd_"))),
              bed_days_exHL_proj = bed_days_exHL + rowSums(across(contains("exHL_bedday_")))
-      )
+      ) 
+    }
+  
+  
+  # Apply growth inflators to grouped activity counts - separately
+  baseline_growth <- reactive({
+    req(baseline_aggregate(), 
+        input$icb)
+    
+    baseline_growth_function("not_oap")
+    
+  })
+  
+  baseline_growth_outgoing <- reactive({
+    req(baseline_aggregate(), 
+        input$icb)
+    
+    baseline_growth_function("oap_outgoing")
+    
+  })
+  
+  baseline_growth_incoming <- reactive({
+    req(baseline_aggregate(), 
+        input$icb)
+    
+    baseline_growth_function("oap_incoming")
+    
+  })
+  
+
+
+  # Summarise growth at ICB level
+  
+  # Calculate growth adjusted outgoing activity to link back to below
+  waterfall_data_outgoing <- reactive({
+    
+    req(baseline_growth_outgoing(),
+        ooa_repat()
+        )
+    
+    baseline_growth_outgoing() %>% 
+      summarise(
+        sp_ooa_repat_outgoing = sum(spell_proj),
+        bd_ooa_repat_outgoing = sum(bed_days_proj),
+        exHL_bedday_ooa_repat_outgoing = sum(bed_days_exHL_proj)
+        ) %>%
+    mutate(icb_dummy = "ICB") %>% 
+    pivot_longer(-icb_dummy) %>% 
+    mutate(value = value *(ooa_repat()/100)) #apply repatriation growth figure
+    
+  })
+  
+  # Calculate growth adjusted incoming activity to link back to below
+  waterfall_data_incoming <- reactive({
+    req(baseline_growth_incoming(),
+        ooa_repat()
+        )
+    
+    baseline_growth_incoming() %>% 
+      summarise(
+        sp_ooa_repat_incoming = sum(spell_proj),
+        bd_ooa_repat_incoming = sum(bed_days_proj),
+        exHL_bedday_ooa_repat_incoming = sum(bed_days_exHL_proj)
+        ) %>%
+    mutate(icb_dummy = "ICB") %>% 
+    pivot_longer(-icb_dummy) %>% 
+    mutate(value = value *((ooa_repat()/100)*-1)) #apply repatriation growth figure
   })
   
   # Aggregate up growth/reduction in activity for each factor to ICB level
   waterfall_data <- reactive({
+    
+    req(baseline_growth(),
+        waterfall_data_outgoing(),
+        waterfall_data_incoming()
+        )
     
     baseline_growth() |> 
       #group_by(residence_icb_name) %>%
@@ -675,8 +745,8 @@ server <- function(input, output, session) {
                 sp_admission_avoidance     = sum(sp_admission_avoidance),
                 sp_waiting_list_reduction  = sum(sp_waiting_list_reduction),
                 #sp_ooa_repat               = sum(sp_ooa_repat),
-                sp_ooa_repat_outgoing      = sum(sp_oap_repat_outgoing),
-                sp_ooa_repat_incoming      = sum(sp_oap_repat_incoming),
+                #sp_ooa_repat_outgoing      = sum(sp_oap_repat_outgoing),
+                #sp_ooa_repat_incoming      = sum(sp_oap_repat_incoming),
                 sp_shift_to_ip             = sum(sp_shift_to_ip),
                 
                 bd_demographic_growth      = sum(bd_demographic_growth),
@@ -690,8 +760,8 @@ server <- function(input, output, session) {
                 bd_admission_avoidance     = sum(bd_admission_avoidance),
                 bd_waiting_list_reduction  = sum(bd_waiting_list_reduction),
                 #bd_ooa_repat               = sum(bd_ooa_repat),
-                bd_ooa_repat_outgoing      = sum(bd_oap_repat_outgoing ),
-                bd_ooa_repat_incoming      = sum(bd_oap_repat_incoming ),
+                #bd_ooa_repat_outgoing      = sum(bd_oap_repat_outgoing ),
+                #bd_ooa_repat_incoming      = sum(bd_oap_repat_incoming ),
                 bd_shift_to_ip             = sum(bd_shift_to_ip),
                 
                 exHL_bedday_demographic_growth     = sum(exHL_bedday_demographic_growth    ),
@@ -705,8 +775,8 @@ server <- function(input, output, session) {
                 exHL_bedday_admission_avoidance    = sum(exHL_bedday_admission_avoidance   ),
                 exHL_bedday_waiting_list_reduction = sum(exHL_bedday_waiting_list_reduction),
                 #exHL_bedday_ooa_repat              = sum(exHL_bedday_ooa_repat             ),
-                exHL_bedday_ooa_repat_outgoing     = sum(exHL_bedday_oap_repat_outgoing    ),
-                exHL_bedday_ooa_repat_incoming     = sum(exHL_bedday_oap_repat_incoming    ),
+                #exHL_bedday_ooa_repat_outgoing     = sum(exHL_bedday_oap_repat_outgoing    ),
+                #exHL_bedday_ooa_repat_incoming     = sum(exHL_bedday_oap_repat_incoming    ),
                 exHL_bedday_shift_to_ip            = sum(exHL_bedday_shift_to_ip           ),
                 
                 spell_proj = sum(spell_proj),
@@ -714,12 +784,15 @@ server <- function(input, output, session) {
                 bed_days_exHL_proj = sum(bed_days_exHL_proj)
                 ) %>%
       mutate(icb_dummy = "ICB") |> 
-      pivot_longer(cols = -icb_dummy)
+      pivot_longer(cols = -icb_dummy) %>% 
+      union_all(waterfall_data_outgoing()) %>% 
+      union_all(waterfall_data_incoming()) 
     
   })
   
   # Plot waterfall - Spells and bed days
   waterfall_plot <- reactive({
+    req(waterfall_data())
     
     data <-
       waterfall_data() |> 
@@ -1072,11 +1145,12 @@ server <- function(input, output, session) {
         )
     
     baseline_aggregate() |> 
+      filter(residence_icb_name == input$icb) %>% 
       mutate(ooa_group = 
                case_when(
                  oap_flag == 0 ~ "not_oap",
-                 oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-                 oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
+                 oap_flag == 1 & residence_icb_name == input$icb ~ "oap_outgoing",
+                 oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
                )) |> 
       group_by(ooa_group) |> 
       summarise(baseline_spells = sum(spell_count)) |> 
@@ -1088,8 +1162,8 @@ server <- function(input, output, session) {
                )) |>
       mutate(projected_spells = 
                case_when(
-                 ooa_group == "2. Outgoing OAP" ~ baseline_spells * 0.4,
-                 ooa_group == "3. Incoming OAP" ~ baseline_spells * (0.4*-1)
+                 ooa_group == "2. Outgoing OAP" ~ baseline_spells * ooa_repat()/100,
+                 ooa_group == "3. Incoming OAP" ~ baseline_spells * ((ooa_repat()/100)*-1)
                )) |> 
       pivot_longer(-ooa_group) |> 
       arrange(ooa_group) |> 
