@@ -437,13 +437,20 @@ ui <- navbarPage(
                  
                  
                  h5(br(),
-                    "Out-Of-Area Placements:",
+                    "Out-Of-Area Placements at baseline:",
                     br()
                     ),
                  h6(
-                   "For the selected ICB, the following table present the number of beddays by whether they were [1] Residence and Provider are in ICB boundary (i.e. not OAP), [2] Outgoing OAP (residence in selected ICB but treated elsewhere) or [3] Incoming OAP (residence outside of selected 
-                   ICB and treated within). Groups [1] and [3] are counted within the baseline bed demand; Groups [1], [2] and [3] are counted in future demand depending on the OPA repatriation assumption specified.",
+                   "For the selected ICB, the table (right) presents baseline activity (the number of beddays or spells) by the patients residence ICB and the ICB in which they were treated (i.e. provision of care):",
                    br(),
+                   br(),
+                   tags$ul(
+                     tags$li("[1 - Upper left quadrent] Residence and Provider are in ICB boundary (i.e. not OAP)"),
+                     tags$li("[2 - Lower left quadrent] Residence outside of selected ICB and treated within (i.e. Incoming OAP)"),
+                     tags$li("[3 - Upper right quadrent] Residence in selected ICB but treated elsewhere (i.e. Outgoing OAP)"),
+                     tags$li("[4 - Lower right quadrent] Resident outside and treated outside of selected ICB (data not included)")
+                   ),
+                   "Groups [1] and [2] are counted within the baseline bed demand; Groups [1], [2], and [3] are counted in future demand depending on the OPA repatriation assumption specified.",br(),
                    br(),
                    "For outgoing OAP's, the out-of-area reparation growth factor (Model assumptions) is applied as an inflator to illustrate the increased activity 
                    demand if outgoing OAP's were treated within the ICB in the future.", 
@@ -483,14 +490,15 @@ ui <- navbarPage(
                ),
                
                mainPanel(
-                 #h3("ICB Outputs"),
-                 
                  h5(br(),
-                    "Out-Of-Area Placements",
+                    "Out-Of-Area Placements at baseline",
                     br()
                     ),
-                 DTOutput("dataTable_oap"),
-                 
+                 tabsetPanel(
+                   tabPanel("Bed days", DTOutput("dataTable_oap_bed_days")),
+                   tabPanel("Bed days - excl. Home Leave", DTOutput("dataTable_oap_bed_days_exHL")),
+                   tabPanel("Spells", DTOutput("dataTable_oap"))
+                   ),
                  h5(br(),
                     "Sub-group Analysis"
                     ),
@@ -530,7 +538,8 @@ server <- function(input, output, session) {
         filter(residence_icb_name == input$icb) %>% 
         mutate(`Demographic growth projection` = paste0(round(weighted_perc_change * 100,1), "%")) %>% 
         select(residence_icb_name, `Demographic growth projection`) %>% 
-        rename(ICB = residence_icb_name)
+        rename(ICB = residence_icb_name),
+      options = list(dom = 't', paging = FALSE, ordering = FALSE)
       )
     })
   
@@ -538,7 +547,14 @@ server <- function(input, output, session) {
   # Read in grouped data
   baseline_aggregate <- reactive({
     req(input$file)
-    read.csv(input$file$datapath)
+    
+    read.csv(input$file$datapath) |>
+      mutate(ooa_group = 
+               case_when(
+                 oap_flag == 0 ~ "not_oap",
+                 oap_flag == 1 & residence_icb_name == input$icb ~ "oap_outgoing",
+                 oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
+               ))
   })
   
   
@@ -596,14 +612,8 @@ server <- function(input, output, session) {
   # Baseline growth function
   baseline_growth_function <- function(oap_filter) {
     
-    baseline_aggregate() |>
-      mutate(ooa_group = 
-               case_when(
-                 oap_flag == 0 ~ "not_oap",
-                 oap_flag == 1 & residence_icb_name == input$icb ~ "oap_outgoing",
-                 oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
-               )) |> 
-      filter(ooa_group == {{oap_filter}}) %>% 
+    baseline_aggregate() |> 
+      filter(ooa_group %in% c( {{oap_filter}} )) %>% 
       mutate(sp_demographic_growth       =  spell_count * (demographic_growth()/100),
              sp_incidence_change         =  spell_count * (incidence_change()/100),
              sp_acuity_change            =  spell_count * (acuity_change()/100),
@@ -661,7 +671,7 @@ server <- function(input, output, session) {
     req(baseline_aggregate(), 
         input$icb)
     
-    baseline_growth_function("not_oap")
+    baseline_growth_function(c("not_oap", "oap_incoming"))
     
   })
   
@@ -1139,49 +1149,71 @@ server <- function(input, output, session) {
     
   })
   
-  # Out of area table
+  # Out of area table ----
   baseline_oap_activity_icb <- reactive({   
     req(baseline_aggregate(),
         input$icb
         )
     
-    baseline_aggregate() |> 
-      filter(residence_icb_name == input$icb) %>% 
-      mutate(ooa_group = 
-               case_when(
-                 oap_flag == 0 ~ "not_oap",
-                 oap_flag == 1 & residence_icb_name == input$icb ~ "oap_outgoing",
-                 oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
-               )) |> 
-      group_by(ooa_group) |> 
-      summarise(baseline_spells = sum(spell_count)) |> 
-      mutate(ooa_group = 
-               case_when(
-                 ooa_group == "not_oap" ~ "1. Not Out-of-area placement",
-                 ooa_group == "oap_outgoing" ~ "2. Outgoing OAP",
-                 ooa_group == "oap_incoming" ~ "3. Incoming OAP"
-               )) |>
-      mutate(projected_spells = 
-               case_when(
-                 ooa_group == "2. Outgoing OAP" ~ baseline_spells * ooa_repat()/100,
-                 ooa_group == "3. Incoming OAP" ~ baseline_spells * ((ooa_repat()/100)*-1)
-               )) |> 
-      pivot_longer(-ooa_group) |> 
-      arrange(ooa_group) |> 
-      pivot_wider(id_cols = name,
-                  names_from = ooa_group,
-                  values_from = value) %>% 
-      mutate(name = 
-               case_when(
-                 name == "baseline_spells" ~ "Baseline - spells",
-                 name == "projected_spells" ~ "Projected change - spells"
-               )) %>% 
-      rename(Measure = name)
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                        TRUE ~ "2. External residence"),
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                        TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(spells = sum(spell_count)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = spells
+                  ) %>% 
+      rename(` ` = flag_residence)
     
     })
+  
+  baseline_oap_activity_icb_bed_days <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+    )
     
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                        TRUE ~ "2. External residence"),
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                        TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(bed_days = sum(bed_days)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = bed_days
+                  ) %>% 
+      rename(` ` = flag_residence)
+    
+  })
   
+  baseline_oap_activity_icb_bed_days_exHL <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+        )
+    
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                      TRUE ~ "2. External residence"),
+           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                      TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = bed_days_exHL
+                  ) %>% 
+      rename(` ` = flag_residence)
+    
+  })
   
+  # Output objects
   output$dataTable_oap <- renderDT({
     req(baseline_oap_activity_icb()
     )
@@ -1190,8 +1222,55 @@ server <- function(input, output, session) {
       baseline_oap_activity_icb(),
       extensions = 'Buttons',
       options = list(dom = 'Bfrtip',
-                     buttons = c('copy', 'csv')
+                     buttons = c('copy', 'csv'),
+                     ordering = FALSE,
+                     columnDefs = list(list(targets = 0, visible = FALSE))
                      )
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
+      )
+    
+  })
+  
+  output$dataTable_oap_bed_days <- renderDT({
+    req(baseline_oap_activity_icb_bed_days()
+    )
+    
+    DT::datatable(
+      baseline_oap_activity_icb_bed_days(),
+      extensions = 'Buttons',
+      options = list(dom = 'Bfrtip',
+                     buttons = c('copy', 'csv'),
+                     ordering = FALSE,
+                     columnDefs = list(list(targets = 0, visible = FALSE))
+                     )
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
+      )
+    
+    
+  })
+  
+  output$dataTable_oap_bed_days_exHL <- renderDT({
+    req(baseline_oap_activity_icb_bed_days_exHL()
+    )
+    
+    DT::datatable(
+      baseline_oap_activity_icb_bed_days_exHL(),
+      extensions = 'Buttons',
+      options = list(dom = 'Bfrtip',
+                     buttons = c('copy', 'csv'),
+                     ordering = FALSE,
+                     columnDefs = list(list(targets = 0, visible = FALSE))
+                     )
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
       )
     
     

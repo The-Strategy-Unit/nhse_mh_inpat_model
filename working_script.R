@@ -12,8 +12,6 @@ setwd("C:/Users/alexander.lawless/OneDrive - Midlands and Lancashire CSU/Work/1.
 
 # To-do (/developments): ----
 
-# Confidence intervals around growth factors
-
 
 
 # Aggregate baseline data ----
@@ -73,7 +71,6 @@ baseline_aggregate <-
 
 # Write aggregated baseline csv to read into shiny app
 write_csv(baseline_aggregate, "baseline_aggregate.csv")
-
 
 # Write ICB specific csv's of the baseline aggregate table ----
 
@@ -431,104 +428,20 @@ waterfall_data |>
   
 # Out of area flag / table ----
   
-  # All spells in ICB
-  baseline_aggregate %>% 
-    summarise(spells = sum(spell_count)) # 3470
+test <- read_csv("icb_baseline_data/baseline_aggregate_QT1.csv")
   
-  # All ICB resident spells 
-  baseline_aggregate %>% 
-    filter(residence_icb_code == "QHL") %>% 
-    summarise(spells = sum(spell_count)) # 3051
+test %>%
+  mutate(flag_residence = case_when(residence_icb_name == "QT1: NHS Nottingham And Nottinghamshire ICB" ~ "Selected icb residence",
+                                    TRUE ~ "External residence"),
+         flag_provision = case_when(provider_icb_name == "QT1: NHS Nottingham And Nottinghamshire ICB" ~ "Selected icb provision",
+                                    TRUE ~ "External provision")) %>% 
+    group_by(flag_residence, flag_provision) %>% 
+    summarise(spells = sum(spell_count)) %>% 
+    ungroup() %>% 
+    pivot_wider(id_cols = flag_residence, 
+                names_from = flag_provision, 
+                values_from = spells)
   
-  3470 - 3051
-  
-  
-  baseline_aggregate %>%
-    #filter(residence_icb_code == "QHL") %>% 
-    mutate(ooa_group = 
-             case_when(
-               oap_flag == 0 ~ "not_oap",
-               oap_flag == 1 & residence_icb_code == "QHL" ~ "oap_outgoing",
-               oap_flag == 1 & residence_icb_code != "QHL" ~ "oap_incoming"
-             )) %>% 
-    group_by(ooa_group) |> 
-    summarise(baseline_spells = sum(spell_count)) 
-  
-  # # A tibble: 3 × 2
-  # ooa_group    baseline_spells
-  # <chr>                  <dbl>
-  # 1 not_oap                 1395
-  # 2 oap_incoming             419
-  # 3 oap_outgoing            1656
-  
-  1395 + 419 + 1656 # = 3470
-  
-  1395 + 1656 # = 3051
-
-  
-  
- # # A tibble: 2 × 2
- # ooa_group    baseline_spells
- # <chr>                  <dbl>
- # 1 not_oap                 1395
- # 2 oap_incoming            1656
-  
-  
-  
-  baseline_aggregate %>%
-    #filter(residence_icb_code == "QHL")
-    mutate(ooa_group = 
-             case_when(
-               oap_flag == 0 ~ "not_oap",
-               oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-               oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
-             )) %>% 
-    group_by(ooa_group) |> 
-    summarise(baseline_spells = sum(spell_count),
-              bed_days = sum(bed_days)) %>% 
-    mutate(ooa_group = 
-             case_when(
-               ooa_group == "not_oap" ~ "1. Not OAP Placement",
-               ooa_group == "oap_outgoing" ~ "2. Outgoing OAP",
-               ooa_group == "oap_incoming" ~ "3. Incoming OAP"
-             )) |>
-    mutate(project_spells = 
-             case_when(
-               ooa_group == "2. Outgoing OOAP" ~ baseline_spells * 0.4,
-               ooa_group == "3. Incoming OOAP" ~ baseline_spells * (0.4*-1)
-             ))
-  
-  
-  # Table design
-  # icb - count - internal spells, outgoing and incoming
-  
-  baseline_oap_activity_icb <-
-    baseline_aggregate |> 
-    #filter(residence_icb_code == "QGH") |> 
-    mutate(ooa_group = 
-             case_when(
-               oap_flag == 0 ~ "not_oap",
-               oap_flag == 1 & residence_icb_code == "QGH" ~ "oap_outgoing",
-               oap_flag == 1 & residence_icb_code != "QGH" ~ "oap_incoming"
-             )) |> 
-    group_by(ooa_group) |> 
-    summarise(baseline_spells = sum(spell_count)) |> 
-    mutate(ooa_group = 
-             case_when(
-               ooa_group == "not_oap" ~ "1. Not OOA Placement",
-               ooa_group == "oap_outgoing" ~ "2. Outgoing OOAP",
-               ooa_group == "oap_incoming" ~ "3. Incoming OOAP"
-             )) |>
-    mutate(project_spells = 
-             case_when(
-               ooa_group == "2. Outgoing OOAP" ~ baseline_spells * 0.4,
-               ooa_group == "3. Incoming OOAP" ~ baseline_spells * (0.4*-1)
-             )) |> 
-    pivot_longer(-ooa_group) |>
-    arrange(ooa_group) |> 
-    pivot_wider(id_cols = name,
-                names_from = ooa_group,
-                values_from = value) 
 
 # Apply occupancy rate to bed days ----
 # Annualised beds (Baseline occupancy rate / occupancy rate) / 365.25 
@@ -849,8 +762,18 @@ icb_lad_baseline_spells <-
   summarise(spell_count = n_distinct(record_number)) |> 
   ungroup()
 
+
+proj_perc_change_la_m_age_group_2 %>%
+  filter(str_detect(area, "Northampton")) %>% View()
+
 icb_weighted_demographic_change <-
   icb_lad_baseline_spells |>
+  mutate(lad23nm = 
+           case_when(
+             lad23nm == "North Northamptonshire" ~ "Northamptonshire",
+             lad23nm == "West Northamptonshire" ~ "Northamptonshire",
+             TRUE ~ lad23nm
+           )) %>% # Fudging the LA names to ensure we can pick up a population projection for Northamptonshire ICB
   left_join(proj_perc_change_la_m_age_group_2 |>
               drop_na(proj_perc_change) |> 
               group_by(area, age_group_2) |> 
@@ -909,31 +832,9 @@ icb_lad_baseline_spells |>
   summarise(weighted_perc_change = sum(perc_change_projection * spell_count) / sum(spell_count))
 
 
-icb_weighted_demographic_change %>% 
-
-  mutate(check = weighted_perc_change * 100)
-
-
-
-
+# Write csv
 write.csv(icb_weighted_demographic_change, 
           "demographic_projections/icb_weighted_demographic_change.csv")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
