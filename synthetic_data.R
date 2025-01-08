@@ -56,6 +56,19 @@ df_new <- syn_df$syn # to extract the data frame
 df_new <- df_new |> 
   mutate(oap_flag = if_else(residence_icb_code == provider_icb_code, 0, 1))
 
+#remove any non-relevant activity created by the randomisation (i.e. neither resident or treated in main ICB)
+
+icb_main <- df_new |> 
+  group_by(residence_icb_code) |> 
+  summarise(count = n()) |> 
+  arrange(desc(count)) |> 
+  head(1) |> 
+  select(1) |> 
+  pull(residence_icb_code)
+
+df_new <- df_new |> 
+  filter(residence_icb_code == icb_main | provider_icb_code == icb_main) ##this ICB code will also need to be added with adjuster (mean of the others?) to the demographic projections file.
+
 # write csv to working directory
 
 write.csv(df_new, file = "baseline_aggregate_pseudo_icb.csv", quote = FALSE, row.names = FALSE)
