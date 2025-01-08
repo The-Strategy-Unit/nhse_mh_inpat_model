@@ -17,29 +17,36 @@ library(stringi)
 df <- read.csv("C:/Users/Andrew.Hood/OneDrive - Midlands and Lancashire CSU/Working Projects/MH inpat modelling/backup 20250103/nhse_mh_inpat_model/baseline_aggregate_QHL.csv")
 
 dist_icb_res <- df |> 
-  distinct(residence_icb_code) |> 
-  rename(icb = residence_icb_code)
+  group_by(residence_icb_code) |>
+  summarise(bd = sum(bed_days)) |> 
+  rename(icb = residence_icb_code) |> 
+  arrange(desc(bd))
 
 dist_icb_prov <- df |> 
-  distinct(provider_icb_code) |> 
-  rename(icb = provider_icb_code)
+  group_by(provider_icb_code) |>
+  summarise(bd = sum(bed_days)) |> 
+  rename(icb = provider_icb_code) |> 
+  arrange(desc(bd))
 
-dist_icb <- bind_rows(dist_icb_res, dist_icb_prov) |> 
-  distinct(icb)
+dist_icb <- bind_rows(dist_icb_res, dist_icb_prov) |>
+  filter(!is.na(icb)) |> 
+  group_by(icb) %>%
+  filter(bd == max(bd)) %>%
+  arrange(desc(bd)) |>
+  rowid_to_column("row_id")
+
+dist_icb <- dist_icb |>  
+  mutate(icb_code = paste0("AT",row_id),
+    icb_name = paste0(icb_code,": Anytown ICB_",row_id))
 
 rm(dist_icb_res,dist_icb_prov)
-
-dist_icb <- dist_icb |>
-  rowwise() |>  
-  mutate(icb_code = paste0(stri_rand_strings(1, 1, "[A-Z]"), stri_rand_strings(1, 3, "[0-9]")),
-    icb_name = paste0(icb_code,": Anytown ICB_",icb_code))
 
 #### replace original icb codes and names with above ####
 
 df <- df |> 
   left_join(dist_icb, by = c("residence_icb_code" = "icb")) |> 
   left_join(dist_icb, by = c("provider_icb_code" = "icb")) |> 
-  select(18:21,5:17) |> 
+  select(20:21,24:25,5:17) |> 
   rename(residence_icb_code = icb_code.x,
          residence_icb_name = icb_name.x,
          provider_icb_code = icb_code.y,
@@ -58,16 +65,14 @@ df_new <- df_new |>
 
 #remove any non-relevant activity created by the randomisation (i.e. neither resident or treated in main ICB)
 
-icb_main <- df_new |> 
-  group_by(residence_icb_code) |> 
-  summarise(count = n()) |> 
-  arrange(desc(count)) |> 
+icb_main <- dist_icb |> 
+  arrange(desc(bd)) |> 
   head(1) |> 
-  select(1) |> 
-  pull(residence_icb_code)
+  select(4) |> 
+  pull(icb_code)
 
 df_new <- df_new |> 
-  filter(residence_icb_code == icb_main | provider_icb_code == icb_main) ##this ICB code will also need to be added with adjuster (mean of the others?) to the demographic projections file.
+  filter(residence_icb_code == icb_main | provider_icb_code == icb_main)
 
 # write csv to working directory
 
