@@ -1,11 +1,12 @@
-"","residence_icb_name","weighted_perc_change"
-"1","QGH: NHS Herefordshire And Worcestershire ICB",0.0234987632900332
-"2","QHL: NHS Birmingham And Solihull ICB",0.0186611774982814
-"3","QJ2: NHS Derby And Derbyshire ICB",0.0148907630194153
-"4","QJM: NHS Lincolnshire ICB",0.0180709790966114
-"5","QK1: NHS Leicester, Leicestershire And Rutland ICB",0.0328695228766128
-"6","QNC: NHS Staffordshire And Stoke-On-Trent ICB",0.0117458769211041
-"7","QOC: NHS Shropshire, Telford And Wrekin ICB",0.0299139327234482
-"8","QT1: NHS Nottingham And Nottinghamshire ICB",0.0238537171540189
-"9","QUA: NHS Black Country ICB",0.0208845174019568
-"10","QWU: NHS Coventry And Warwickshire ICB",0.0256331193124123
+,residence_icb_name,weighted_perc_change
+1,QGH: NHS Herefordshire And Worcestershire ICB,0.023498763
+2,QHL: NHS Birmingham And Solihull ICB,0.018661177
+3,QJ2: NHS Derby And Derbyshire ICB,0.014890763
+4,QJM: NHS Lincolnshire ICB,0.018070979
+5,"QK1: NHS Leicester, Leicestershire And Rutland ICB",0.032869523
+6,QNC: NHS Staffordshire And Stoke-On-Trent ICB,0.011745877
+7,"QOC: NHS Shropshire, Telford And Wrekin ICB",0.029913933
+8,QT1: NHS Nottingham And Nottinghamshire ICB,0.023853717
+9,QUA: NHS Black Country ICB,0.020884517
+10,QWU: NHS Coventry And Warwickshire ICB,0.025633119
+11,K369: Anytown ICB_K369,0.022002237
