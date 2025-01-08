@@ -11,7 +11,7 @@ library(waterfalls) # https://www.rdocumentation.org/packages/waterfalls/version
 library(shinyWidgets)
 library(readxl)
 library(rlang)
-
+  
 #### Set SU theme ####
 SU_colours <- c (
   `orange`                     = grDevices::rgb(248,191,7, maxColorValue = 255),# "#f9bf07",
@@ -268,7 +268,7 @@ ui <- navbarPage(
                                    
                                    h6(strong("Indirect changes:")),
                                    numericInput("waiting_list_reduction", "Waiting List Management", value = -3.7,   step = 0.1),
-                                   numericInput("prevention_programme", "Prevention Programme",     value = -4, step = 0.1),
+                                   numericInput("prevention_programme", "Prevention Programme",     value = -4.8, step = 0.1),
                                    
                                    h6(strong("External influences:")),
                                    numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
@@ -293,8 +293,8 @@ ui <- navbarPage(
                           
                           br(),
                           
-                          h5("Export paramters:"),
-                          h6("Click to download the paramaters at the levels set above for the next time you use the app. Upload your parameters 
+                          h5("Export parameters:"),
+                          h6("Click to download the parameters at the levels set above for the next time you use the app. Upload your parameters 
                              on the `Instructions & Data` tab to apply parameters from a previous session."),
                           
                           downloadButton("downloadParameters", "Download Adjusted Parameters"),
@@ -334,7 +334,8 @@ ui <- navbarPage(
                #br(),
                
                h5(strong("Indirect changes:")),
-               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some. Reducing waiting lists could reverse rising admission trends. We estimate for a 10% waiting list reduction, 3.7% fewer emergency admissions may occur over 3 years."),
+               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some (https://www.rcpsych.ac.uk/news-and-features/latest-news/detail/2022/10/10/hidden-waits-force-more-than-three-quarters-of-mental-health-patients-to-seek-help-from-emergency-services). Reducing waiting lists could reverse rising admission trends. We estimate, based on historic data on emergency method admissions that for a 10% waiting list reduction, 3.7% fewer admissions may occur over 3 years."),
+               p(strong("Prevention Programmes"),": A prevous review of evidence on impact of preventive interventions (https://www.strategyunitwm.nhs.uk/sites/default/files/2019-11/Exploring%20Mental%20Health%20Inpatient%20Capacity%20accross%20Sustainability%20and%20Transformation%20Partnerships%20in%20England%20-%20191030_1.pdf) suggested there was strong evidence that Early Intervention in Psychosis, CBT and Family Interventions could reduce demand on inpatient settings for some patients. Based on weighted impact of these studies (https://pubmed.ncbi.nlm.nih.gov/21037211/) and an investment reach of 50% to these groups we estimate an overall impact of 4.8% reduction in admitted bed days."),
                
                #br(),
                
@@ -346,7 +347,7 @@ ui <- navbarPage(
                br(),
                
                h3("Bed Policy and Capacity conversions:"),
-               p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 40% of this activity to in-area beds over 3 years."),
+               p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 50% of this activity to in-area beds over 3 years."),
                p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of NHS activity you might want to commission (in-area) IP beds for in the future."),
                p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.", strong("THESE VALUES CAN BE CHANGED ON THE MAIN RESULTS TAB."))
                           )
@@ -1052,7 +1053,7 @@ server <- function(input, output, session) {
     updateNumericInput(session, "mha_changes", value = -5)
     updateNumericInput(session, "national_policy", value = -4.8)
     updateNumericInput(session, "service_models", value = -5)
-    updateNumericInput(session, "prevention_programme", value = -4)
+    updateNumericInput(session, "prevention_programme", value = -4.8)
     updateNumericInput(session, "admission_avoidance", value = -4)
     updateNumericInput(session, "waiting_list_reduction", value = -3.7)
     updateNumericInput(session, "ooa_repat", value = 50)
