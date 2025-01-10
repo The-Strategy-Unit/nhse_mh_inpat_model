@@ -280,22 +280,20 @@ ui <- navbarPage(
                                    numericInput("incidence_change", "Incidence Change",           value = 3.5,   step = 0.1),
                                    numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
                                    
-                                   h6(strong("Indirect changes:")),
+                                   h6(strong("Demand Management:")),
                                    numericInput("waiting_list_reduction", "Waiting List Management", value = -3.7,   step = 0.1),
                                    numericInput("prevention_programme", "Prevention Programme",     value = -4.8, step = 0.1),
-                                   
+                                   numericInput("service_models", "Service Models",               value = -5,step = 0.1),
+                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
+                                   ),
+                            
+                            column(6,
                                    h6(strong("External influences:")),
                                    numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
                                    numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1),
                                    numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
-                                   ),
-                            column(6,
                                    
-                                   h6(strong("Direct changes:")),
-                                   numericInput("service_models", "Service Models",               value = -5,step = 0.1),
-                                   numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
-                                   
-                                   h6(strong("Bed policy:")),
+                                   h6(strong("Bed policy & Management:")),
                                    numericInput("ooa_repat", "Out of Area Repatriation",            value = 50,   step = 0.1),
                                    numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1),
                                    
@@ -342,15 +340,11 @@ ui <- navbarPage(
                
                #br(),
                
-               h5(strong("Direct changes:")),
-               p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We propose a notional 5% bedday reduction over 3 years for these transformational activities."),
-               p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
-               
-               #br(),
-               
-               h5(strong("Indirect changes:")),
+               h5(strong("Demand Management:")),
                p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some", a("(source)", href = "https://www.rcpsych.ac.uk/news-and-features/latest-news/detail/2022/10/10/hidden-waits-force-more-than-three-quarters-of-mental-health-patients-to-seek-help-from-emergency-services", target = "_blank"), ". Reducing waiting lists could reverse rising admission trends. We estimate, based on historic data on emergency method admissions that for a 10% waiting list reduction, 3.7% fewer admissions may occur over 3 years."),
                p(strong("Prevention Programmes"),": A prevous review of evidence on impact of preventive interventions", a("(source)", href = "https://www.strategyunitwm.nhs.uk/sites/default/files/2019-11/Exploring%20Mental%20Health%20Inpatient%20Capacity%20accross%20Sustainability%20and%20Transformation%20Partnerships%20in%20England%20-%20191030_1.pdf", target = "_blank"), "suggested there was strong evidence that Early Intervention in Psychosis, CBT and Family Interventions could reduce demand on inpatient settings for some patients. Based on weighted impact of these studies", a("(source)", href = "https://pubmed.ncbi.nlm.nih.gov/21037211/", target = "_blank"), "and an investment reach of 50% to these groups we estimate an overall impact of 4.8% reduction in admitted bed days."),
+               p(strong("Service Models"),": Other local changes to service models, discharge pathways and prevention may reduce admissions or LoS. This is best estimated locally depending on commissioning plans. We propose a notional 5% bedday reduction over 3 years for these transformational activities."),
+               p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, parental and maternal support and older adult support could reduce some demand on inpatient services. This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
                
                #br(),
                
@@ -361,7 +355,7 @@ ui <- navbarPage(
                
                br(),
                
-               h3("Bed Policy and Capacity conversions:"),
+               h3("Bed Policy & Management:"),
                p(strong("Out of area repatriation"),": This applies to patients resident in your ICB but receiving care outside, although a reciprocal arrangement is also computed for OAP hosted in your beds - your ICB may be a net importer or exporter of OAP. A starting assumption is to repatriate 50% of this activity to in-area beds over 3 years."),
                p(strong("Shift to independent setting"),": Utilising independent provider beds will free existing NHS beds or negate the need for more. The starting assumption for this is net zero or no change - please adjust this up or down to increase the % of NHS activity you might want to commission (in-area) IP beds for in the future."),
                p(strong("Occupancy rates"),": In order to convert both the baseline and modelled demand into number of beds we must convert the bed days. For baseline we will assume a current occupancy rate of 92% and for future desirable OR of 85%.", strong("THESE VALUES CAN BE CHANGED ON THE MAIN RESULTS TAB."))
