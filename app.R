@@ -491,7 +491,7 @@ ui <- navbarPage(
                                    "IMD Quintile" = "imd_quintile",
                                    "Provider Type" = "provider_type",
                                    "Legal Status Group" = "legal_status_group",
-                                   #"LDA Flag" = "lda_flag",
+                                   "LDA Flag" = "lda_flag",
                                    "Ward Type Description" = "der_ward_type_desc_first"
                                  )
                                )
@@ -510,6 +510,18 @@ ui <- navbarPage(
                    tabPanel("Bed days - excl. Home Leave", DTOutput("dataTable_oap_bed_days_exHL")),
                    tabPanel("Spells", DTOutput("dataTable_oap"))
                    ),
+                 
+                 h5(br(),
+                    "NHS and independent sector activity",
+                    br()
+                 ),
+                 tabsetPanel(
+                   tabPanel("Bed days", DTOutput("ind_nhs_bed_days")),
+                   tabPanel("Bed days - excl. Home Leave", DTOutput("ind_nhs_bed_days_exHL")),
+                   tabPanel("Spells", DTOutput("ind_nhs_spells"))
+                 ),
+                 
+                 
                  h5(br(),
                     "Sub-group Analysis"
                     ),
@@ -643,7 +655,7 @@ server <- function(input, output, session) {
     
     baseline_aggregate() |> 
       filter(ooa_group %in% c( {{oap_filter}} )) %>% 
-      mutate(sp_demographic_growth       =  spell_count * (demographic_growth()/100),
+      mutate(sp_demographic_growth       =  spell_count * (demographic_growth()/100),  # ERROR?
              sp_incidence_change         =  spell_count * (incidence_change()/100),
              sp_acuity_change            =  spell_count * (acuity_change()/100),
              sp_social_care_pressures    =  spell_count * (social_care_pressures()/100),
@@ -1132,6 +1144,128 @@ server <- function(input, output, session) {
       write.csv(params, file, row.names = FALSE)
     }
   )
+  
+  
+  # NHS vs Independent activity ----
+  
+  provider_type_view_function <- function(baseline_aggregate, activity_type, waterfall_data, waterfall_baseline, growth_factors, growth_shift_to_ip) {
+    
+    # Ensure reactive inputs are evaluated
+    baseline_aggregate <- isolate(baseline_aggregate())
+    waterfall_data <- isolate(waterfall_data())
+    waterfall_data <- isolate(waterfall_data())
+    
+    # Baseline activity by provider type
+    base_activity <-
+      baseline_aggregate %>%   # reactive object
+      group_by(provider_type) %>% 
+      summarise(count = sum({{activity_type}})) %>%# function input
+      mutate(prop = count/sum(count))
+    
+    # Baseline activity
+    a <- 
+      waterfall_data |>
+      select(-icb_dummy) |> 
+      filter(name == waterfall_baseline) # function input
+    
+    # Change in activity between baseline and projection - from waterfall data
+    b <-
+      waterfall_data |>
+      select(-icb_dummy) |> 
+      filter(str_detect(name, growth_factors)) %>%# function input
+      summarise(name = "change",
+                value = sum(value))
+    
+    # Projected in waterfall (baseline + change)
+    c <-
+      tribble(
+        ~name, ~value,
+        "projected", a$value + b$value
+      )
+    
+    # Shift to independent to add to total
+    d <-
+      waterfall_data %>%  
+      filter(name %in% c(growth_shift_to_ip)) %>%  # function input
+      select(-icb_dummy)
+    
+    # projected + independent sector
+    e <-
+      tribble(
+        ~name, ~value,
+        "projected + independent sector", c$value + (d$value*-1) #inverted to positive number
+      )
+    
+    #
+    total_projected_activity_provider_type <-
+      tribble(
+        ~provider_type, ~value,
+        "NHS", c$value * base_activity$prop[base_activity$provider_type == "NHS"], #Projected activity * NHS proportion to show NHS beds in baseline
+        "Independent", (c$value * base_activity$prop[base_activity$provider_type == "Independent"]) + # Independent activity that remained in the projection from baseline
+          (d$value*-1) # Plus shifted activity to Independent sector - inverted
+      ) 
+    
+    
+    #
+    baseline_projection_comp <-
+      base_activity %>% 
+      left_join(total_projected_activity_provider_type, by = "provider_type") %>% 
+      rename(baseline = count,
+             projected = value) %>% 
+      mutate(baseline_prop =  paste0(round(prop*100,1), "%"),
+             projected_prop = paste0(round(projected/sum(projected)*100,1), "%")
+      ) %>% 
+      select(provider_type , baseline, baseline_prop, projected, projected_prop) %>% 
+      mutate(projected = round(projected,1))
+    
+    # Table output
+    baseline_projection_comp
+    
+  }
+  
+  
+  ind_nhs_spells <- reactive({  
+    req(baseline_growth())
+    req(waterfall_data())
+    
+    provider_type_view_function(isolate(baseline_growth()), spell_count, isolate(waterfall_data()), "spell_count", "sp_", "sp_shift_to_ip")
+  }) 
+  
+  ind_nhs_bed_days <- reactive({  
+    req(baseline_growth())
+    req(waterfall_data())
+    
+    provider_type_view_function(isolate(baseline_growth()), bed_days, isolate(waterfall_data()), "bed_days", "bd_", "bd_shift_to_ip")
+  }) 
+  
+  
+  ind_nhs_bed_days_exHL <- reactive({  
+    req(baseline_growth())
+    req(waterfall_data())
+    
+    provider_type_view_function(isolate(baseline_growth()), bed_days_exHL, isolate(waterfall_data()), "bed_days_exHL", "exHL_", "exHL_bedday_shift_to_ip")
+  }) 
+  
+  
+  output$ind_nhs_spells <- renderDT({
+    req(ind_nhs_spells())
+    
+    DT::datatable(ind_nhs_spells())
+  })
+  
+  output$ind_nhs_bed_days <- renderDT({
+    req(ind_nhs_bed_days())
+    
+    DT::datatable(ind_nhs_bed_days())
+  })
+  
+  output$ind_nhs_bed_days_exHL <- renderDT({
+    req(ind_nhs_bed_days_exHL())
+    
+    DT::datatable(ind_nhs_bed_days_exHL())
+  })
+  
+  
   
   
   # Occupancy rate table ----
