@@ -118,7 +118,6 @@ theme_set(theme_SU())
   
 #### Define UI ####
 ui <- navbarPage(
-  "Mental health inpatient strategy",
   "Mental Health Inpatient Bed Model",
   theme = bs_theme(bootswatch = "united",
                    primary = "#f9bf07",
@@ -318,9 +317,6 @@ ui <- navbarPage(
                         
             mainPanel(
                 h3("Demand factor assumptions:"),
-                p("Demographic growth values are externally sourced from ONS population projections published at local authority level (https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/subnationalpopulationprojectionsforengland/2018based).
-               We have extracted age and gender specific population projections which are applied to our data extract and grouped to ICB level.
-               As such, demographic growth is a fixed point and not modifiable unlike our other growth factors."),
                 p("Demographic growth values are externally sourced from ONS population projections published at local authority level ",
                   a("here", href = "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/subnationalpopulationprojectionsforengland/2018based", target = "_blank"),
                   ". We have extracted age and gender specific population projections which are applied to our data extract and grouped to ICB level. As such, demographic growth is a fixed point and not modifiable unlike our other growth factors."
@@ -346,8 +342,6 @@ ui <- navbarPage(
                #br(),
                
                h5(strong("Indirect changes:")),
-               p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some (https://www.rcpsych.ac.uk/news-and-features/latest-news/detail/2022/10/10/hidden-waits-force-more-than-three-quarters-of-mental-health-patients-to-seek-help-from-emergency-services). Reducing waiting lists could reverse rising admission trends. We estimate, based on historic data on emergency method admissions that for a 10% waiting list reduction, 3.7% fewer admissions may occur over 3 years."),
-               p(strong("Prevention Programmes"),": A prevous review of evidence on impact of preventive interventions (https://www.strategyunitwm.nhs.uk/sites/default/files/2019-11/Exploring%20Mental%20Health%20Inpatient%20Capacity%20accross%20Sustainability%20and%20Transformation%20Partnerships%20in%20England%20-%20191030_1.pdf) suggested there was strong evidence that Early Intervention in Psychosis, CBT and Family Interventions could reduce demand on inpatient settings for some patients. Based on weighted impact of these studies (https://pubmed.ncbi.nlm.nih.gov/21037211/) and an investment reach of 50% to these groups we estimate an overall impact of 4.8% reduction in admitted bed days."),
                p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' waiting lists are thought to increase risk of admission for some", a("(source)", href = "https://www.rcpsych.ac.uk/news-and-features/latest-news/detail/2022/10/10/hidden-waits-force-more-than-three-quarters-of-mental-health-patients-to-seek-help-from-emergency-services", target = "_blank"), ". Reducing waiting lists could reverse rising admission trends. We estimate, based on historic data on emergency method admissions that for a 10% waiting list reduction, 3.7% fewer admissions may occur over 3 years."),
                p(strong("Prevention Programmes"),": A prevous review of evidence on impact of preventive interventions", a("(source)", href = "https://www.strategyunitwm.nhs.uk/sites/default/files/2019-11/Exploring%20Mental%20Health%20Inpatient%20Capacity%20accross%20Sustainability%20and%20Transformation%20Partnerships%20in%20England%20-%20191030_1.pdf", target = "_blank"), "suggested there was strong evidence that Early Intervention in Psychosis, CBT and Family Interventions could reduce demand on inpatient settings for some patients. Based on weighted impact of these studies", a("(source)", href = "https://pubmed.ncbi.nlm.nih.gov/21037211/", target = "_blank"), "and an investment reach of 50% to these groups we estimate an overall impact of 4.8% reduction in admitted bed days."),
                
@@ -355,7 +349,6 @@ ui <- navbarPage(
                
                h5(strong("External influences:")),
                p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. We have assumed there will be an increase in delayed discharge spells over the next 3 years of 6.6%, based on national trends in rates of DD (per 1000 spells) between 2017 and 2023."),
-               p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment relative to overall budgets (£2.3bn vs £12bn, https://www.kingsfund.org.uk/insight-and-analysis/long-reads/mental-health-360-funding-costs) and indicative impacts (https://pmc.ncbi.nlm.nih.gov/articles/PMC10753954/), we estimate this may reduce admissions by 4.8% over the next 3 years."),
                p(strong("National Policy"),": The government's latest Long-term Plan is funding alternatives to prevent admission (crisis support, safe havens etc...). Given the scale of investment relative to overall budgets (£2.3bn vs £12bn ", a("(source)", href = "https://www.kingsfund.org.uk/insight-and-analysis/long-reads/mental-health-360-funding-costs", target = "_blank"), "), and indicative impacts", a("(source)", href = "https://pmc.ncbi.nlm.nih.gov/articles/PMC10753954/", target = "_blank"), ", we estimate this may reduce admissions by 4.8% over the next 3 years."),
                p(strong("MHA changes"),": Changes to the Mental Health Act are designed to tighten up detention criteria, only use when treatment success is likely, increase the frequency of assessment and reduce detention time for those with LD or autism. Speculatively, we are assuming that these changes will reduce detention bed days by 10% over 3 years. However we anticipate this may be offset by increased informal/planned admissions so have adjusted to 5%."),
                
@@ -530,7 +523,6 @@ ui <- navbarPage(
              titlePanel("Metadata and glossary:"),
              h3("Metadata"),
              p("The MHSDS data hosted within UDAL is our baseline datasource. Data in the raw extract is for the 1-year period 1st July 2023 to 30th June 2024. All admissions are included where not recorded as a specialised commissioning category and where the patient was either resident or treated within the Midlands region (11 ICB boundaries).
-               Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exsists and has been aggregated to generate the ICB files used to feed into the model."),
 
                Specified inclusion and exclusion criteria have been applied and are detailed below along with the format in which data exists and has been aggregated to generate the ICB files used to feed into the model."),
 
@@ -663,7 +655,6 @@ server <- function(input, output, session) {
              #sp_ooa_repat                = case_when(oop_flag == 1 ~ spell_count * (ooa_repat), TRUE ~ 0),
              #sp_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ spell_count*(ooa_repat/100), TRUE ~ 0),
              #sp_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ spell_count*((ooa_repat/100)*-1), TRUE ~ 0),
-             sp_shift_to_ip              = case_when(provider_type == "Independent" ~ spell_count * (shift_to_ip()/100), TRUE ~ 0),
              sp_shift_to_ip              = case_when(provider_type == "NHS" ~ spell_count * ((shift_to_ip()/100)*-1), TRUE ~ 0),
              
              bd_demographic_growth       =  bed_days * (demographic_growth()/100),
@@ -679,7 +670,6 @@ server <- function(input, output, session) {
              #bd_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days * (ooa_repat), TRUE ~ 0),
              #bd_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days*(ooa_repat/100), TRUE ~ 0),
              #bd_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days*((ooa_repat/100)*-1), TRUE ~ 0),
-             bd_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days * (shift_to_ip()/100), TRUE ~ 0),
              bd_shift_to_ip              =  case_when(provider_type == "NHS" ~ bed_days * ((shift_to_ip()/100)*-1), TRUE ~ 0),
              
              exHL_bedday_demographic_growth       =  bed_days_exHL * (demographic_growth()/100),
@@ -695,7 +685,6 @@ server <- function(input, output, session) {
              #exHL_bedday_ooa_repat                =  case_when(oop_flag == 1 ~ bed_days_exHL * (ooa_repat), TRUE ~ 0),
              #exHL_bedday_oap_repat_outgoing       = case_when(ooa_group == "oap_outgoing" ~ bed_days_exHL*(ooa_repat/100), TRUE ~ 0),
              #exHL_bedday_oap_repat_incoming       = case_when(ooa_group == "oap_incoming" ~ bed_days_exHL*((ooa_repat/100)*-1), TRUE ~ 0),
-             exHL_bedday_shift_to_ip              =  case_when(provider_type == "Independent" ~ bed_days_exHL * (shift_to_ip()/100), TRUE ~ 0)
              exHL_bedday_shift_to_ip              =  case_when(provider_type == "NHS" ~ bed_days_exHL * ((shift_to_ip()/100)*-1), TRUE ~ 0),
              ) |> 
       mutate(spell_proj = spell_count + rowSums(across(contains("sp_"))),
