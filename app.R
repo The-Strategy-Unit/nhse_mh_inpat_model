@@ -239,7 +239,7 @@ ui <- navbarPage(
              p("2a. Navigate to the 'Modelling Assumptions' tab to view the parameters and change as required (skip to step 3 if accepting the defaults)."),
              p("2b. If you change the parameters from the default ones, download and save them to reload later - ",strong("the server session does time out after 1 hour of inactivity")," and will start as fresh default session when you next access the app!"),
              p("3. Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand and relevant capacity conversion."),
-             p("4. When happy the model reflects your local position on the assumptions, you can export a csv of the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in that tab"),
+             p("4. When happy the model reflects your local position on the assumptions, you can export a csv of the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in that tab."),
              p("5. Navigate to the 'Supplemetary outputs' tab to view data on out-of-area flows (at baseline) and sub-group level changes according to the model."),br(),
              p("If you want to generate multiple models with different assumptions e.g. demographics only, high or low growth scenario etc... then please repeat steps 2-5 after loading the baseline data.",strong(" REMEMBER")," to save your model outputs ",strong("AND")," your parameter file if you want to revisit/recreate these in the tool later!"),
              br(),
@@ -440,10 +440,10 @@ ui <- navbarPage(
                    br(),
                    br(),
                    tags$ul(
-                     tags$li("[1 - Upper left quadrent] Residence and Provider are in ICB boundary (i.e. not OAP)"),
-                     tags$li("[2 - Lower left quadrent] Residence outside of selected ICB and treated within (i.e. Incoming OAP)"),
-                     tags$li("[3 - Upper right quadrent] Residence in selected ICB but treated elsewhere (i.e. Outgoing OAP)"),
-                     tags$li("[4 - Lower right quadrent] Resident outside and treated outside of selected ICB (data not included)")
+                     tags$li("[1 - Upper left quadrant] Residence and Provider are in ICB boundary (i.e. not OAP)"),
+                     tags$li("[2 - Lower left quadrant] Residence outside of selected ICB and treated within (i.e. Incoming OAP)"),
+                     tags$li("[3 - Upper right quadrant] Residence in selected ICB but treated elsewhere (i.e. Outgoing OAP)"),
+                     tags$li("[4 - Lower right quadrant] Resident outside and treated outside of selected ICB (data not included)")
                    ),
                    "If the value of group 2 is higher than group 3 then you are a 'net importer' of OAP and if the value of group 3 is higher than group 2 you are a 'net exporter' of OAP.",
                    
@@ -1631,6 +1631,8 @@ server <- function(input, output, session) {
         "CBT"       , "Cognitive Behavioural Therapy, a psychological approach to changing thoughts and behaviours.",
         "LDA"       , "Learning Disability or Autism, the presence or otherwise of these diagnoses in patient records.",
         "OAP"       , "Out of Area Placement, a patient receiving care outside of their resident or responsible healthcare boundary.",
+        "Repatriate", "Bring ICB residents in out of area beds back to beds in the ICB",
+        "Expatriate", "Move non-ICB residents in beds in our area back to beds in their own ICB",
         "Occupancy" , "The share of available resource that is utilised at a point in time - in our case, inpatient beds.",
         "Annualised", "Converting time-based data into typical yearly units - in our case total bed days to beds.",
         "Home Leave", "A period of inpatient care spent/managed at home. In our tool/data, the user can choose to count the full period of inpatient care or excluding the days on home leave.",
