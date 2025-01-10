@@ -199,7 +199,14 @@ ui <- navbarPage(
              br(),
              h3("Other useful resources"),
              p("Due to time and budget constraints, this tool and model are imperfect and likely don't consider the full range of potential drivers of demand. Systems should consider additional information when establishing a concensus view of the future state of mental health and demand for inpatient beds. The following may be useful:"),
-             p("Fingertips - link etc..."),
+             p(a("OHID Fingertips", href = "https://fingertips.phe.org.uk/profiles", target = "_blank"), " - Information on diseases prevalence, wider determinants of health and outcomes related to mental health."),
+             p(a("Mental Health Data Hub", href = "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/mental-health-data-hub", target = "_blank"), " - NHS digital data and reports on variety of aspects of Mental Health."),
+             p(a("Centre for Mental Health", href = "https://www.centreformentalhealth.org.uk/", target = "_blank"), " - Lots of resources, evidence and publications on range of MH topics."),
+             p(a("Mental Health Foundation", href = "https://www.mentalhealth.org.uk/explore-mental-health/publications/economic-case-investing-prevention-mental-health-conditions-UK", target = "_blank"), " - resources, evidence and publications on range of MH topics including prevention and health economics."),
+             p(a("Review of mental health inpatient capacity", href = "https://www.strategyunitwm.nhs.uk/publications/exploring-mental-health-inpatient-capacity", target = "_blank"), " - Strategy Unit report for RCP on capacity in England."),
+             p(a("The Inbetweeners", href = "https://www.ncepod.org.uk/2023transition/The%20Inbetweeners_summary%20report.pdf", target = "_blank"), " - Report from NECPOD on the challenges of transition to adult services for children with complex needs."),
+             p(a("Reference costs for Mental Health", href = "https://www.england.nhs.uk/long-read/integrated-national-cost-collection-guidance-2024/", target = "_blank"), " - Costs associated with mental health activity to support economic modelling."),
+             p(a("Workforce Statistics", href = "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/mental-health-data-hub/dashboards/mental-health-and-learning-disabilities-workforce-in-the-nhs", target = "_blank"), " - Data on mental health specific workforce in NHS in England."),
              
              br(),
              
