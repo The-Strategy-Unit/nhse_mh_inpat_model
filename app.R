@@ -1572,6 +1572,8 @@ server <- function(input, output, session) {
         "CBT"       , "Cognitive Behavioural Therapy, a psychological approach to changing thoughts and behaviours.",
         "LDA"       , "Learning Disability or Autism, the presence or otherwise of these diagnoses in patient records.",
         "OAP"       , "Out of Area Placement, a patient receiving care outside of their resident or responsible healthcare boundary.",
+        "Repatriate", "Bring ICB residents in out of area beds back to beds in the ICB",
+        "Expatriate", "Move non-ICB residents in beds in our area back to beds in their own ICB",
         "Occupancy" , "The share of available resource that is utilised at a point in time - in our case, inpatient beds.",
         "Annualised", "Converting time-based data into typical yearly units - in our case total bed days to beds.",
         "Home Leave", "A period of inpatient care spent/managed at home. In our tool/data, the user can choose to count the full period of inpatient care or excluding the days on home leave.",
