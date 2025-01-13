@@ -222,7 +222,7 @@ ui <- navbarPage(
              p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on workflow and hosting arrangements for the tool."),
              
              h4("Contact Us"),
-             p("Click the 'Contact Us' button below to get in touch with an questions or queries:"),
+             p("Click the 'Contact Us' button below to get in touch with any questions or queries:"),
              
              actionButton("contact_button", "Contact Us"),
              
@@ -1258,7 +1258,6 @@ server <- function(input, output, session) {
   )
   
   
-
   # Occupancy rate table ----
   
   current_occupancy   <- reactive({ input$current_occupancy })
