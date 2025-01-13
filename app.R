@@ -1337,9 +1337,9 @@ server <- function(input, output, session) {
     )
     
     baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
                                         TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                         TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
       summarise(bed_days = sum(bed_days)) %>% 
@@ -1358,9 +1358,9 @@ server <- function(input, output, session) {
         )
     
     baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
                                       TRUE ~ "2. External residence"),
-           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                       TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
       summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
@@ -1426,7 +1426,14 @@ server <- function(input, output, session) {
         )
     })
   
-  
+
+  # Reset occupancy rates to default position
+  observeEvent(input$reset_occupancy, {
+    updateNumericInput(session, "current_occupancy", value = 92)
+    updateNumericInput(session, "future_occupancy", value = 85)
+    
+  })
+
   # Bed policy table ---- 
   
   # Spells
@@ -1614,132 +1621,6 @@ server <- function(input, output, session) {
     updateNumericInput(session, "shift_to_ip", value = 0)
   })
   
-
-  # Out of area table ----
-  baseline_oap_activity_icb <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(spells = sum(spell_count)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = spells
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-    })
-  
-  baseline_oap_activity_icb_bed_days <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-    )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days = sum(bed_days)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  baseline_oap_activity_icb_bed_days_exHL <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
-                                      TRUE ~ "2. External residence"),
-           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
-                                      TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days_exHL
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  # Output objects
-  output$dataTable_oap <- renderDT({
-    req(baseline_oap_activity_icb()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-      )
-    
-  })
-  
-  output$dataTable_oap_bed_days <- renderDT({
-    req(baseline_oap_activity_icb_bed_days()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-  output$dataTable_oap_bed_days_exHL <- renderDT({
-    req(baseline_oap_activity_icb_bed_days_exHL()
-    )
-
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days_exHL(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-
-  # Reset occupancy rates to default position
-  observeEvent(input$reset_occupancy, {
-    updateNumericInput(session, "current_occupancy", value = 92)
-    updateNumericInput(session, "future_occupancy", value = 85)
-    
-  })
-
   
   # Sub-group plots ----
   
