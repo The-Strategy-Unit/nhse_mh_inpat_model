@@ -1314,7 +1314,7 @@ server <- function(input, output, session) {
       mutate(dummy = "") |> 
       pivot_longer(-dummy) |>
       rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round(`Bed days` * 0.92/365.25),1) |> 
+      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
       pivot_longer(cols = c(`Bed days`, `Annualised beds`),
                    names_to = "Metric") |> 
       select(-dummy) |> 
@@ -1366,7 +1366,7 @@ server <- function(input, output, session) {
       mutate(dummy = "") |> 
       pivot_longer(-dummy) |>
       rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round(`Bed days` * 0.92/365.25),1) |> 
+      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
       pivot_longer(cols = c(`Bed days`, `Annualised beds`),
                    names_to = "Metric") |> 
       select(-dummy) |> 
@@ -1467,9 +1467,9 @@ server <- function(input, output, session) {
     )
     
     baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
                                         TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                         TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
       summarise(bed_days = sum(bed_days)) %>% 
@@ -1488,9 +1488,9 @@ server <- function(input, output, session) {
         )
     
     baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
                                       TRUE ~ "2. External residence"),
-           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                       TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
       summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
