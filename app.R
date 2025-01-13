@@ -171,6 +171,11 @@ ui <- navbarPage(
           sidebar.css('top', '0');
         }
       });
+      
+      document.getElementById('contact_button').onclick = function() {
+        window.location.href = 'mailto:strategy.unit@nhs.net?subject=Mental Health Inpatient Demand Model';
+      };
+      
     });
   "))
   ),
@@ -215,6 +220,12 @@ ui <- navbarPage(
              p("Andy Hood, Alex Lawless, Anya Ferguson, Andy Wilson, Diane Domenico, Hannah Bedford, Sarah Fellows, Jake Parsons, Sarah Lucas."),
              br(),
              p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on workflow and hosting arrangements for the tool."),
+             
+             h4("Contact Us"),
+             p("Click the 'Contact Us' button below to get in touch with an questions or queries:"),
+             
+             actionButton("contact_button", "Contact Us"),
+             
              
              )
            ),
@@ -516,7 +527,11 @@ ui <- navbarPage(
                  h6(strong("Bed policy & Management:")),
                  numericInput("ooa_repat", "Out of Area Repatriation",            value = 50,   step = 0.1),
                  numericInput("ooa_expat", "Out of Area Expatriation",            value = 50,   step = 0.1),
-                 numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1)
+                 numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1),
+                 
+                 br(),
+                 
+                 actionButton("reset_bed_policy", "Reset Bed Policy Factors to Default")
                  
                ),
                
@@ -584,11 +599,9 @@ ui <- navbarPage(
                                    "LDA Flag" = "lda_flag",
                                    "Ward Type Description" = "der_ward_type_desc_first"
                                  )
-                   )
+                               )
+                   ),
                  ),
-                 
-                 
-               ),
                
                mainPanel(
                  
@@ -676,6 +689,11 @@ server <- function(input, output, session) {
       pull(residence_icb_name)
     
     updateSelectInput(session, "icb", choices = highest_ranked_icb)
+  })
+  
+  
+  output$info <- renderText({
+    "Click the 'Contact Us' button to send an email."
   })
   
   
@@ -1224,11 +1242,194 @@ server <- function(input, output, session) {
     }
   )
   
+  # Download data
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("projected_data_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      data <- 
+        baseline_growth() |> 
+        select(-c(spell_count, contains("sp_"), spell_proj)) #|> 
+        #filter(bed_days > 5)
+      
+      write.csv(data, file)
+    }
+  )
   
+  
+
+  # Occupancy rate table ----
+  
+  current_occupancy   <- reactive({ input$current_occupancy })
+  future_occupancy    <- reactive({ input$future_occupancy })
+  
+  output$dataTable_occupancy <- renderDT({
+    req(baseline_growth())
+    req(waterfall_data())
+    req(current_occupancy())
+    req(future_occupancy())
+    
+    DT::datatable(
+      waterfall_data() |> 
+        filter(str_detect(name, "bed_days")) |> 
+        mutate(value = round(value,0)) |> 
+        mutate(beds_annualised = 
+                 case_when(
+                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/(current_occupancy()/100)/365.25), 0),
+                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/(future_occupancy()/100)/365.25),0)
+                 )
+               ) |> 
+        mutate(name = 
+                 case_when(
+                   name == "bed_days" ~ "Baseline",
+                   name == "bed_days_exHL" ~ "Baseline - excl home leave",
+                   name == "bed_days_proj" ~ "Projected",
+                   name == "bed_days_exHL_proj" ~ "Projected - excl home leave"
+                 )) |>
+        select(-icb_dummy) |>
+        mutate(value = scales::comma(value)
+               #beds_annualised = scales::comma(beds_annualised)
+        ) %>% 
+        rename(#ICB = residence_icb_name,
+               Measure = name,
+               `Bed days` = value,
+               `Annualised beds` = beds_annualised),
+      extensions = 'Buttons',
+      options = list(dom = 'Bfrtip',
+                     buttons = c('copy', 'csv')
+      )
+    )
+    
+  })
+  
+  # Reset occupancy rates to default position
+  observeEvent(input$reset_occupancy, {
+    updateNumericInput(session, "current_occupancy", value = 92)
+    updateNumericInput(session, "future_occupancy", value = 85)
+    
+  })
+  
+  # Out of area table ----
+  baseline_oap_activity_icb <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+        )
+    
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                        TRUE ~ "2. External residence"),
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                        TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(spells = sum(spell_count)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = spells
+                  ) %>% 
+      rename(` ` = flag_residence)
+    
+    })
+  
+  baseline_oap_activity_icb_bed_days <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+    )
+    
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                        TRUE ~ "2. External residence"),
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                        TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(bed_days = sum(bed_days)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = bed_days
+                  ) %>% 
+      rename(` ` = flag_residence)
+    
+  })
+  
+  baseline_oap_activity_icb_bed_days_exHL <- reactive({   
+    req(baseline_aggregate(),
+        input$icb
+        )
+    
+    baseline_aggregate() |>
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+                                      TRUE ~ "2. External residence"),
+           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+                                      TRUE ~ "2. External provision")) %>% 
+      group_by(flag_residence, flag_provision) %>% 
+      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
+      ungroup() %>% 
+      pivot_wider(id_cols = flag_residence, 
+                  names_from = flag_provision, 
+                  values_from = bed_days_exHL
+                  ) %>% 
+      rename(` ` = flag_residence)
+    
+  })
+  
+  # Output objects
+  output$dataTable_oap <- renderDT({
+    req(baseline_oap_activity_icb()
+    )
+    
+    DT::datatable(
+      baseline_oap_activity_icb(),
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
+      )
+    
+  })
+  
+  output$dataTable_oap_bed_days <- renderDT({
+    req(baseline_oap_activity_icb_bed_days()
+    )
+    
+    DT::datatable(
+      baseline_oap_activity_icb_bed_days(),
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
+        )
+    })
+  
+  output$dataTable_oap_bed_days_exHL <- renderDT({
+    req(baseline_oap_activity_icb_bed_days_exHL()
+    )
+
+    DT::datatable(
+      baseline_oap_activity_icb_bed_days_exHL(),
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
+      ) %>%
+      formatStyle(
+        columns = 1,
+        fontWeight = 'bold'
+        )
+    })
   
   
   # Bed policy table ---- 
-
+  
   # Spells
   bed_policy_table_spells <- reactive({
     req(baseline_growth(),
@@ -1406,175 +1607,14 @@ server <- function(input, output, session) {
     
   })
   
-
-  # Occupancy rate table ----
   
-  current_occupancy   <- reactive({ input$current_occupancy })
-  future_occupancy    <- reactive({ input$future_occupancy })
-  
-  output$dataTable_occupancy <- renderDT({
-    req(baseline_growth())
-    req(waterfall_data())
-    req(current_occupancy())
-    req(future_occupancy())
-    
-    DT::datatable(
-      waterfall_data() |> 
-        filter(str_detect(name, "bed_days")) |> 
-        mutate(value = round(value,0)) |> 
-        mutate(beds_annualised = 
-                 case_when(
-                   name %in% c("bed_days", "bed_days_exHL") ~ round((value/(current_occupancy()/100)/365.25), 0),
-                   name %in% c("bed_days_proj", "bed_days_exHL_proj") ~ round((value/(future_occupancy()/100)/365.25),0)
-                 )
-               ) |> 
-        mutate(name = 
-                 case_when(
-                   name == "bed_days" ~ "Baseline",
-                   name == "bed_days_exHL" ~ "Baseline - excl home leave",
-                   name == "bed_days_proj" ~ "Projected",
-                   name == "bed_days_exHL_proj" ~ "Projected - excl home leave"
-                 )) |>
-        select(-icb_dummy) |>
-        mutate(value = scales::comma(value)
-               #beds_annualised = scales::comma(beds_annualised)
-        ) %>% 
-        rename(#ICB = residence_icb_name,
-               Measure = name,
-               `Bed days` = value,
-               `Annualised beds` = beds_annualised),
-      extensions = 'Buttons',
-      options = list(dom = 'Bfrtip',
-                     buttons = c('copy', 'csv')
-      )
-    )
-    
+  # Reset bed policy factors to default position
+  observeEvent(input$reset_bed_policy, {
+    updateNumericInput(session, "ooa_repat", value = 50)
+    updateNumericInput(session, "ooa_expat", value = 50)
+    updateNumericInput(session, "shift_to_ip", value = 0)
   })
   
-  # Out of area table ----
-  baseline_oap_activity_icb <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(spells = sum(spell_count)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = spells
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-    })
-  
-  baseline_oap_activity_icb_bed_days <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-    )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days = sum(bed_days)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  baseline_oap_activity_icb_bed_days_exHL <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                      TRUE ~ "2. External residence"),
-           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                      TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days_exHL
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  # Output objects
-  output$dataTable_oap <- renderDT({
-    req(baseline_oap_activity_icb()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-      )
-    
-  })
-  
-  output$dataTable_oap_bed_days <- renderDT({
-    req(baseline_oap_activity_icb_bed_days()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-  output$dataTable_oap_bed_days_exHL <- renderDT({
-    req(baseline_oap_activity_icb_bed_days_exHL()
-    )
-
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days_exHL(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-
-  # Reset occupancy rates to default position
-  observeEvent(input$reset_occupancy, {
-    updateNumericInput(session, "current_occupancy", value = 92)
-    updateNumericInput(session, "future_occupancy", value = 85)
-    
-  })
   
   # Sub-group plots ----
   
@@ -1649,20 +1689,7 @@ server <- function(input, output, session) {
     
   })
   
-  # Download data
-  output$downloadData <- downloadHandler(
-    filename = function() {
-      paste("projected_data_", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(file) {
-      data <- 
-        baseline_growth() |> 
-        select(-c(spell_count, contains("sp_"), spell_proj)) |> 
-        filter(bed_days > 5)
-      
-      write.csv(data, file)
-    }
-  )
+ 
   
   # Meta data table and glossary ----
   

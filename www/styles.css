@@ -32,6 +32,12 @@
   border: none;
 }
 
+#reset_bed_policy {
+  background-color: #ec6555; 
+  color: white;
+  border: none;
+}
+
 #downloadParameters {
   background-color: #f9bf07; 
   color: white;
