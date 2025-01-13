@@ -173,7 +173,7 @@ ui <- navbarPage(
       });
       
       document.getElementById('contact_button').onclick = function() {
-        window.location.href = 'mailto:strategy.unit@nhs.net?subject=Mental Health Inpatient Demand Model';
+        window.location.href = 'mailto:strategy.unit@nhs.net?subject=Mental Health Inpatient Demand Model query';
       };
       
     });
