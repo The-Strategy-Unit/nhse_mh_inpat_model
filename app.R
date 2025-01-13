@@ -1379,19 +1379,31 @@ server <- function(input, output, session) {
   output$bed_policy_table_spells <- renderDT({
     req(bed_policy_table_spells())
     
-    DT::datatable(bed_policy_table_spells())
+    DT::datatable(bed_policy_table_spells(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
   })
   
   output$bed_policy_table_bd <- renderDT({
     req(bed_policy_table_bd())
     
-    DT::datatable(bed_policy_table_bd())
+    DT::datatable(bed_policy_table_bd(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
   })
   
   output$bed_policy_table_bd_exHL <- renderDT({
     req(bed_policy_table_bd_exHL())
     
-    DT::datatable(bed_policy_table_bd_exHL())
+    DT::datatable(bed_policy_table_bd_exHL(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
   })
   
 
@@ -1510,12 +1522,10 @@ server <- function(input, output, session) {
     
     DT::datatable(
       baseline_oap_activity_icb(),
-      extensions = 'Buttons',
-      options = list(dom = 'Bfrtip',
-                     buttons = c('copy', 'csv'),
-                     ordering = FALSE,
-                     columnDefs = list(list(targets = 0, visible = FALSE))
-                     )
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
       ) %>%
       formatStyle(
         columns = 1,
@@ -1530,41 +1540,33 @@ server <- function(input, output, session) {
     
     DT::datatable(
       baseline_oap_activity_icb_bed_days(),
-      extensions = 'Buttons',
-      options = list(dom = 'Bfrtip',
-                     buttons = c('copy', 'csv'),
-                     ordering = FALSE,
-                     columnDefs = list(list(targets = 0, visible = FALSE))
-                     )
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
       ) %>%
       formatStyle(
         columns = 1,
         fontWeight = 'bold'
-      )
-    
-    
-  })
+        )
+    })
   
   output$dataTable_oap_bed_days_exHL <- renderDT({
     req(baseline_oap_activity_icb_bed_days_exHL()
     )
-    
+
     DT::datatable(
       baseline_oap_activity_icb_bed_days_exHL(),
-      extensions = 'Buttons',
-      options = list(dom = 'Bfrtip',
-                     buttons = c('copy', 'csv'),
-                     ordering = FALSE,
-                     columnDefs = list(list(targets = 0, visible = FALSE))
-                     )
+      extensions = "Buttons",              rownames = F, 
+      options = list(dom = 'Blfrtip', 
+                     buttons = list(list(extend = 'copy', title = NULL))
+                     ) 
       ) %>%
       formatStyle(
         columns = 1,
         fontWeight = 'bold'
-      )
-    
-    
-  })
+        )
+    })
   
 
   # Reset occupancy rates to default position
