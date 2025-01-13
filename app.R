@@ -1515,7 +1515,6 @@ server <- function(input, output, session) {
       mutate(dummy = "") |> 
       pivot_longer(-dummy) |>
       rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round(`Bed days` * 0.92/365.25),1) |> 
       mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
       pivot_longer(cols = c(`Bed days`, `Annualised beds`),
                    names_to = "Metric") |> 
@@ -1568,7 +1567,6 @@ server <- function(input, output, session) {
       mutate(dummy = "") |> 
       pivot_longer(-dummy) |>
       rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round(`Bed days` * 0.92/365.25),1) |> 
       mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
       pivot_longer(cols = c(`Bed days`, `Annualised beds`),
                    names_to = "Metric") |> 
