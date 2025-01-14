@@ -203,7 +203,7 @@ ui <- navbarPage(
              p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The parameters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and comparing scenario using the tool."),
              br(),
              h3("Other useful resources"),
-             p("Due to time and budget constraints, this tool and model are imperfect and likely don't consider the full range of potential drivers of demand. Systems should consider additional information when establishing a concensus view of the future state of mental health and demand for inpatient beds. The following may be useful:"),
+             p("Due to time and budget constraints, this tool and model are limited and likely don't consider the full range of potential drivers of demand. Systems should consider additional information when establishing a concensus view of the future state of mental health and demand for inpatient beds. The following may be useful:"),
              p(a("OHID Fingertips", href = "https://fingertips.phe.org.uk/profiles", target = "_blank"), " - Information on diseases prevalence, wider determinants of health and outcomes related to mental health."),
              p(a("Mental Health Data Hub", href = "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/mental-health-data-hub", target = "_blank"), " - NHS digital data and reports on variety of aspects of Mental Health."),
              p(a("Centre for Mental Health", href = "https://www.centreformentalhealth.org.uk/", target = "_blank"), " - Lots of resources, evidence and publications on range of MH topics."),
@@ -250,27 +250,27 @@ ui <- navbarPage(
              fileInput("file", "Upload CSV File", accept = ".csv"),
              br(),
              
-             DTOutput("glimpse_baseline_aggregate"), 
+             DTOutput("glimpse_baseline_aggregate"),
+             br(),
              
-             
-             p("2a. Navigate to the 'Modelling Assumptions' tab to view the demand parameters and change as required 
+             p(strong("2a. "),"Navigate to the 'Modelling Assumptions' tab to view the demand parameters and change as required 
                (skip to step 3 if accepting the defaults)."),
-             p("2b. If you change the parameters from the default ones, download and save them to reload later - ",
+             p(strong("2b. "),"If you change the parameters from the default ones, download and save them to reload later - ",
                strong("the server session does time out after 1 hour of inactivity")," and will start as fresh default 
                session when you next access the app!"),
-             p("3. Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand 
+             p(strong("3. "),"Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand 
                and capacity conversion to beds."),
-             p("4. Now switch to the 'Bed Policy and Management' tab to specify any plans for out of area and 
-               independent beds."),
-             p("5. Navigate to the 'Sub-group Analysis' tab to view data on out-of-area flows (at baseline) and 
+             p(strong("4. "),"Now switch to the 'Bed Policy and Management' tab to specify any plans for out of area and 
+               independent beds and the switches in beds these might mean."),
+             p(strong("5. "),"Navigate to the 'Sub-group Analysis' tab to view data on out-of-area flows (at baseline) and 
                sub-group level changes according to what is specified in the above steps."),br(),
-             p("6. When happy the model reflects your local position on the assumptions, you can export a csv of 
+             p(strong("6. "),"When happy the model reflects your local position on the assumptions, you can export a csv of 
                the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in 
                the 'Main Outputs' tab."),
              p("If you want to generate multiple models with different assumptions e.g. demographics only, high 
-               or low growth scenario etc... then please repeat steps 2-5 after loading the baseline data.",
+               or low growth scenario etc... then please repeat the above steps after loading the baseline data.",
                strong(" REMEMBER")," to save your model outputs ",strong("AND")," your parameter file if you want to 
-               revisit/recreate these in the tool later!"),
+               revisit/recreate these scenario in the tool later!"),
              br(),
              
              h3("Upload growth factor parameters (optional):"),
@@ -343,9 +343,6 @@ ui <- navbarPage(
                              parameters from a previous session."),
                           
                           downloadButton("downloadParameters", "Download Adjusted Parameters"),
-                          
-                          br(),
-                          br(),
                           br(),
                           
                           ),
@@ -468,6 +465,7 @@ ui <- navbarPage(
                             
                             
                             h5("Export Projections"),
+                            p(em("(this will also include the bed flow changes specified on the next tab.)")),
                             downloadButton("downloadData", "Download Projected Data")
                           )
                           
@@ -541,8 +539,8 @@ ui <- navbarPage(
                  p(strong("Out of area repatriation and expatriation"),": For outgoing OAP's, the repatriation factor 
                    (left panel) is applied as an inflator to illustrate the increased internal bed requirement if outgoing 
                    OAP's were treated at providers within the ICB in the future. For incoming OAP's, the 
-                   expatriation factor below is expressed as a reduction in internal demand, as patients are 'sent back' 
-                   to providers in their own ICB area.A starting assumption is to adjust 50% of this activity in both directions over 3 years."),
+                   expatriation factor is expressed as a reduction in internal demand, as patients are 'sent back' 
+                   to providers in their own ICB area. A starting assumption is to adjust 50% of this activity in both directions over 3 years."),
                  p(strong("Shift to independent setting"),": Utilising independent provider (IP) beds will, in theory, 
                    free existing NHS beds or negate the need for more. Our starting assumption for this is net zero 
                    or no change - please adjust this up or down to increase the % of NHS activity you might want to 
@@ -1224,7 +1222,8 @@ server <- function(input, output, session) {
                       "Prevention Programme", 
                       "Admission Avoidance", 
                       "Waiting List Reduction", 
-                      "Out of Area Repatriation", 
+                      "Out of Area Repatriation",
+                      "Out of Area Expatriation",
                       "Shift to Independent setting"),
         Value = c(input$incidence_change, 
                   input$acuity_change, 
@@ -1235,7 +1234,8 @@ server <- function(input, output, session) {
                   input$prevention_programme, 
                   input$admission_avoidance, 
                   input$waiting_list_reduction, 
-                  input$ooa_repat, 
+                  input$ooa_repat,
+                  input$ooa_expat,
                   input$shift_to_ip)
       )
       write.csv(params, file, row.names = FALSE)
