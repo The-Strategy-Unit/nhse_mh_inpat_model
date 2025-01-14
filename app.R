@@ -11,6 +11,7 @@ library(waterfalls) # https://www.rdocumentation.org/packages/waterfalls/version
 library(shinyWidgets)
 library(readxl)
 library(rlang)
+library(scales)
   
 #### Set SU theme ####
 SU_colours <- c (
@@ -222,10 +223,12 @@ ui <- navbarPage(
              p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on workflow and hosting arrangements for the tool."),
              
              h4("Contact Us"),
-             p("Click the 'Contact Us' button below to get in touch with an questions or queries:"),
+             p("Click the 'Contact Us' button below to get in touch with any questions or queries:"),
              
              actionButton("contact_button", "Contact Us"),
              
+             br(),
+             br()
              
              )
            ),
@@ -289,8 +292,9 @@ ui <- navbarPage(
                          "text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")
-             ),
-           )),
+                       ),
+             )
+           ),
   
   tabPanel("Modelling assumptions",
            tabPanel("Analysis",
@@ -347,9 +351,6 @@ ui <- navbarPage(
                           
                           ),
                         
-                        
-                        
-                        
             mainPanel(
                 h3("Demand factor assumptions:"),
                 p("Demographic growth values are externally sourced from ONS population projections published 
@@ -374,9 +375,7 @@ ui <- navbarPage(
                  arrive at an adjusted estimate of 3.5% for impact of incidence changes over 3 years."),
                p(strong("Acuity change"),": We have assumed a general change in acuity (length of stay as a proxy) 
                  for all admissions of 6.7% increase over 3 years based on national trends in LoS between 2017 and 2023"),
-               
-               #br(),
-               
+              
                h5(strong("Demand Management:")),
                p(strong("Waiting list management"),": Larger waiting lists with longer waits as well as 'hidden' 
                  waiting lists are thought to increase risk of admission for some",
@@ -395,9 +394,7 @@ ui <- navbarPage(
                p(strong("Admission avoidance"),": National programmes to prevent mental ill-health, extend talking therapies, 
                  parental and maternal support and older adult support could reduce some demand on inpatient services. 
                  This effect is likely to be small in the short-term - we estimate up to 4% reduction."),
-               
-               #br(),
-               
+           
                h5(strong("External influences:")),
                p(strong("Social care pressures"),": Social care cost and resource pressures are likely to continue in the future. 
                  We have assumed there will be an increase in delayed discharge bed days over the next 3 years of 6.6%, 
@@ -476,8 +473,7 @@ ui <- navbarPage(
                           tabsetPanel(
                             tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "800px", width = "1200px")),
                             tabPanel("Bed days - excl. Home Leave", plotOutput("waterfall_Plot_bed_days_exHL", height = "800px", width = "1200px")),
-                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "800px", width = "1200px")),
-                            #tabPanel("Projection Table", DTOutput("dataTable"))
+                            tabPanel("Spells", plotOutput("waterfall_Plot", height = "800px", width = "1200px"))
                           ),
                           
                           h5(br(),
@@ -660,7 +656,6 @@ server <- function(input, output, session) {
       )
     })
   
-  
   # Read in grouped data
   baseline_aggregate <- reactive({
     req(input$file)
@@ -673,7 +668,6 @@ server <- function(input, output, session) {
                  oap_flag == 1 & residence_icb_name != input$icb ~ "oap_incoming"
                ))
   })
-  
   
   # Update selectInput choices based on the highest frequency ICB
   observe({
@@ -689,11 +683,9 @@ server <- function(input, output, session) {
     updateSelectInput(session, "icb", choices = highest_ranked_icb)
   })
   
-  
   output$info <- renderText({
     "Click the 'Contact Us' button to send an email."
   })
-  
   
   # Intro tab ----
   
@@ -727,7 +719,6 @@ server <- function(input, output, session) {
     updateNumericInput(session, "ooa_expat", value = params$Value[params$Parameter == "Out of Area Expatriation"])
     updateNumericInput(session, "shift_to_ip", value = params$Value[params$Parameter == "Shift to Independent setting"])
   })
-  
   
   # Growth factor inputs 
   demographic_growth     <- reactive({ icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb] * 100})
@@ -801,7 +792,6 @@ server <- function(input, output, session) {
       ) 
     }
   
-  
   # Apply growth inflators to grouped activity counts - separately
   baseline_growth <- reactive({
     req(baseline_aggregate(), 
@@ -810,62 +800,6 @@ server <- function(input, output, session) {
     baseline_growth_function(c("not_oap", "oap_incoming", "oap_outgoing"))
     
   })
-  
-  #baseline_growth_outgoing <- reactive({
-  #  req(baseline_aggregate(), 
-  #      input$icb)
-  #  
-  #  baseline_growth_function("oap_outgoing")
-  #  
-  #})
-  #
-  #baseline_growth_incoming <- reactive({
-  #  req(baseline_aggregate(), 
-  #      input$icb)
-  #  
-  #  baseline_growth_function("oap_incoming")
-  #  
-  #})
-  
-
-
-  # Summarise growth at ICB level
-  
-  ## Calculate growth adjusted outgoing activity to link back to below
-  #waterfall_data_outgoing <- reactive({
-  #  
-  #  req(baseline_growth_outgoing(),
-  #      ooa_repat()
-  #      )
-  #  
-  #  baseline_growth_outgoing() %>% 
-  #    summarise(
-  #      sp_ooa_repat_outgoing = sum(spell_proj),
-  #      bd_ooa_repat_outgoing = sum(bed_days_proj),
-  #      exHL_bedday_ooa_repat_outgoing = sum(bed_days_exHL_proj)
-  #      ) %>%
-  #  mutate(icb_dummy = "ICB") %>% 
-  #  pivot_longer(-icb_dummy) %>% 
-  #  mutate(value = value *(ooa_repat()/100)) #apply repatriation growth figure
-  #  
-  #})
-  #
-  ## Calculate growth adjusted incoming activity to link back to below
-  #waterfall_data_incoming <- reactive({
-  #  req(baseline_growth_incoming(),
-  #      ooa_repat()
-  #      )
-  #  
-  #  baseline_growth_incoming() %>% 
-  #    summarise(
-  #      sp_ooa_repat_incoming = sum(spell_proj),
-  #      bd_ooa_repat_incoming = sum(bed_days_proj),
-  #      exHL_bedday_ooa_repat_incoming = sum(bed_days_exHL_proj)
-  #      ) %>%
-  #  mutate(icb_dummy = "ICB") %>% 
-  #  pivot_longer(-icb_dummy) %>% 
-  #  mutate(value = value *((ooa_repat()/100)*-1)) #apply repatriation growth figure
-  #})
   
   # Aggregate up growth/reduction in activity for each factor to ICB level
   waterfall_data <- reactive({
@@ -1250,15 +1184,50 @@ server <- function(input, output, session) {
     content = function(file) {
       data <- 
         baseline_growth() |> 
-        select(-c(spell_count, contains("sp_"), spell_proj)) #|> 
-        #filter(bed_days > 5)
+        select(-c(spell_count, contains("sp_"), spell_proj)) |>
+        mutate(aadjusted_proj_oap =
+                 case_when(
+                   ooa_group == "oap_outgoing" ~ bed_days_proj * (input$ooa_repat / 100),
+                   ooa_group == "oap_incoming" ~ bed_days_proj * ((input$ooa_expat / 100) * -1),
+                   ooa_group == "not_oap" ~ 0
+                 ),
+               
+               adj_shift_to_ind = 
+                 case_when(
+                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adj_shift_from_ind = 
+                 case_when(
+                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adjusted_proj_oap_exHL =
+                 case_when(
+                   ooa_group == "oap_outgoing" ~ bed_days_exHL_proj * (input$ooa_repat / 100),
+                   ooa_group == "oap_incoming" ~ bed_days_exHL_proj * ((input$ooa_expat / 100) * -1),
+                   ooa_group == "not_oap" ~ 0
+                 ),
+               
+               adj_shift_to_ind_exHL = 
+                 case_when(
+                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adj_shift_from_ind_exHL = 
+                 case_when(
+                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 )
+               )
       
-      write.csv(data, file)
+      write.csv(data, file, row.names = FALSE)
     }
   )
   
-  
-
   # Occupancy rate table ----
   
   current_occupancy   <- reactive({ input$current_occupancy })
@@ -1317,318 +1286,12 @@ server <- function(input, output, session) {
         )
     
     baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
+      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Internal residence",
                                         TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
+             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                         TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
-      summarise(spells = sum(spell_count)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = spells
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-    })
-  
-  baseline_oap_activity_icb_bed_days <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-    )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days = sum(bed_days)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  baseline_oap_activity_icb_bed_days_exHL <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                      TRUE ~ "2. External residence"),
-           flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                      TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
-      ungroup() %>% 
-      pivot_wider(id_cols = flag_residence, 
-                  names_from = flag_provision, 
-                  values_from = bed_days_exHL
-                  ) %>% 
-      rename(` ` = flag_residence)
-    
-  })
-  
-  # Output objects
-  output$dataTable_oap <- renderDT({
-    req(baseline_oap_activity_icb()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-      )
-    
-  })
-  
-  output$dataTable_oap_bed_days <- renderDT({
-    req(baseline_oap_activity_icb_bed_days()
-    )
-    
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-  output$dataTable_oap_bed_days_exHL <- renderDT({
-    req(baseline_oap_activity_icb_bed_days_exHL()
-    )
-
-    DT::datatable(
-      baseline_oap_activity_icb_bed_days_exHL(),
-      extensions = "Buttons",              rownames = F, 
-      options = list(dom = 'Blfrtip', 
-                     buttons = list(list(extend = 'copy', title = NULL))
-                     ) 
-      ) %>%
-      formatStyle(
-        columns = 1,
-        fontWeight = 'bold'
-        )
-    })
-  
-  
-  # Bed policy table ---- 
-  
-  # Spells
-  bed_policy_table_spells <- reactive({
-    req(baseline_growth(),
-        input$shift_to_ip,
-        input$ooa_repat,
-        input$ooa_expat
-    )
-    
-    baseline_growth() |> 
-      mutate(adjusted_proj_oap =
-               case_when(
-                 ooa_group == "oap_outgoing" ~ spell_proj * (input$ooa_repat / 100),
-                 ooa_group == "oap_incoming" ~ spell_proj * ((input$ooa_expat / 100) * -1),
-                 ooa_group == "not_oap" ~ 0
-               ),
-             
-             adj_shift_to_ind = 
-               case_when(
-                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ spell_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               ),
-             
-             adj_shift_from_ind = 
-               case_when(
-                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ spell_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               )
-      ) |>  
-      summarise(
-        projected = round(sum(spell_proj),1),
-        adj_proj_oap = round(sum(adjusted_proj_oap),1),
-        adj_shift_to_ind = round(sum(adj_shift_to_ind),1),
-        adj_shift_from_ind = round(sum(adj_shift_from_ind),1)
-      ) |> 
-      rename(
-        `Projected demand` = projected,
-        `Out-of-area policy impact` = adj_proj_oap,
-        `Shift to independent sector` = adj_shift_to_ind,
-        `Shift from independent sector` = adj_shift_from_ind
-      )
-  })
-  
-  # Bed days
-  bed_policy_table_bd <- reactive({
-    req(baseline_growth(),
-        input$shift_to_ip,
-        input$ooa_repat,
-        input$ooa_expat
-    )
-    
-    baseline_growth() |> 
-      mutate(adjusted_proj_oap =
-               case_when(
-                 ooa_group == "oap_outgoing" ~ bed_days_proj * (input$ooa_repat / 100),
-                 ooa_group == "oap_incoming" ~ bed_days_proj * ((input$ooa_expat / 100) * -1),
-                 ooa_group == "not_oap" ~ 0
-               ),
-             
-             adj_shift_to_ind = 
-               case_when(
-                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               ),
-             
-             adj_shift_from_ind = 
-               case_when(
-                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               )
-      ) |>  
-      summarise(
-        projected = round(sum(bed_days_proj),1),
-        adj_proj_oap = round(sum(adjusted_proj_oap),1),
-        adj_shift_to_ind = round(sum(adj_shift_to_ind),1),
-        adj_shift_from_ind = round(sum(adj_shift_from_ind),1)
-      ) |> 
-      rename(
-        `Projected demand` = projected,
-        `Out-of-area policy impact` = adj_proj_oap,
-        `Shift to independent sector` = adj_shift_to_ind,
-        `Shift from independent sector` = adj_shift_from_ind
-      ) |> 
-      mutate(dummy = "") |> 
-      pivot_longer(-dummy) |>
-      rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
-      pivot_longer(cols = c(`Bed days`, `Annualised beds`),
-                   names_to = "Metric") |> 
-      select(-dummy) |> 
-      pivot_wider(id_cols = Metric, 
-                  names_from = name, 
-                  values_from = value)
-  })
-  
-  # Bed days - excl HL
-  bed_policy_table_bd_exHL <- reactive({
-    req(baseline_growth(),
-        input$shift_to_ip,
-        input$ooa_repat,
-        input$ooa_expat
-    )
-    
-    baseline_growth() |> 
-      mutate(adjusted_proj_oap =
-               case_when(
-                 ooa_group == "oap_outgoing" ~ bed_days_exHL_proj * (input$ooa_repat / 100),
-                 ooa_group == "oap_incoming" ~ bed_days_exHL_proj * ((input$ooa_expat / 100) * -1),
-                 ooa_group == "not_oap" ~ 0
-               ),
-             
-             adj_shift_to_ind = 
-               case_when(
-                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               ),
-             
-             adj_shift_from_ind = 
-               case_when(
-                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
-                 TRUE ~ 0
-               )
-      ) |>  
-      summarise(
-        projected = round(sum(bed_days_exHL_proj),1),
-        adj_proj_oap = round(sum(adjusted_proj_oap),1),
-        adj_shift_to_ind = round(sum(adj_shift_to_ind),1),
-        adj_shift_from_ind = round(sum(adj_shift_from_ind),1)
-      ) |> 
-      rename(
-        `Projected demand` = projected,
-        `Out-of-area policy impact` = adj_proj_oap,
-        `Shift to independent sector` = adj_shift_to_ind,
-        `Shift from independent sector` = adj_shift_from_ind
-      ) |> 
-      mutate(dummy = "") |> 
-      pivot_longer(-dummy) |>
-      rename(`Bed days` = value) |> 
-      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
-      pivot_longer(cols = c(`Bed days`, `Annualised beds`),
-                   names_to = "Metric") |> 
-      select(-dummy) |> 
-      pivot_wider(id_cols = Metric, 
-                  names_from = name, 
-                  values_from = value)
-  })
-  
-  # Output objects
-  output$bed_policy_table_spells <- renderDT({
-    req(bed_policy_table_spells())
-    
-    DT::datatable(bed_policy_table_spells(), 
-                  extensions = "Buttons",              rownames = F, 
-                  options = list(dom = 'Blfrtip', 
-                                 buttons = list(list(extend = 'copy', title = NULL))))
-    
-  })
-  
-  output$bed_policy_table_bd <- renderDT({
-    req(bed_policy_table_bd())
-    
-    DT::datatable(bed_policy_table_bd(), 
-                  extensions = "Buttons",              rownames = F, 
-                  options = list(dom = 'Blfrtip', 
-                                 buttons = list(list(extend = 'copy', title = NULL))))
-    
-  })
-  
-  output$bed_policy_table_bd_exHL <- renderDT({
-    req(bed_policy_table_bd_exHL())
-    
-    DT::datatable(bed_policy_table_bd_exHL(), 
-                  extensions = "Buttons",              rownames = F, 
-                  options = list(dom = 'Blfrtip', 
-                                 buttons = list(list(extend = 'copy', title = NULL))))
-    
-  })
-  
-  
-  # Reset bed policy factors to default position
-  observeEvent(input$reset_bed_policy, {
-    updateNumericInput(session, "ooa_repat", value = 50)
-    updateNumericInput(session, "ooa_expat", value = 50)
-    updateNumericInput(session, "shift_to_ip", value = 0)
-  })
-  
-
-  # Out of area table ----
-  baseline_oap_activity_icb <- reactive({   
-    req(baseline_aggregate(),
-        input$icb
-        )
-    
-    baseline_aggregate() |>
-      mutate(flag_residence = case_when(residence_icb_name == input$icb ~ "1. Selected ICB residence",
-                                        TRUE ~ "2. External residence"),
-             flag_provision = case_when(provider_icb_name == input$icb ~ "1. Selected ICB provision",
-                                        TRUE ~ "2. External provision")) %>% 
-      group_by(flag_residence, flag_provision) %>% 
-      summarise(spells = sum(spell_count)) %>% 
+      summarise(spells = comma(sum(spell_count))) %>% 
       ungroup() %>% 
       pivot_wider(id_cols = flag_residence, 
                   names_from = flag_provision, 
@@ -1649,7 +1312,7 @@ server <- function(input, output, session) {
              flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                         TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days = sum(bed_days)) %>% 
+      summarise(bed_days = comma(sum(bed_days))) %>% 
       ungroup() %>% 
       pivot_wider(id_cols = flag_residence, 
                   names_from = flag_provision, 
@@ -1670,7 +1333,7 @@ server <- function(input, output, session) {
            flag_provision = case_when(provider_icb_name == input$icb ~ "1. Internal provision",
                                       TRUE ~ "2. External provision")) %>% 
       group_by(flag_residence, flag_provision) %>% 
-      summarise(bed_days_exHL = sum(bed_days_exHL)) %>% 
+      summarise(bed_days_exHL = comma(sum(bed_days_exHL))) %>% 
       ungroup() %>% 
       pivot_wider(id_cols = flag_residence, 
                   names_from = flag_provision, 
@@ -1687,7 +1350,8 @@ server <- function(input, output, session) {
     
     DT::datatable(
       baseline_oap_activity_icb(),
-      extensions = "Buttons",              rownames = F, 
+      extensions = "Buttons",              
+      rownames = F, 
       options = list(dom = 'Blfrtip', 
                      buttons = list(list(extend = 'copy', title = NULL))
                      ) 
@@ -1741,6 +1405,195 @@ server <- function(input, output, session) {
     
   })
 
+  # Bed policy table ---- 
+  
+  # Spells
+  bed_policy_table_spells <- reactive({
+    req(baseline_growth(),
+        input$shift_to_ip,
+        input$ooa_repat,
+        input$ooa_expat
+    )
+    
+    baseline_growth() |> 
+      mutate(adjusted_proj_oap =
+               case_when(
+                 ooa_group == "oap_outgoing" ~ spell_proj * (input$ooa_repat / 100),
+                 ooa_group == "oap_incoming" ~ spell_proj * ((input$ooa_expat / 100) * -1),
+                 ooa_group == "not_oap" ~ 0
+               ),
+             
+             adj_shift_to_ind = 
+               case_when(
+                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ spell_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               ),
+             
+             adj_shift_from_ind = 
+               case_when(
+                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ spell_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               )
+      ) |>  
+      summarise(
+        projected = comma(sum(spell_proj)),
+        adj_proj_oap = comma(sum(adjusted_proj_oap)),
+        adj_shift_to_ind = comma(sum(adj_shift_to_ind)),
+        adj_shift_from_ind = comma(sum(adj_shift_from_ind))
+      ) |> 
+      rename(
+        `Projected demand` = projected,
+        `Out-of-area policy impact` = adj_proj_oap,
+        `Shift to independent sector` = adj_shift_to_ind,
+        `Shift from independent sector` = adj_shift_from_ind
+      )
+  })
+  
+  # Bed days
+  bed_policy_table_bd <- reactive({
+    req(baseline_growth(),
+        input$shift_to_ip,
+        input$ooa_repat,
+        input$ooa_expat
+    )
+    
+    baseline_growth() |> 
+      mutate(adjusted_proj_oap =
+               case_when(
+                 ooa_group == "oap_outgoing" ~ bed_days_proj * (input$ooa_repat / 100),
+                 ooa_group == "oap_incoming" ~ bed_days_proj * ((input$ooa_expat / 100) * -1),
+                 ooa_group == "not_oap" ~ 0
+               ),
+             
+             adj_shift_to_ind = 
+               case_when(
+                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               ),
+             
+             adj_shift_from_ind = 
+               case_when(
+                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               )
+      ) |>  
+      summarise(
+        projected = sum(bed_days_proj),
+        adj_proj_oap = sum(adjusted_proj_oap),
+        adj_shift_to_ind = sum(adj_shift_to_ind),
+        adj_shift_from_ind = sum(adj_shift_from_ind)
+        ) |> 
+      rename(
+        `Projected demand` = projected,
+        `Out-of-area policy impact` = adj_proj_oap,
+        `Shift to independent sector` = adj_shift_to_ind,
+        `Shift from independent sector` = adj_shift_from_ind
+      ) |> 
+      mutate(dummy = "") |> 
+      pivot_longer(-dummy) |>
+      rename(`Bed days` = value) |> 
+      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
+      pivot_longer(cols = c(`Bed days`, `Annualised beds`),
+                   names_to = "Metric") |> 
+      select(-dummy) |> 
+      mutate(value = comma(value)) |> 
+      pivot_wider(id_cols = Metric, 
+                  names_from = name, 
+                  values_from = value)
+  })
+  
+  # Bed days - excl HL
+  bed_policy_table_bd_exHL <- reactive({
+    req(baseline_growth(),
+        input$shift_to_ip,
+        input$ooa_repat,
+        input$ooa_expat
+    )
+    
+    baseline_growth() |> 
+      mutate(adjusted_proj_oap =
+               case_when(
+                 ooa_group == "oap_outgoing" ~ bed_days_exHL_proj * (input$ooa_repat / 100),
+                 ooa_group == "oap_incoming" ~ bed_days_exHL_proj * ((input$ooa_expat / 100) * -1),
+                 ooa_group == "not_oap" ~ 0
+               ),
+             
+             adj_shift_to_ind = 
+               case_when(
+                 (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               ),
+             
+             adj_shift_from_ind = 
+               case_when(
+                 (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                 TRUE ~ 0
+               )
+      ) |>  
+      summarise(
+        projected = sum(bed_days_exHL_proj),
+        adj_proj_oap = sum(adjusted_proj_oap),
+        adj_shift_to_ind = sum(adj_shift_to_ind),
+        adj_shift_from_ind = sum(adj_shift_from_ind)
+        ) |> 
+      rename(
+        `Projected demand` = projected,
+        `Out-of-area policy impact` = adj_proj_oap,
+        `Shift to independent sector` = adj_shift_to_ind,
+        `Shift from independent sector` = adj_shift_from_ind
+      ) |> 
+      mutate(dummy = "") |> 
+      pivot_longer(-dummy) |>
+      rename(`Bed days` = value) |> 
+      mutate(`Annualised beds` = round((`Bed days`/ (future_occupancy()/100)/365.25),1)) |> 
+      pivot_longer(cols = c(`Bed days`, `Annualised beds`),
+                   names_to = "Metric") |> 
+      select(-dummy) |> 
+      mutate(value = comma(value)) |> 
+      pivot_wider(id_cols = Metric, 
+                  names_from = name, 
+                  values_from = value)
+  })
+  
+  # Output objects
+  output$bed_policy_table_spells <- renderDT({
+    req(bed_policy_table_spells())
+    
+    DT::datatable(bed_policy_table_spells(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  output$bed_policy_table_bd <- renderDT({
+    req(bed_policy_table_bd())
+    
+    DT::datatable(bed_policy_table_bd(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  output$bed_policy_table_bd_exHL <- renderDT({
+    req(bed_policy_table_bd_exHL())
+    
+    DT::datatable(bed_policy_table_bd_exHL(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  
+  # Reset bed policy factors to default position
+  observeEvent(input$reset_bed_policy, {
+    updateNumericInput(session, "ooa_repat", value = 50)
+    updateNumericInput(session, "ooa_expat", value = 50)
+    updateNumericInput(session, "shift_to_ip", value = 0)
+  })
+  
   
   # Sub-group plots ----
   
