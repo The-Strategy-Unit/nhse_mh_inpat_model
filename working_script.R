@@ -507,15 +507,9 @@ baseline_growth |>
   rename(" " = provider_type)
 
 
-
-
+# Table output
 base <- 
   read_csv("icb_baseline_data/baseline_aggregate_QHL.csv") 
-
-#
-
-# Table output
-baseline_projection_comp
 
 
 provider_type_view_function <- function(activity_type, waterfall_baseline, growth_factors, growth_shift_to_ip) {
@@ -712,9 +706,6 @@ output$ind_nhs_bed_days_exHL <- renderDT({
 })
 
 
-
-
-
 # Apply occupancy rate to bed days ----
 # Annualised beds (Baseline occupancy rate / occupancy rate) / 365.25 
 
@@ -750,18 +741,25 @@ waterfall_data |>
 # Project sub-group activity ----
 
 baseline_growth |> 
-  filter(residence_icb_code == "QGH") |> 
+  #filter(residence_icb_code == "QGH") |> 
   group_by(age_group_admission) |> 
   summarise(spell_count = sum(spell_count),
             bed_days = sum(bed_days),
+            bed_days_exHL = sum(bed_days_exHL),
             
             spell_proj = sum(spell_proj),
-            bed_days_proj = sum(bed_days_proj)
-  ) |>
+            bed_days_proj = sum(bed_days_proj),
+            bed_days_exHL_proj = sum(bed_days_exHL_proj)
+            ) |>
   rename(group_name = 1) |>
   pivot_longer(-group_name) |> 
-  mutate(flag = case_when(str_detect(name, "spell_") ~ "1. Spells", TRUE ~ "2. Bed days"),
-         current_projection = case_when(str_detect(name, "proj") ~ "Projection", TRUE ~ "Current")
+  mutate(flag = 
+           case_when(str_detect(name, "spell_") ~ "1. Spells", 
+                     str_detect(name, "bed_days_exHL") ~ "3. Bed days - excl Home Leave", 
+                     TRUE ~ "2. Bed days"),
+         current_projection = 
+           case_when(str_detect(name, "proj") ~ "Projection", 
+                     TRUE ~ "Current")
   ) |> 
   
   ggplot(aes(x = group_name, y = value, fill = current_projection)) +

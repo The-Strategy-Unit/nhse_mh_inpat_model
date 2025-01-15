@@ -494,7 +494,7 @@ ui <- navbarPage(
                  
                  h5(br(),
                     "Sub-group Analysis:"
-                 ),
+                    ),
                  h6(
                    "In order to inform patient and service demand perspectives, below we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
                    br(),
@@ -521,9 +521,9 @@ ui <- navbarPage(
                
                mainPanel(
                  
-                 h5(br(),
-                    "Sub-group Analysis"
-                 ),
+                 #h5(br(),
+                 #   "Sub-group Analysis"
+                 #   ),
                  tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px"))
                )
              )
@@ -1723,19 +1723,28 @@ server <- function(input, output, session) {
       mutate(gender = case_when(gender == "1" ~ "Male", 
                                 gender == "2" ~ "Female")) %>% 
       mutate(imd_quintile = as.character(imd_quintile)) %>% 
-      group_by(!!sym(input$group_selection)) |> 
+      
+      group_by(!!sym(input$group_selection)) |>
       summarise(spell_count = sum(spell_count),
                 bed_days = sum(bed_days),
+                bed_days_exHL = sum(bed_days_exHL),
                 
                 spell_proj = sum(spell_proj),
-                bed_days_proj = sum(bed_days_proj)
+                bed_days_proj = sum(bed_days_proj),
+                bed_days_exHL_proj = sum(bed_days_exHL_proj)
       ) |>
-      rename(group_name = 1) |> 
-      drop_na(group_name) %>% 
+      rename(group_name = 1) |>
+      drop_na(group_name) |> 
       pivot_longer(-group_name) |> 
-      mutate(flag = case_when(str_detect(name, "spell_") ~ "1. Spells", TRUE ~ "2. Bed days"),
-             current_projection = case_when(str_detect(name, "proj") ~ "Projection", TRUE ~ "Current")
-      ) 
+      mutate(flag = 
+               case_when(str_detect(name, "spell_") ~ "1. Spells", 
+                         str_detect(name, "bed_days_exHL") ~ "3. Bed days - excl Home Leave", 
+                         TRUE ~ "2. Bed days"),
+             current_projection = 
+               case_when(str_detect(name, "proj") ~ "Projection", 
+                         TRUE ~ "Current")
+             )
+       
   })
   
   # Plot sub-group
