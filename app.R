@@ -261,15 +261,15 @@ ui <- navbarPage(
              p(strong("2b. "),"If you change the parameters from the default ones, download and save them to reload later - ",
                strong("the server session does time out after 1 hour of inactivity")," and will start as fresh default 
                session when you next access the app!"),
-             p(strong("3. "),"Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand 
+             p(strong("3a. "),"Navigate to the 'Main outputs' tab to view a plot/table of the baseline, modelled demand 
                and capacity conversion to beds."),
+             p(strong("3b. "),"Navigate to the 'Sub-group Outputs' tab to view the baseline vs modelled demand data for the sub-groups of 
+               patients / beds in the data."),
              p(strong("4. "),"Now switch to the 'Bed Policy and Management' tab to specify any plans for out of area and 
-               independent beds and the switches in beds these might mean."),
-             p(strong("5. "),"Navigate to the 'Sub-group Analysis' tab to view data on out-of-area flows (at baseline) and 
-               sub-group level changes according to what is specified in the above steps."),br(),
+               independent beds and the switches in bed numbers these might mean."),
              p(strong("6. "),"When happy the model reflects your local position on the assumptions, you can export a csv of 
                the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in 
-               the 'Main Outputs' tab."),
+               the 'Main Outputs' tab."),br(),
              p("If you want to generate multiple models with different assumptions e.g. demographics only, high 
                or low growth scenario etc... then please repeat the above steps after loading the baseline data.",
                strong(" REMEMBER")," to save your model outputs ",strong("AND")," your parameter file if you want to 
