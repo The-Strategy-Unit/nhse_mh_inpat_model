@@ -487,6 +487,49 @@ ui <- navbarPage(
                     )
            ),
   
+  tabPanel("Sub-group outputs",
+           fluidPage(
+             sidebarLayout(
+               sidebarPanel(
+                 
+                 h5(br(),
+                    "Sub-group Analysis:"
+                    ),
+                 h6(
+                   "In order to inform patient and service demand perspectives, below we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
+                   br(),
+                   br(),
+                   "Cycle through the 'grouping variable' control (below) to change the sub-group measure by which we present the baseline and 
+                   projected activity.",
+                   br(),
+                   br(),
+                   selectInput("group_selection", "Select grouping variable:", 
+                               choices = 
+                                 c(
+                                   "Age Group Admission" = "age_group_admission",
+                                   "Gender" = "gender",
+                                   "Ethnic Category" = "ethnic_category_2",
+                                   "IMD Quintile" = "imd_quintile",
+                                   "Provider Type" = "provider_type",
+                                   "Legal Status Group" = "legal_status_group",
+                                   "LDA Flag" = "lda_flag",
+                                   "Ward Type Description" = "der_ward_type_desc_first"
+                                 )
+                   )
+                 ),
+               ),
+               
+               mainPanel(
+                 
+                 #h5(br(),
+                 #   "Sub-group Analysis"
+                 #   ),
+                 tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px"))
+               )
+             )
+           )
+  ),
+  
   
   tabPanel("Bed policy and management",
            fluidPage(
@@ -552,6 +595,19 @@ ui <- navbarPage(
                  ),
                  
                  h5(br(),
+                    "Provider type and out-of-area activity at baseline",
+                    br()
+                 ),
+                 p("Use the table below to guage the baseline levels of activity that is delivered by NHS and Independent sector providers along with
+                   the way in which that activity is distributed by the geographica and organisational location of care - whether treated within the ICB or externally."),
+                 tabsetPanel(
+                   tabPanel("Bed days", DTOutput("bed_policy_oap_group_baseline_bd")),
+                   tabPanel("Bed days - excl. Home Leave", DTOutput("bed_policy_oap_group_baseline_bd_exHL")),
+                   tabPanel("Spells", DTOutput("bed_policy_oap_group_baseline"))
+                 ),
+                 
+                 
+                 h5(br(),
                     "Bed policy changes to projected activity",
                     br()
                  ),
@@ -564,49 +620,6 @@ ui <- navbarPage(
                )
              )
            ),
-  
-  tabPanel("Sub-group Analysis",
-           fluidPage(
-             sidebarLayout(
-               sidebarPanel(
-                 
-                 h5(br(),
-                    "Sub-group Analysis:"
-                 ),
-                 h6(
-                   "In order to inform patient and service demand perspectives, below we present the baseline and projected activity levels by patient group or pathway, in both spells and bed days.", 
-                   br(),
-                   br(),
-                   "Cycle through the 'grouping variable' control (below) to change the sub-group measure by which we present the baseline and 
-                   projected activity.",
-                   br(),
-                   br(),
-                   selectInput("group_selection", "Select grouping variable:", 
-                               choices = 
-                                 c(
-                                   "Age Group Admission" = "age_group_admission",
-                                   "Gender" = "gender",
-                                   "Ethnic Category" = "ethnic_category_2",
-                                   "IMD Quintile" = "imd_quintile",
-                                   "Provider Type" = "provider_type",
-                                   "Legal Status Group" = "legal_status_group",
-                                   "LDA Flag" = "lda_flag",
-                                   "Ward Type Description" = "der_ward_type_desc_first"
-                                 )
-                               )
-                   ),
-                 ),
-               
-               mainPanel(
-                 
-                 h5(br(),
-                    "Sub-group Analysis"
-                 ),
-                 tabPanel("Sub-group Plot", plotOutput("sub_group_Plot", height = "700px", width = "1000px"))
-               )
-             )
-           )
-  ),
   
   tabPanel("Metadata and glossary",
            fluidPage(
@@ -1595,6 +1608,111 @@ server <- function(input, output, session) {
   })
   
   
+  # Provider and OAP-group breakdown at baseline ----
+  
+  # Spells
+  bed_policy_oap_group_baseline <- reactive({
+    req(baseline_growth())
+    
+    baseline_growth() |> 
+      group_by(provider_type, ooa_group) |> 
+      mutate(ooa_group = 
+               case_when(
+                 ooa_group == "not_oap" ~ "Not OAP",
+                 ooa_group == "oap_outgoing" ~ "Outgoing placement",
+                 ooa_group == "oap_incoming" ~ "Incoming placement"
+               )) |> 
+      summarise(count = sum(spell_count)) |> 
+      mutate(Total = comma(sum(count))) |> 
+      mutate(count = comma(count)) |>
+      
+      pivot_wider(id_cols = c(provider_type, Total), 
+                  names_from = ooa_group,
+                  values_from = count) |> 
+      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      rename(" " = provider_type)
+    })
+  
+  # Bed days
+  bed_policy_oap_group_baseline_bd <- reactive({
+    req(baseline_growth())
+    
+    baseline_growth() |> 
+      group_by(provider_type, ooa_group) |> 
+      mutate(ooa_group = 
+               case_when(
+                 ooa_group == "not_oap" ~ "Not OAP",
+                 ooa_group == "oap_outgoing" ~ "Outgoing placement",
+                 ooa_group == "oap_incoming" ~ "Incoming placement"
+               )) |> 
+      summarise(count = sum(bed_days)) |> 
+      mutate(Total = comma(sum(count))) |> 
+      mutate(count = comma(count)) |>
+      
+      pivot_wider(id_cols = c(provider_type, Total), 
+                  names_from = ooa_group,
+                  values_from = count) |> 
+      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      rename(" " = provider_type)
+    })
+  
+  # Bed days - exHL
+  bed_policy_oap_group_baseline_bd_exHL <- reactive({
+    req(baseline_growth())
+    
+    baseline_growth() |> 
+      group_by(provider_type, ooa_group) |> 
+      mutate(ooa_group = 
+               case_when(
+                 ooa_group == "not_oap" ~ "Not OAP",
+                 ooa_group == "oap_outgoing" ~ "Outgoing placement",
+                 ooa_group == "oap_incoming" ~ "Incoming placement"
+               )) |> 
+      summarise(count = sum(bed_days_exHL)) |> 
+      mutate(Total = comma(sum(count))) |> 
+      mutate(count = comma(count)) |>
+      
+      pivot_wider(id_cols = c(provider_type, Total), 
+                  names_from = ooa_group,
+                  values_from = count) |> 
+      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      rename(" " = provider_type)
+    
+    })
+  
+  # Output objects
+  output$bed_policy_oap_group_baseline <- renderDT({
+    req(bed_policy_oap_group_baseline())
+    
+    DT::datatable(bed_policy_oap_group_baseline(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  output$bed_policy_oap_group_baseline_bd <- renderDT({
+    req(bed_policy_oap_group_baseline_bd())
+    
+    DT::datatable(bed_policy_oap_group_baseline_bd(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  output$bed_policy_oap_group_baseline_bd_exHL <- renderDT({
+    req(bed_policy_oap_group_baseline_bd_exHL())
+    
+    DT::datatable(bed_policy_oap_group_baseline_bd_exHL(), 
+                  extensions = "Buttons",              rownames = F, 
+                  options = list(dom = 'Blfrtip', 
+                                 buttons = list(list(extend = 'copy', title = NULL))))
+    
+  })
+  
+  
+  
   # Sub-group plots ----
   
   # Calculate sub-group activity
@@ -1605,19 +1723,28 @@ server <- function(input, output, session) {
       mutate(gender = case_when(gender == "1" ~ "Male", 
                                 gender == "2" ~ "Female")) %>% 
       mutate(imd_quintile = as.character(imd_quintile)) %>% 
-      group_by(!!sym(input$group_selection)) |> 
+      
+      group_by(!!sym(input$group_selection)) |>
       summarise(spell_count = sum(spell_count),
                 bed_days = sum(bed_days),
+                bed_days_exHL = sum(bed_days_exHL),
                 
                 spell_proj = sum(spell_proj),
-                bed_days_proj = sum(bed_days_proj)
+                bed_days_proj = sum(bed_days_proj),
+                bed_days_exHL_proj = sum(bed_days_exHL_proj)
       ) |>
-      rename(group_name = 1) |> 
-      drop_na(group_name) %>% 
+      rename(group_name = 1) |>
+      drop_na(group_name) |> 
       pivot_longer(-group_name) |> 
-      mutate(flag = case_when(str_detect(name, "spell_") ~ "1. Spells", TRUE ~ "2. Bed days"),
-             current_projection = case_when(str_detect(name, "proj") ~ "Projection", TRUE ~ "Current")
-      ) 
+      mutate(flag = 
+               case_when(str_detect(name, "spell_") ~ "1. Spells", 
+                         str_detect(name, "bed_days_exHL") ~ "3. Bed days - excl Home Leave", 
+                         TRUE ~ "2. Bed days"),
+             current_projection = 
+               case_when(str_detect(name, "proj") ~ "Projection", 
+                         TRUE ~ "Current")
+             )
+       
   })
   
   # Plot sub-group
