@@ -14,7 +14,7 @@ library(stringi)
 
 ##deanonymise icb codes from base file before synth'ing
 
-df <- read.csv("C:/Users/Andrew.Hood/OneDrive - Midlands and Lancashire CSU/Working Projects/MH inpat modelling/backup 20250103/nhse_mh_inpat_model/baseline_aggregate_QHL.csv")
+df <- read.csv("C:/Users/Andrew.Hood/OneDrive - Midlands and Lancashire CSU/Working Projects/MH inpat modelling/backup 20250103/nhse_mh_inpat_model/baseline_aggregate_QWU.csv")
 
 dist_icb_res <- df |> 
   group_by(residence_icb_code) |>
