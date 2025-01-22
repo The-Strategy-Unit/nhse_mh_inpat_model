@@ -267,7 +267,7 @@ ui <- navbarPage(
                patients / beds in the data."),
              p(strong("4. "),"Now switch to the 'Bed Policy and Management' tab to specify any plans for out of area and 
                independent beds and the switches in bed numbers these might mean."),
-             p(strong("6. "),"When happy the model reflects your local position on the assumptions, you can export a csv of 
+             p(strong("5. "),"When happy the model reflects your local position on the assumptions, you can export a csv of 
                the full modelled grouped data for your own post-hoc analysis using 'Download Projected Data' button in 
                the 'Main Outputs' tab."),br(),
              p("If you want to generate multiple models with different assumptions e.g. demographics only, high 
@@ -305,7 +305,7 @@ ui <- navbarPage(
                           p("After confirming your ICB from the drop-down box, use the controls below to change 
                             each parameter in turn using either the step arrows or typing over the values. 
                             Every parameter is a percentage change value allowing for 1 decimal place accuracy 
-                            that estimates total changes over the next 3 years. The text opposite gives a description 
+                            that estimates ",strong("total changes over the next 3 years.")," The text opposite gives a description 
                             of each parameter and where relevant the source and/or logic for our default values."),
                           
                           selectInput("icb", "Select ICB:", choices = NULL),
@@ -318,20 +318,18 @@ ui <- navbarPage(
                                    numericInput("incidence_change", "Incidence Change",           value = 3.5,   step = 0.1),
                                    numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
                                    
+                                   h6(strong("External influences:")),
+                                   numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
+                                   numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1),
+                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
+                                   ),
+                            
+                            column(6,
                                    h6(strong("Demand Management:")),
                                    numericInput("waiting_list_reduction", "Waiting List Management", value = -3.7,   step = 0.1),
                                    numericInput("prevention_programme", "Prevention Programme",     value = -4.8, step = 0.1),
                                    numericInput("service_models", "Service Models",               value = -5,step = 0.1),
                                    numericInput("admission_avoidance", "Admission Avoidance",       value = -4, step = 0.1),
-                                   ),
-                            
-                            column(6,
-                                   h6(strong("External influences:")),
-                                   numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
-                                   numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1),
-                                   numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
-                                   
-                                  
                                    
                                    br(),
                                    
@@ -427,7 +425,7 @@ ui <- navbarPage(
                           h5("Demand factor changes:"),
                           
                           h6(
-                            "The waterfall chart displays the baseline number of bed days or spells and the 
+                            "The waterfall chart opposite displays the baseline number of bed days or spells and the 
                             progressive change from the baseline when each growth factor (modelling assumptions tab) 
                             is applied.", 
                             br(),
@@ -477,7 +475,7 @@ ui <- navbarPage(
                           ),
                           
                           h5(br(),
-                             "Occupancy rate adjusted",
+                             "Occupancy rate adjusted beds",
                              br()
                           ),
                           tabPanel("Annualised bed days", DTOutput("dataTable_occupancy")),
