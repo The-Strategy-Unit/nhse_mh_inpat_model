@@ -1,0 +1,68 @@
+---
+title: "Midlands Mental Health Inpatient Bed Model - Baseline Data Analysis"
+author: "<a href='https://github.com/ASW-Analyst/'>Andy Wilson</a><br><a href='https://transformationunit.nhs.uk/'>NHS Transformation Unit</a>"
+date: "01/22/2025"
+date-format: "DD MMMM YYYY"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    self-contained: true
+params:
+  icb: "QHL"
+
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  out.width = '100%'
+)
+
+selected_icb <- params$icb
+
+library(here)
+source(paste0(here(), "/baseline_analysis/requirements/packages.R"))
+mhsds_baseline_adm <- read.csv(paste0(here(), "/udal_extracts/data/mhsds_baseline_adm250102.csv"))
+mhsds_baseline_ws <- read.csv(paste0(here(), "/udal_extracts/data/mhsds_baseline_ws_250102.csv"))
+
+source(paste0(here(), "/baseline_analysis/processing/pre-processing.R"))
+
+```
+
+```{r}
+
+adm_comb |>
+  group_by(Group) |>
+  summarise(Total = n())
+
+```
+
+# Introduction
+This analysis has been undertaken to provide additional context to the development of the Midlands Mental Health Inpatient Beds Demand and Capacity Tool. This analysis explores admissions and Length of Stay (LOS) from the baseline dataset used within this model. The baseline dataset is covers admissions where:
+
+* The patient is **resident** to a Midlands ICB or is **admitted to** a Midlands provider and
+* The admission overlaps with the period **01/07/2023 - 30/06/2024** and
+* Specialist Commissioned activity has been **excluded**
+
+This analysis has been designed to provide an overview of important features associated with demand and capacity including:
+
+* Demographic analysis of patients who are admitted
+* Analysis of length of stay within hospital considering:
+  * Type of bed admitted to
+  * Security level of the ward
+  * Diagnosis information
+  * Demographics of the patient
+  
+
+# Length of Stay
+
+## Bed Type
+
+## Diagnosis
+
+## Ward Security
