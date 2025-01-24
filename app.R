@@ -12,6 +12,7 @@ library(shinyWidgets)
 library(readxl)
 library(rlang)
 library(scales)
+library(openxlsx)
   
 #### Set SU theme ####
 SU_colours <- c (
@@ -1796,9 +1797,10 @@ server <- function(input, output, session) {
   
   
   # Download data ----
+
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("projected_data_", Sys.Date(), ".csv", sep = "")
+      paste("projected_data_", Sys.Date(), ".xlsx", sep = "")
     },
     content = function(file) {
       data <- 
@@ -1848,12 +1850,97 @@ server <- function(input, output, session) {
                proj_annualised_beds = (bed_days_proj/(future_occupancy()/100)/365.25), 
                proj_annualised_beds_exHL = (bed_days_exHL_proj/(future_occupancy()/100)/365.25)
                
-               )
+        )
       
-      write.csv(data, file, row.names = FALSE)
+      # Create a workbook and add worksheets
+      wb <- createWorkbook()
+      addWorksheet(wb, "Data")
+      addWorksheet(wb, "Metadata")
+      
+      # Write data to the first sheet
+      writeData(wb, "Data", data)
+      
+      # Create metadata
+      field_names <- names(data)
+      descriptions <- c(
+        
+        "Code representing the Integrated Care Board (ICB) of the patient's residence.",
+        "Name of the Integrated Care Board (ICB) of the patient's residence.",
+        "Code representing the Integrated Care Board (ICB) of the healthcare provider.",
+        "Name of the Integrated Care Board (ICB) of the healthcare provider.",
+        "Age group of the patient at the time of admission.",
+        "Gender of the patient.",
+        "Ethnic category of the patient, using a broad classification system.",
+        "Index of Multiple Deprivation (IMD) quintile, indicating the level of deprivation of the patient's area of residence.",
+        "Type of healthcare provider (e.g., NHS, Independent).",
+        "Legal status group of the patient (e.g., voluntary, detained under the Mental Health Act).",
+        "Flag indicating whether the patient has a learning disability or autism.",
+        "Description of the type of ward where the patient was first admitted.",
+        "Flag indicating whether the patient is an out-of-area placement.",
+        "Total number of bed days for the patient group at baseline.",
+        "Total number of bed days at baseline excluding home-leave periods.",
+        "Number of delayed-discharge bed days for the patient (bed days occuring after ready for discharge date before discharge date).",
+        "Group classification for out-of-area patients.",
+        "Bed days attributed to demographic growth.",
+        "Bed days attributed to changes in incidence rates.",
+        "Bed days attributed to changes in patient acuity.",
+        "Bed days attributed to social care pressures.",
+        "Bed days attributed to changes in the Mental Health Act.",
+        "Bed days attributed to national policy changes.",
+        "Bed days attributed to changes in service models.",
+        "Bed days attributed to prevention programs.",
+        "Bed days attributed to admission avoidance strategies.",
+        "Bed days attributed to waiting list reduction efforts.",
+        "Bed days excluding home-leave care attributed to demographic growth.",
+        "Bed days excluding home-leave care attributed to changes in incidence rates.",
+        "Bed days excluding home-leave care attributed to changes in patient acuity.",
+        "Bed days excluding home-leave care attributed to social care pressures.",
+        "Bed days excluding home-leave care attributed to changes in the Mental Health Act.",
+        "Bed days excluding home-leave care attributed to national policy changes.",
+        "Bed days excluding home-leave care attributed to changes in service models.",
+        "Bed days excluding home-leave care attributed to prevention programs.",
+        "Bed days excluding home-leave care attributed to admission avoidance strategies.",
+        "Bed days excluding home-leave care attributed to waiting list reduction efforts.",
+        "Projected number of bed days.",
+        "Projected number of bed days excluding home-leave periods.",
+        "Adjusted projected bed days for out-of-area patients.",
+        "Adjusted shift to independent providers.",
+        "Adjusted shift from independent providers.",
+        "Adjusted projected bed days excluding home-leave periods for out-of-area patients.",
+        "Adjusted shift to independent providers excluding home-leave periods.",
+        "Adjusted shift from independent providers excluding home-leave periods.",
+        "Baseline annualised number of beds.",
+        "Baseline annualised number of beds excluding home-leave periods.",
+        "Projected annualised number of beds.",
+        "Projected annualised number of beds excluding home-leave periods."
+        )
+      
+      # Ensure descriptions match the number of fields
+      if (length(descriptions) < length(field_names)) {
+        descriptions <- c(descriptions, rep("Description not provided", length(field_names) - length(descriptions)))
+      }
+      
+      metadata <- data.frame(
+        Field_Name = field_names,
+        Description = descriptions
+      )
+      
+      # Write metadata to the second sheet
+      writeData(wb, "Metadata", metadata)
+      
+      # Save the workbook
+      saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
-}
+
+  
+  
+  
+  
+  
+  
+  }
+
 
 # Run the application ----
 shinyApp(ui = ui, server = server)
