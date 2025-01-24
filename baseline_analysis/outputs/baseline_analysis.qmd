@@ -10,7 +10,7 @@ format:
     toc-location: left
     self-contained: true
 params:
-  icb: "QHL"
+  icb: "QJ2"
 
 ---
 
@@ -30,24 +30,21 @@ source(paste0(here(), "/baseline_analysis/requirements/packages.R"))
 mhsds_baseline_adm <- read.csv(paste0(here(), "/udal_extracts/data/mhsds_baseline_adm250102.csv"))
 mhsds_baseline_ws <- read.csv(paste0(here(), "/udal_extracts/data/mhsds_baseline_ws_250102.csv"))
 
+source(paste0(here(), "/baseline_analysis/config/palette.R"))
+source(paste0(here(), "/baseline_analysis/config/tu_ggplot_theme.R"))
 source(paste0(here(), "/baseline_analysis/processing/pre-processing.R"))
 
-```
-
-```{r}
-
-adm_comb |>
-  group_by(Group) |>
-  summarise(Total = n())
+source(paste0(here(), "/baseline_analysis/analysis/los.R"))
 
 ```
+
 
 # Introduction
 This analysis has been undertaken to provide additional context to the development of the Midlands Mental Health Inpatient Beds Demand and Capacity Tool. This analysis explores admissions and Length of Stay (LOS) from the baseline dataset used within this model. The baseline dataset is covers admissions where:
 
 * The patient is **resident** to a Midlands ICB or is **admitted to** a Midlands provider and
 * The admission overlaps with the period **01/07/2023 - 30/06/2024** and
-* Specialist Commissioned activity has been **excluded**
+* Specialist Commissioned activity has been **excluded**.
 
 This analysis has been designed to provide an overview of important features associated with demand and capacity including:
 
@@ -60,9 +57,63 @@ This analysis has been designed to provide an overview of important features ass
   
 
 # Length of Stay
+This section provides an overview of the Length of Stay for patients either resident or at a provide within **`r selected_icb_name`**.
+
+## Overall
+
+:::{.panel-tabset}
+
+### Spell LOS
+
+```{r spell_all}
+
+spell_los_all_boxplot
+
+```
+
+### Excluding Home Leave
+
+```{r spell_all_exhl}
+
+spell_los_hl_boxplot
+
+```
+
+:::
 
 ## Bed Type
+We can explore how the length of stay varies between the different types of wards and beds that patients are admitted to.
+
+### Ward Bed Type
+The chart and table below show the distribution of the length of stay for each of the Ward Types that the patient has been admitted to:
+
+```{r ward_type_first_chart}
+
+spell_los_wbtf_boxplot 
+
+```
+
+```{r ward_type_first_table}
+
+spell_los_wbtf_summ_tbl
+
+```
+
+## Ward Security
 
 ## Diagnosis
 
-## Ward Security
+## Clinically Ready for Discharge
+Within MHSDS there is a record of the number of days when a patient is clinically ready for discharge but this was delayed. Before April 2024 this was recorded as a Delayed Transfer of Care within MHSDS. More information on how this is recorded within MHSDS and these changes can be found within the MHSDS Technical Output Specification.
+
+Across the Midlands `r round(crd_summ[[1, 6]] * 100, 2)`% of spells had a record of at least one day delayed discharge. These delays represented `r round(crd_summ[[1, 7]] * 100, 2)`% of all hospital beddays. For `r selected_icb_name`, there were `r round(crd_summ[[2, 6]] * 100, 2)`% with delays accounting for `r round(crd_summ[[2, 7]] * 100, 2)`% of all beddays.
+
+For those admissions where there was a delay there is a wide range of the length of these delays. The chart and table below summarise this information:
+
+```{r crd_boxplot}
+crd_nz_boxplot
+```
+
+```{r crd_table}
+crd_nz_table
+```
