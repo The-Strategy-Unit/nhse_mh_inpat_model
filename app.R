@@ -1187,57 +1187,7 @@ server <- function(input, output, session) {
     }
   )
   
-  # Download data
-  output$downloadData <- downloadHandler(
-    filename = function() {
-      paste("projected_data_", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(file) {
-      data <- 
-        baseline_growth() |> 
-        select(-c(spell_count, contains("sp_"), spell_proj)) |>
-        mutate(aadjusted_proj_oap =
-                 case_when(
-                   ooa_group == "oap_outgoing" ~ bed_days_proj * (input$ooa_repat / 100),
-                   ooa_group == "oap_incoming" ~ bed_days_proj * ((input$ooa_expat / 100) * -1),
-                   ooa_group == "not_oap" ~ 0
-                 ),
-               
-               adj_shift_to_ind = 
-                 case_when(
-                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
-                   TRUE ~ 0
-                 ),
-               
-               adj_shift_from_ind = 
-                 case_when(
-                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
-                   TRUE ~ 0
-                 ),
-               
-               adjusted_proj_oap_exHL =
-                 case_when(
-                   ooa_group == "oap_outgoing" ~ bed_days_exHL_proj * (input$ooa_repat / 100),
-                   ooa_group == "oap_incoming" ~ bed_days_exHL_proj * ((input$ooa_expat / 100) * -1),
-                   ooa_group == "not_oap" ~ 0
-                 ),
-               
-               adj_shift_to_ind_exHL = 
-                 case_when(
-                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
-                   TRUE ~ 0
-                 ),
-               
-               adj_shift_from_ind_exHL = 
-                 case_when(
-                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
-                   TRUE ~ 0
-                 )
-               )
-      
-      write.csv(data, file, row.names = FALSE)
-    }
-  )
+  
   
   # Occupancy rate table ----
   
@@ -1845,6 +1795,64 @@ server <- function(input, output, session) {
   
   
   
+  # Download data ----
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste("projected_data_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      data <- 
+        baseline_growth() |> 
+        select(-c(spell_count, contains("sp_"), spell_proj)) |>
+        mutate(aadjusted_proj_oap =
+                 case_when(
+                   ooa_group == "oap_outgoing" ~ bed_days_proj * (input$ooa_repat / 100),
+                   ooa_group == "oap_incoming" ~ bed_days_proj * ((input$ooa_expat / 100) * -1),
+                   ooa_group == "not_oap" ~ 0
+                 ),
+               
+               adj_shift_to_ind = 
+                 case_when(
+                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adj_shift_from_ind = 
+                 case_when(
+                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adjusted_proj_oap_exHL =
+                 case_when(
+                   ooa_group == "oap_outgoing" ~ bed_days_exHL_proj * (input$ooa_repat / 100),
+                   ooa_group == "oap_incoming" ~ bed_days_exHL_proj * ((input$ooa_expat / 100) * -1),
+                   ooa_group == "not_oap" ~ 0
+                 ),
+               
+               adj_shift_to_ind_exHL = 
+                 case_when(
+                   (input$shift_to_ip > 0 & provider_type == "NHS") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               adj_shift_from_ind_exHL = 
+                 case_when(
+                   (input$shift_to_ip < 0 & provider_type == "Independent") ~ bed_days_exHL_proj * ((input$shift_to_ip / 100) * -1),
+                   TRUE ~ 0
+                 ),
+               
+               baseline_annualised_beds = (bed_days/(current_occupancy()/100)/365.25),
+               baseline_annualised_beds_exHL = (bed_days_exHL/(current_occupancy()/100)/365.25),
+               
+               proj_annualised_beds = (bed_days_proj/(future_occupancy()/100)/365.25), 
+               proj_annualised_beds_exHL = (bed_days_exHL_proj/(future_occupancy()/100)/365.25)
+               
+               )
+      
+      write.csv(data, file, row.names = FALSE)
+    }
+  )
 }
 
 # Run the application ----
