@@ -537,30 +537,19 @@ ui <- navbarPage(
                  
                  
                  h5(br(),
-                    "Out-Of-Area Placements at baseline:",
+                    "Bed policy & Management:",
                     br()
                     ),
-                 h6(
-                   "For the selected ICB, the table (right) presents baseline activity (the number of beddays 
-                   or spells) by the patients residence ICB and the ICB in which they were treated (i.e. provision 
-                   of care):",
+                 p("This panel allows the user to test assumptions on bed flows in and out of area and also 
+                   between NHS and Independent Provider beds.", strong(" This has no effect on demand")," rather the shift 
+                   of beds around the system in the future state",
                    br(),
-                   br(),
-                   tags$ul(
-                     tags$li("[1 - Upper left quadrant] Residence and Provider are in ICB boundary (i.e. not OAP)"),
-                     tags$li("[2 - Lower left quadrant] Residence outside of selected ICB and treated within 
-                             (i.e. Incoming OAP)"),
-                     tags$li("[3 - Upper right quadrant] Residence in selected ICB but treated elsewhere 
-                             (i.e. Outgoing OAP)"),
-                     tags$li("[4 - Lower right quadrant] Resident outside and treated outside of selected ICB 
-                             (data not included)")
-                   ),
-                   "If the value of group 2 is higher than group 3 then you are a 'net importer' of OAP and 
-                   if the value of group 3 is higher than group 2 you are a 'net exporter' of OAP.",
-                   br(),
+                   p("The text and tables to the right explain the concepts for the assumptions, provide some 
+                     baseline information to inform judgements on setting them and finally demonstrate the 
+                     effects of those parameters on bed flows."),
                    ),
                  
-                 h6(strong("Bed policy & Management:")),
+                 h6(strong("Bed policy & Management assumptions:")),
                  numericInput("ooa_repat", "Out of Area Repatriation",            value = 50,   step = 0.1),
                  numericInput("ooa_expat", "Out of Area Expatriation",            value = 50,   step = 0.1),
                  numericInput("shift_to_ip", "Shift to Independent setting",      value = 0,   step = 0.1),
@@ -579,10 +568,7 @@ ui <- navbarPage(
                    OAP's were treated at providers within the ICB in the future. For incoming OAP's, the 
                    expatriation factor is expressed as a reduction in internal demand, as patients are 'sent back' 
                    to providers in their own ICB area. A starting assumption is to adjust 50% of this activity in both directions over 3 years."),
-                 p(strong("Shift to independent setting"),": Utilising independent provider (IP) beds will, in theory, 
-                   free existing NHS beds or negate the need for more. Our starting assumption for this is net zero 
-                   or no change - please adjust this up or down to increase the % of NHS activity you might want to 
-                   commission (in-area) IP beds for in the future."),
+                 
                  h5(br(),
                     "Out-Of-Area Placements at baseline",
                     br()
@@ -592,13 +578,31 @@ ui <- navbarPage(
                    tabPanel("Bed days - excl. Home Leave", DTOutput("dataTable_oap_bed_days_exHL")),
                    tabPanel("Spells", DTOutput("dataTable_oap"))
                  ),
+                 br(),
+                 tags$ul(
+                   tags$li("[1 - Upper left quadrant] Residence and Provider are in ICB boundary (i.e. not OAP)"),
+                   tags$li("[2 - Lower left quadrant] Residence outside of selected ICB and treated within 
+                             (i.e. Incoming OAP)"),
+                   tags$li("[3 - Upper right quadrant] Residence in selected ICB but treated elsewhere 
+                             (i.e. Outgoing OAP)"),
+                   tags$li("[4 - Lower right quadrant] Resident outside and treated outside of selected ICB 
+                             (data not included)")
+                 ),
+                 p("If the value of group 2 is higher than group 3 then you are a 'net importer' of OAP and 
+                   if the value of group 3 is higher than group 2 you are a 'net exporter' of OAP."),
+                 br(),
+                 
+                 p(strong("Shift to independent setting"),": Utilising independent provider (IP) beds will, in theory, 
+                   free existing NHS beds or negate the need for more. Our starting assumption for this is net zero 
+                   or no change - please adjust this up or down to increase the % of NHS activity you might want to 
+                   commission IP beds for in the future."),
                  
                  h5(br(),
                     "Provider type and out-of-area activity at baseline",
                     br()
                  ),
-                 p("Use the table below to guage the baseline levels of activity that is delivered by NHS and Independent sector providers along with
-                   the way in which that activity is distributed by the geographica and organisational location of care - whether treated within the ICB or externally."),
+                 p("Use the table below to gauge the baseline levels of activity that is delivered by NHS and 
+                   Independent sector providers along with whether it is in or out of area care."),
                  tabsetPanel(
                    tabPanel("Bed days", DTOutput("bed_policy_oap_group_baseline_bd")),
                    tabPanel("Bed days - excl. Home Leave", DTOutput("bed_policy_oap_group_baseline_bd_exHL")),
@@ -608,8 +612,10 @@ ui <- navbarPage(
                  
                  h5(br(),
                     "Bed policy changes to projected activity",
-                    br()
+                    br(),
                  ),
+                    p("This table shows the effect of the above changes on the ",strong("modelled future demand "), 
+                      "in respect of bed days and beds that may need to rebalance the future system."),
                  tabsetPanel(
                    tabPanel("Bed days", DTOutput("bed_policy_table_bd")),
                    tabPanel("Bed days - excl. Home Leave", DTOutput("bed_policy_table_bd_exHL")),
