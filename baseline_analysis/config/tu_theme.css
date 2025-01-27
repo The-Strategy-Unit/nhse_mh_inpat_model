@@ -1,0 +1,25 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+body {
+    background-color: #fff;
+    color: #333;
+    font-family: 'Franklin Gothic', sans-serif;
+    font-size: 11pt;
+}
+
+/* Header Styles */
+h1, h2, h3, h4 {
+    color: #407EC9;
+}
+
+hr {
+    color: #407EC9;
+    border-color: #407EC9;
+}
+
+
+div.sidebar.sidebar-navigation.rollup.quarto-sidebar-toggle-contents, nav.sidebar.sidebar-navigation:not(.rollup) {
+    background-color: #40c1ac1a;
+}
