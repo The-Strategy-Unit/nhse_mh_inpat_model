@@ -7,8 +7,8 @@ rsconnect::deployApp(
     "demographic_projections/icb_weighted_demographic_change.csv",
     "www/styles.css",
     "www/tsu_logo_black.png",
-    "www/data_format_image.PNG"
-    
+    "www/data_format_image.PNG",
+    "baseline_extract_meta.xlsx"
   ),
   
   appId = rsconnect::deployments(".")$appID,
