@@ -9,8 +9,9 @@ format:
     toc-depth: 2
     toc-location: left
     self-contained: true
+    css: ../config/tu_theme.css
 params:
-  icb: "QJ2"
+  icb: "QWU"
 
 ---
 
@@ -34,6 +35,7 @@ source(paste0(here(), "/baseline_analysis/config/palette.R"))
 source(paste0(here(), "/baseline_analysis/config/tu_ggplot_theme.R"))
 source(paste0(here(), "/baseline_analysis/processing/pre-processing.R"))
 
+source(paste0(here(), "/baseline_analysis/analysis/adm.R"))
 source(paste0(here(), "/baseline_analysis/analysis/los.R"))
 
 ```
@@ -44,6 +46,7 @@ This analysis has been undertaken to provide additional context to the developme
 
 * The patient is **resident** to a Midlands ICB or is **admitted to** a Midlands provider and
 * The admission overlaps with the period **01/07/2023 - 30/06/2024** and
+* Adult patients only (18+) and
 * Specialist Commissioned activity has been **excluded**.
 
 This analysis has been designed to provide an overview of important features associated with demand and capacity including:
@@ -51,15 +54,67 @@ This analysis has been designed to provide an overview of important features ass
 * Demographic analysis of patients who are admitted
 * Analysis of length of stay within hospital considering:
   * Type of bed admitted to
-  * Security level of the ward
   * Diagnosis information
+  * Impact of CRD and DTOC delays
   * Demographics of the patient
-  
+
+<br/>
+
+***
+
+# Admissions
+This first section provides a brief overview of the demographics of patients who were admitted during the baseline period.
+
+## Age on Admission
+The admissions have been summarised into five year age bands:
+
+```{r adm_demo_age}
+
+demo_adm_age
+
+```
+## Deprivation Decile
+Derpivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
+
+```{r adm_demo_dep}
+
+demo_adm_imd
+
+```
+
+## Ethnicity
+Ethnicity codes are recorded within the **Master Patient Index** table within MHSDS. These codes are then mapped to five groups, with the table below providing a summary:
+
+```{r adm_demo_eth}
+
+demo_adm_eth
+
+```
+
+
+<br/>
+
+***
 
 # Length of Stay
-This section provides an overview of the Length of Stay for patients either resident or at a provide within **`r selected_icb_name`**.
+This section provides an overview of the Length of Stay for patients either resident or at a provider within **`r selected_icb_name`**. This analysis covers a number of areas and considers length of stay for spells and ward stays alongside home leave and discharge delays. The diagram below shows an example admission within MHSDS to explain the key points:
 
-## Overall
+![Example MHSDS extract of individual hospital spell](mhsds_baseline_ex.drawio.png)
+
+* The **Spell Length of Stay** relates to the entire period from the date of admission with the provider to date they were discharged from the same provider.
+* This spell is made up of three ward stays. The **Ward Stay Length of Stay** covers the time spent in that ward from point of admission to the ward to discharge or transfer to another ward.
+* During the course of this spell the patient was recorded as being clinically ready for discharge at two points in time. The total **delay days** cover the total number of days that the patient was clinically ready for discharge regardless of where they occured during the spell. I.e. Not just at the end of the spell prior to discharge.
+* The patient also had two periods of **home leave** during the spell. The length of stay excluding home leave for the patient **excludes all time on home leave**.
+
+
+## Spell Length of Stay
+The chart and tables below show a summary of the overall length of stay within for the entire hospital spell. Switch between the tabs to see this with **Home Leave** included and excluded from the length of stay.
+
+::: {.callout-note}
+
+## Chart Limits
+The following sections contain several charts showing different views of length of stay. To allow for comparisons between your ICB and the midlands overall the charts are usually limited to show length of stay from 0 to 200 days. However, longer length of stays are used in any of the calculations (such as median, mean etc.) as displayed in the summary tables.
+:::
 
 :::{.panel-tabset}
 
@@ -71,6 +126,12 @@ spell_los_all_boxplot
 
 ```
 
+```{r spell_all_table}
+
+spell_los_summ_tbl
+
+```
+
 ### Excluding Home Leave
 
 ```{r spell_all_exhl}
@@ -79,13 +140,21 @@ spell_los_hl_boxplot
 
 ```
 
+```{r spell_all_exhl_table}
+
+spell_los_hl_summ_tbl
+
+```
+
 :::
 
+<br/>
+
 ## Bed Type
-We can explore how the length of stay varies between the different types of wards and beds that patients are admitted to.
+This section explores the differences in length of stay by the type of ward the patient is admitted to and their classification.
 
 ### Ward Bed Type
-The chart and table below show the distribution of the length of stay for each of the Ward Types that the patient has been admitted to:
+The chart and table below show the distribution of the length of stay for each of the Ward Types that the patient has been admitted to. The length of stay is shown for the Ward Type of the **first ward stay** during that spell. More about the Ward Types is available in the [MHSDS Enhanced Technical Output Specification](https://digital.nhs.uk/binaries/content/assets/website-assets/isce/0011/0011372022tos.xlsx) - see tab **MHS903WardDetails**.
 
 ```{r ward_type_first_chart}
 
@@ -99,14 +168,79 @@ spell_los_wbtf_summ_tbl
 
 ```
 
-## Ward Security
+### Admitted Classification
+At each Ward Stay there is a record of their admitted patient classification. More information is available in the [MHSDS Enhanced Technical Output Specification](https://digital.nhs.uk/binaries/content/assets/website-assets/isce/0011/0011372022tos.xlsx) - see tab **MHS502WardStays**. As there are 26 different classifications that can be applied within MHSDS the following table and chart just focus on the top six for the ICB:
+
+```{r adm_class_boxplot}
+
+adm_class_first_top6_boxplot
+
+```
+
+```{r adm_class_table}
+
+adm_class_first_top6_table
+
+```
+
+<br/>
 
 ## Diagnosis
 
-## Clinically Ready for Discharge
-Within MHSDS there is a record of the number of days when a patient is clinically ready for discharge but this was delayed. Before April 2024 this was recorded as a Delayed Transfer of Care within MHSDS. More information on how this is recorded within MHSDS and these changes can be found within the MHSDS Technical Output Specification.
+::: {.callout-warning}
 
-Across the Midlands `r round(crd_summ[[1, 6]] * 100, 2)`% of spells had a record of at least one day delayed discharge. These delays represented `r round(crd_summ[[1, 7]] * 100, 2)`% of all hospital beddays. For `r selected_icb_name`, there were `r round(crd_summ[[2, 6]] * 100, 2)`% with delays accounting for `r round(crd_summ[[2, 7]] * 100, 2)`% of all beddays.
+## Diagnosis Coding
+The primary diagnosis code could only be linked to hospital spells for **`r round(prim_diag_status[[2,3]] * 100, 2)`%** in the baseline data. Therefore, the following summary should be treated with caution due to missing data.
+:::
+
+The diagnosis summary is based on the first ICD-10 primary diagnosis code recorded during the hospital spell. Due to the large number of ICD-10 codes these have been mapped to their relevant sub-chapter so that the summaries are not too small to be meaningful.
+
+The table below summarises the hospital spell length of stay for ICD-10 sub-chapters that have more than 10 admissions during the baseline period:
+
+```{r los_diags_table}
+
+spell_los_diags_table
+
+```
+
+## Demographics
+
+### Age
+The chart and table below show a summary of the length of stay for adult admissions in five-year age bands. The age is based on the age of the patient on admission.
+
+```{r demo_age_los_boxplot}
+
+age_los_boxplot
+
+```
+
+```{r demo_age_los_table}
+
+age_los_table
+
+```
+
+### Deprivation
+Derpivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
+
+```{r demo_dep_los_boxplot}
+
+imd_los_boxplot
+
+```
+
+```{r demo_dep_los_table}
+
+imd_los_table
+
+```
+
+<br/>
+
+## Clinically Ready for Discharge
+Within MHSDS there is a record of the number of days when a patient is clinically ready for discharge but this was delayed. Before April 2024 this was recorded as a Delayed Transfer of Care within MHSDS. More information on how this is recorded within MHSDS and these changes can be found within the [MHSDS Enhanced Technical Output Specification](https://digital.nhs.uk/binaries/content/assets/website-assets/isce/0011/0011372022tos.xlsx).
+
+Across the Midlands **`r round(crd_summ[[1, 6]] * 100, 2)`%** of spells had a record of at least one day delayed discharge. These delays represented **`r round(crd_summ[[1, 7]] * 100, 2)`%** of all hospital beddays. For **`r selected_icb_name`**, there were **`r round(crd_summ[[2, 6]] * 100, 2)`%** with delays accounting for **`r round(crd_summ[[2, 7]] * 100, 2)`%** of all beddays.
 
 For those admissions where there was a delay there is a wide range of the length of these delays. The chart and table below summarise this information:
 
@@ -117,3 +251,7 @@ crd_nz_boxplot
 ```{r crd_table}
 crd_nz_table
 ```
+
+<br/>
+
+***
