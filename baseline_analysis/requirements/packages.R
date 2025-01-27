@@ -8,7 +8,8 @@ packages <- c("here",
               "dplyr",
               "ggplot2",
               "scales",
-              "kableExtra"
+              "kableExtra",
+              "stringr"
 )
 
 # Load packages -----------------------------------------------------------
