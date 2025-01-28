@@ -1719,7 +1719,7 @@ server <- function(input, output, session) {
       scale_y_continuous(labels = scales::comma) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(strip.background = element_rect(fill = NA, colour = "grey"),
-            axis.text = element_text(size = 12),
+            axis.text = element_text(size = 9),
             axis.title.x = element_text(size = 15),
             axis.title.y = element_blank(),
             strip.text = element_text(size = 16)
@@ -1737,7 +1737,8 @@ server <- function(input, output, session) {
     req(sub_group_plot())
     
     sub_group_plot()
-  })
+  },
+  height = 600, width = 900)
   
   output$dataTable_subplot <- renderDT({
     req(baseline_growth())
