@@ -248,7 +248,10 @@ ui <- navbarPage(
                used within the baseline, how the aggregate file you were sent is generated and what some of the 
                terms used in the tool mean."),
              
-             p("1. Upload the CSV file provided to your ICB using the 'Upload CSV File' button below."),
+             p("1. Upload the CSV file provided to your ICB using the 'Upload CSV File' button below. 
+               If you want to 'play' with a synthetic file, please download and save it from ",
+               a(href = "baseline_aggregate_pseudo_icb.csv", "here", download=NA, target = "_blank"),
+               " and then upload via the button below."),
              br(),
              
              fileInput("file", "Upload CSV File", accept = ".csv"),
