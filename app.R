@@ -302,6 +302,7 @@ ui <- navbarPage(
                     fluidPage(
                       sidebarLayout(
                         sidebarPanel(
+                          style = "height: 90vh; overflow-y: auto;",
                           h3("Adjust model parameters"),
                           p("After confirming your ICB from the drop-down box, use the controls below to change 
                             each parameter in turn using either the step arrows or typing over the values. 
@@ -351,6 +352,7 @@ ui <- navbarPage(
                           ),
                         
             mainPanel(
+              style = "height: 90vh; overflow-y: auto;",
                 h3("Demand factor assumptions:"),
                 p("Demographic growth values are externally sourced from ONS population projections published 
                   at local authority level ", a("here", href = "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/subnationalpopulationprojectionsforengland/2018based", target = "_blank"),
@@ -422,6 +424,7 @@ ui <- navbarPage(
                     fluidPage(
                       sidebarLayout(
                         sidebarPanel(
+                          style = "height: 90vh; overflow-y: auto;",
                           
                           h5("Demand factor changes:"),
                           
@@ -468,6 +471,7 @@ ui <- navbarPage(
                         ),
                         
                         mainPanel(
+                          style = "height: 90vh; overflow-y: auto;",
                           h3("Modelled change in demand"),
                           tabsetPanel(
                             tabPanel("Bed days", plotOutput("waterfall_Plot_bed_days", height = "800px", width = "1200px")),
@@ -519,6 +523,7 @@ ui <- navbarPage(
                ),
                
                mainPanel(
+                 style = "height: 90vh; overflow-y: auto;",
                  
                  #h5(br(),
                  #   "Sub-group Analysis"
@@ -534,7 +539,7 @@ ui <- navbarPage(
            fluidPage(
              sidebarLayout(
                sidebarPanel(
-                 
+                 style = "height: 90vh; overflow-y: auto;",
                  
                  h5(br(),
                     "Bed policy & Management:",
@@ -542,7 +547,7 @@ ui <- navbarPage(
                     ),
                  p("This panel allows the user to test assumptions on bed flows in and out of area and also 
                    between NHS and Independent Provider beds.", strong(" This has no effect on demand")," rather the shift 
-                   of beds around the system in the future state",
+                   of beds around the system in the future state.",
                    br(),
                    p("The text and tables to the right explain the concepts for the assumptions, provide some 
                      baseline information to inform judgements on setting them and finally demonstrate the 
@@ -561,6 +566,7 @@ ui <- navbarPage(
                ),
                
                mainPanel(
+                 style = "height: 90vh; overflow-y: auto;",
                  
                  h3("Bed Policy & Management:"),
                  p(strong("Out of area repatriation and expatriation"),": For outgoing OAP's, the repatriation factor 
