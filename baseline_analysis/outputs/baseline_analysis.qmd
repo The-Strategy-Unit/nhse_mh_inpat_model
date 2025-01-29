@@ -11,7 +11,7 @@ format:
     self-contained: true
     css: ../config/tu_theme.css
 params:
-  icb: "QT1"
+  icb: "QWU"
 
 ---
 
@@ -42,7 +42,7 @@ source(paste0(here(), "/baseline_analysis/analysis/los.R"))
 
 
 # Introduction
-This analysis has been undertaken to provide additional context to the development of the Midlands Mental Health Inpatient Beds Demand and Capacity Tool. This analysis explores admissions and Length of Stay (LOS) from the baseline dataset used within this model. The baseline dataset is covers admissions where:
+This analysis has been undertaken to provide additional context to the development of the Midlands Mental Health Inpatient Beds Demand and Capacity Tool. This analysis explores admissions and Length of Stay (LOS) from the baseline dataset used within this model. The baseline dataset covers admissions where:
 
 * The patient is **resident** to a Midlands ICB or is **admitted to** a Midlands provider and
 * The admission overlaps with the period **01/07/2023 - 30/06/2024** and
@@ -82,7 +82,7 @@ demo_adm_age
 
 ```
 ## Deprivation Decile
-Derpivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
+Deprivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
 
 ```{r adm_dem_dep_chart}
 
@@ -179,7 +179,7 @@ This section provides an overview of the Length of Stay for patients either resi
 
 * The **Spell Length of Stay** relates to the entire period from the date of admission with the provider to date they were discharged from the same provider.
 * This spell is made up of three ward stays. The **Ward Stay Length of Stay** covers the time spent in that ward from point of admission to the ward to discharge or transfer to another ward.
-* During the course of this spell the patient was recorded as being clinically ready for discharge at two points in time. The total **delay days** cover the total number of days that the patient was clinically ready for discharge regardless of where they occured during the spell. I.e. Not just at the end of the spell prior to discharge.
+* During the course of this spell the patient was recorded as being clinically ready for discharge at two points in time. The total **delay days** cover the total number of days that the patient was clinically ready for discharge regardless of where they occurred during the spell. I.e. Not just at the end of the spell prior to discharge.
 * The patient also had two periods of **home leave** during the spell. The length of stay excluding home leave for the patient **excludes all time on home leave**.
 
 
@@ -297,7 +297,7 @@ age_los_table
 ```
 
 ### Deprivation
-Derpivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
+Deprivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
 
 ```{r demo_dep_los_boxplot}
 
@@ -337,7 +337,7 @@ crd_nz_table
 ## Boxplot Interpretation
 Much of this analysis is concerned with understanding the distribution of Length of Stay by different factors. A good way of visualising the distribution is using a boxplot. This is a graphical representation of the distribution of data based on key statistics:
 
-* **Median (Q2)**: The median is represented by a line inside the box. It divides the dataset into two equal halves, with 50% of the data points lying below and 50% above this line. It provides a measure of the central tendancy of the data.
+* **Median (Q2)**: The median is represented by a line inside the box. It divides the dataset into two equal halves, with 50% of the data points lying below and 50% above this line. It provides a measure of the central tendency of the data.
 
 * **Lower Quartile (Q1)**: The lower edge of the box represents the lower quartile with 25% of the dataset having a value lower or equal to this line.
 

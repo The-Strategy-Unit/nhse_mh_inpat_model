@@ -109,7 +109,7 @@ adm_mha_chart <- adm_mha_icb |>
   scale_x_continuous(labels = percent) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 40)) +
   labs(x = "Percentage of Admissions",
-       y = "Ethnic Category",
+       y = "MHA Legal Status",
        caption = "Source: MSHDS",
        title = "MHA Legal Status on Admission",
        subtitle = paste0(selected_icb_name)) +
@@ -140,7 +140,7 @@ adm_asrc_chart <- adm_asrc_icb |>
   scale_x_continuous(labels = percent) +
   scale_y_discrete(labels = function(x) str_wrap(x, width = 80)) +
   labs(x = "Percentage of Admissions",
-       y = "Ethnic Category",
+       y = "Admission Source",
        caption = "Source: MSHDS",
        title = "Admission Source",
        subtitle = paste0(selected_icb_name)) +
