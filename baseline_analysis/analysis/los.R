@@ -314,7 +314,7 @@ adm_class_first_top6_boxplot <- adm_class_first_top6_df |>
        caption = "Source: MSHDS",
        title = "Hospital Spell Length of Stay",
        subtitle = paste0(selected_icb_name)) +
-  coord_cartesian(xlim = c(0, 200)) +
+  coord_cartesian(xlim = c(0, 300)) +
   theme_tu_white(hex_col = palette_tu[4])
 
 adm_class_first_top6_table <- adm_class_first_top6 |>
