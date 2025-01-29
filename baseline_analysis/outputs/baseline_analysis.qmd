@@ -11,7 +11,7 @@ format:
     self-contained: true
     css: ../config/tu_theme.css
 params:
-  icb: "QWU"
+  icb: "QT1"
 
 ---
 
@@ -65,8 +65,16 @@ This analysis has been designed to provide an overview of important features ass
 # Admissions
 This first section provides a brief overview of the demographics of patients who were admitted during the baseline period.
 
+:::{.panel-tabset}
+
 ## Age on Admission
 The admissions have been summarised into five year age bands:
+
+```{r adm_dem_age_chart}
+
+demo_adm_age_chart
+
+```
 
 ```{r adm_demo_age}
 
@@ -75,6 +83,12 @@ demo_adm_age
 ```
 ## Deprivation Decile
 Derpivation is measured using the Index of Multiple Deprivation (IMD) published in 2019. This produces a composite score of deprivation for each small area within England (LSOA). A patients IMD decile is then determined based on their resident postcode. More deprived areas have a lower decile (1) and least deprived areas a higher decile (10). More information is available [here](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019).
+
+```{r adm_dem_dep_chart}
+
+demo_adm_imd_chart
+
+```
 
 ```{r adm_demo_dep}
 
@@ -85,12 +99,74 @@ demo_adm_imd
 ## Ethnicity
 Ethnicity codes are recorded within the **Master Patient Index** table within MHSDS. These codes are then mapped to five groups, with the table below providing a summary:
 
+```{r adm_dem_eth_chart}
+
+demo_adm_eth_chart
+
+```
+
 ```{r adm_demo_eth}
 
 demo_adm_eth
 
 ```
 
+
+## Legal Status - MHA Act
+The MHA Legal Status Classification is taken from the **MHS401MHActPeriod** table within MHSDS. The recording of a legal status at admission was used for this analysis. More information on how this is recorded within MHSDS can be found within the [MHSDS Enhanced Technical Output Specification](https://digital.nhs.uk/binaries/content/assets/website-assets/isce/0011/0011372022tos.xlsx).
+
+```{r adm_mha_chart}
+
+adm_mha_chart
+
+```
+
+```{r adm_mha}
+
+adm_mha
+
+```
+
+
+## Admission Source
+Admission source was taken from the **MHS501HospProvSpell** table within MHSDS. More information on how this is recorded within MHSDS can be found within the [MHSDS Enhanced Technical Output Specification](https://digital.nhs.uk/binaries/content/assets/website-assets/isce/0011/0011372022tos.xlsx).
+
+```{r adm_src_chart}
+
+adm_asrc_chart
+
+```
+
+```{r adm_src_table}
+
+adm_asrc
+
+```
+
+## LD and Autism Flags
+Flags for LD and Autism were created by examining if codes were present within the hospital spell for either:
+
+* MHS007 - Disability Type
+* MHS101 - Referral - Primary Referral Reasons
+* MHS103 - Other Referral Reason
+* MHS102 - Service Referred To
+* MHS601 - Previous Medical History
+* MHS604 - Current Primary Diagnosis
+* MHS605 - Current Secondary Diagnoses
+
+```{r adm_flag_ld_table}
+
+adm_flag_ld_table
+
+```
+
+```{r adm_flag_a_table}
+
+adm_flag_a_table
+
+```
+
+:::
 
 <br/>
 
@@ -255,3 +331,29 @@ crd_nz_table
 <br/>
 
 ***
+
+# Guidance
+
+## Boxplot Interpretation
+Much of this analysis is concerned with understanding the distribution of Length of Stay by different factors. A good way of visualising the distribution is using a boxplot. This is a graphical representation of the distribution of data based on key statistics:
+
+* **Median (Q2)**: The median is represented by a line inside the box. It divides the dataset into two equal halves, with 50% of the data points lying below and 50% above this line. It provides a measure of the central tendancy of the data.
+
+* **Lower Quartile (Q1)**: The lower edge of the box represents the lower quartile with 25% of the dataset having a value lower or equal to this line.
+
+* **Upper Quartile (Q3)**: The upper edge of the box represents the upper quartile with 25% of the dataset having a value high or equal to this line.
+
+* **Interquartile Range (IQR)**: The IQR is the range between Q1 and Q3 and is represented by the box itself. This contains the middle 50% of data. The IQR is a measure of variability and spread, indicating how concentrated the data is around the median.
+
+* **Whiskers**: The whiskers extend from the edges of the box to the minimum and maximum values within 1.5 times the IQR from Q1 and Q3. They show the range of the data, excluding outliers.
+
+These points are highlighted in the example below:
+
+![boxplot example guidance](boxplot_ex.drawio.png)
+
+### Interpretation
+When looking at a boxplot it is important to consider:
+
+* **Spread and variability**: A wider box or longer whiskers indicate greater variability in the data, while a narrower box suggests more consistency.
+* **Skewness**: If the median is closer to Q1, the data is skewed right (positive skew). If it is closer to Q3 the data is skewed left (negative skew).
+* **Outliers**: The presence of outliers can indicate anomalies or extreme values within the dataset.
