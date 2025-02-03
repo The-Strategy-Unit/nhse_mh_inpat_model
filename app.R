@@ -193,19 +193,41 @@ ui <- navbarPage(
            fluidPage(
              titlePanel("Welcome to the Mental Health inpatient demand & capacity tool"),
              h3("Background"),
-             p("Integrated Care Boards (ICB) are required to submit strategic plans for inpatient bed provision to NHS England. This tool development has been commissioned by NHSE Midlands to support ICBs in the region to that end and fundamentally aims to predict the expected volume of inpatient activity and therefore bed requirements over the next 3 years."),
+             p("Integrated Care Boards (ICB) are required to submit strategic plans for inpatient bed provision 
+               to NHS England. This tool development has been commissioned by NHSE Midlands to support ICBs 
+               in the region to that end and fundamentally aims to predict the expected volume of inpatient 
+               activity and therefore bed requirements over the next 3 years."),
              
              h3("Who the tool is for"),
-             p("The tool is specifically designed for use by ICB commissioners to help develop their system-wide medium-term plans for mental health beds. It may be best used collaboratively by mental health commissioners, analysts, providers and other relevant stakeholders though can in theory be used by anyone in isolation. It is likely that analysts will be required to take and manipulate the outputs of the model alongside other local information and bespoke assumptions to support the overall strategic plan - this model is an approximation of the factors likely to impact on demand in the future and does not account for everything nor take into account local circumstances.", strong("All")," of our default assumptions should be screened and adjusted (or omitted)."),
+             p("The tool is specifically designed for use by ICB commissioners to help develop their system-wide 
+               medium-term plans for mental health beds. It may be best used collaboratively by mental health 
+               commissioners, analysts, providers and other relevant stakeholders though can in theory be used 
+               by anyone in isolation. It is likely that analysts will be required to take and manipulate the 
+               outputs of the model alongside other local information and bespoke assumptions to support the 
+               overall strategic plan - this model is an approximation of the factors likely to impact on demand 
+               in the future and does not account for everything nor take into account local circumstances."
+               , strong("All")," of our default assumptions should be screened and adjusted (or omitted)."),
              
              h3("What the model does"),
-             p("The model takes a 12-month baseline of data (July 2023 to June 2024) and applies a set of adjustments to that for a range of parameters to estimate future demand for inpatient beds. These parameters cover elements of population change, service changes, indirect impacts, external factors and specific policies on bed management."),
+             p("The model takes a 12-month baseline of data (July 2023 to June 2024) and applies a set of 
+               adjustments to that for a range of parameters to estimate future demand for inpatient beds. 
+               These parameters cover elements of population change, service changes, indirect impacts, 
+               external factors and specific policies on bed management."),
              
              h3("How the tool works"),
-             p("The tool has been developed to allow users to interact with the model by adjusting the various parameters up or down to scenario plan and adjust for local perspectives. The impact of changing those parameters can be seen instantly within the model outputs. The numerical outputs of the model can be exported for additional sub-group analysis and/or extended use alongside local information & assumptions not included in the model. The parameters that were agreed and set in the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress testing and comparing scenario using the tool."),
+             p("The tool has been developed to allow users to interact with the model by adjusting the various 
+               parameters up or down to scenario plan and adjust for local perspectives. The impact of changing 
+               those parameters can be seen instantly within the model outputs. The numerical outputs of the 
+               model can be exported for additional sub-group analysis and/or extended use alongside local 
+               information & assumptions not included in the model. The parameters that were agreed and set in 
+               the tool for a particular modelling scenario can also be downloaded (and re-uploaded) for stress 
+               testing and comparing scenario using the tool."),
              br(),
              h3("Other useful resources"),
-             p("Due to time and budget constraints, this tool and model are limited and likely don't consider the full range of potential drivers of demand. Systems should consider additional information when establishing a concensus view of the future state of mental health and demand for inpatient beds. The following may be useful:"),
+             p("Due to time and budget constraints, this tool and model are limited and likely don't consider 
+               the full range of potential drivers of demand. Systems should consider additional information 
+               when establishing a concensus view of the future state of mental health and demand for inpatient 
+               beds. The following may be useful:"),
              p(a("OHID Fingertips", href = "https://fingertips.phe.org.uk/profiles", target = "_blank"), " - Information on diseases prevalence, wider determinants of health and outcomes related to mental health."),
              p(a("Mental Health Data Hub", href = "https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/mental-health-data-hub", target = "_blank"), " - NHS digital data and reports on variety of aspects of Mental Health."),
              p(a("Centre for Mental Health", href = "https://www.centreformentalhealth.org.uk/", target = "_blank"), " - Lots of resources, evidence and publications on range of MH topics."),
@@ -218,10 +240,14 @@ ui <- navbarPage(
              br(),
              
              h4("Acknowledgements"),
-             p("This tool has been developed with a range of input (data extraction, tool dev't, advice, QA) from the following people:"),
-             p("Andy Hood, Alex Lawless, Anya Ferguson, Andy Wilson, Diane Domenico, Hannah Bedford, Sarah Fellows, Jake Parsons, Sarah Lucas."),
+             p("This tool has been developed with a range of input (data extraction, tool dev't, advice, QA) 
+               from the following people:"),
+             p("Andy Hood, Alex Lawless, Anya Ferguson, Andy Wilson, Diane Domenico, Hannah Bedford, 
+               Sarah Fellows, Jake Parsons, Sarah Lucas."),
              br(),
-             p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on workflow and hosting arrangements for the tool."),
+             p("Kind thanks to Matt Dray in the Strategy Unit data science team for technical support on 
+               workflow and hosting arrangements for the tool. Also thanks to Lorna Crofts, business manager, 
+               for the video editing."),
              
              h4("Contact Us"),
              p("Click the 'Contact Us' button below to get in touch with any questions or queries:"),
@@ -238,9 +264,9 @@ ui <- navbarPage(
            fluidPage(
              titlePanel("Loading data and navigating through the tool"),
              p("The below instructions provide a brief guide to get you going with the tool. We have recorded 
-               a webinar with some stakeholders (link when video ready and posted) that walks through in detail 
-               all the functions (and quirks) that you can expect when using the tool. It's advised that you 
-               watch this before your first use."),
+               a ", a("webinar", href = "https://www.youtube.com/watch?v=Syts4XOA28A"), " with some 
+               stakeholders that walks through in detail all the functions (and quirks) that you can expect 
+               when using the tool. It's advised that you watch this before your first use."),
             
               h3("Instructions"),
              p("Before you start using the tool for the first time, you may also want to scan the information 
