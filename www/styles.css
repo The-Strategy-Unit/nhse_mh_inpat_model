@@ -26,6 +26,12 @@
   border: none;
 }
 
+#reset_man_demographic_growth {
+  background-color: #ec6555; 
+  color: white;
+  border: none;
+}
+
 #reset_occupancy {
   background-color: #ec6555; 
   color: white;

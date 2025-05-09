@@ -345,11 +345,12 @@ ui <- navbarPage(
                           
                           fluidRow(
                             column(6,
-                                   h6(strong("Population changes:")),
+                                   h6(strong("Population Changes:")),
+                                   
                                    numericInput("incidence_change", "Incidence Change",           value = 3.5,   step = 0.1),
                                    numericInput("acuity_change", "Acuity Change",                 value = 6.7, step = 0.1),
                                    
-                                   h6(strong("External influences:")),
+                                   h6(strong("External Influences:")),
                                    numericInput("social_care_pressures", "Social Care Pressures", value = 6.6, step = 0.1),
                                    numericInput("national_policy", "National Policy",             value = -4.8,  step = 0.1),
                                    numericInput("mha_changes", "Mental Health Act Changes",       value = -5,  step = 0.1),
@@ -370,6 +371,14 @@ ui <- navbarPage(
                           
                           br(),
                           
+                          h5("Optional - Override demographic growth projection:"),
+                          fluidRow(
+                            numericInput("demographic_change_man", 
+                                         "Manually set Demographic Change value rather than using our weighted ONS calculation",  
+                                         value = NULL, step = 0.1),
+                            actionButton("reset_man_demographic_growth", "Revert to ONS Demographic Growth")
+                            ),
+                          
                           h5("Export parameters:"),
                           h6("Click to download the parameters at the levels set above for the next time you 
                              use the app. Upload your parameters on the `Instructions & Data` tab to apply 
@@ -383,15 +392,33 @@ ui <- navbarPage(
             mainPanel(
               style = "height: 90vh; overflow-y: auto;",
                 h3("Demand factor assumptions:"),
-                p("Demographic growth values are externally sourced from ONS population projections published 
-                  at local authority level ", a("here", href = "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/subnationalpopulationprojectionsforengland/2018based", target = "_blank"),
-                  ". We have extracted age and gender specific population projections which are applied to our 
-                  data extract and grouped to ICB level. As such, demographic growth is a fixed point and not 
-                  modifiable unlike our other growth factors."
+                p(strong("Demographic growth"),
+                  br(),
+                  "Demographic growth values are externally sourced from ONS population projections published 
+                  at local authority level ", 
+                  a("here", href = "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/bulletins/subnationalpopulationprojectionsforengland/2018based", target = "_blank"),
+                  ".",
+                  
+                  br(),
+                  
+                  "As population projections are published per local authority, we have measured the overlap of ICB boarders with local 
+                  authority boundaries to calculate a geographic, land-based approach to weighted ICB projections.",  
+                  
+                  br(),
+                  
+                  "For example, where an ICB overlaps two local authority boundaries equally, we have weighted both LA population projections equally 
+                  to derive a weighted-ICB projection; where 90% of an ICB sits within one LA and 10% sits within another, we have weighted that ICB's 
+                  projection proportionally to represent 90% of LA 1 and 10% LA 2.",
+                  
+                  br(),
+                  br(),
+                  
+                  "The app will select our weighted ICB projection primarily, unless a manual demographic growth factor is input to the optional override bar in 
+                  the input panel to the left of screen."
                 ),
                br(),
                
-               "For reference, the demographic growth factor for the selected ICB is:",
+               "For reference, the default demographic growth factor for the selected ICB is:",
                
                DTOutput("icb_demographic_growth"),
                
@@ -692,8 +719,9 @@ ui <- navbarPage(
 server <- function(input, output, session) {
   
   # Set up ----
+  
   # Read in demographic factor
-  icb_weighted_demographic_change <- read_csv("demographic_projections/icb_weighted_demographic_change.csv")
+  icb_weighted_demographic_change <- read_csv("demographic_projections/icb_population_projection_land_based.csv")
   
   output$icb_demographic_growth <- renderDT({
     req(icb_weighted_demographic_change)
@@ -701,10 +729,11 @@ server <- function(input, output, session) {
     
     DT::datatable(
       icb_weighted_demographic_change %>% 
-        filter(residence_icb_name == input$icb) %>% 
-        mutate(`Demographic growth projection` = paste0(round(weighted_perc_change * 100,1), "%")) %>% 
-        select(residence_icb_name, `Demographic growth projection`) %>% 
-        rename(ICB = residence_icb_name),
+        filter(icb_name == input$icb) %>% 
+        #mutate(`Demographic growth projection` = paste0(round(weighted_perc_change * 100,1), "%")) %>%
+        mutate(`Demographic growth projection` = paste0(round(icb_proj_perc_chg ,3), "%")) %>%
+        select(icb_name, `Demographic growth projection`) %>% 
+        rename(ICB = icb_name),
       options = list(dom = 't', paging = FALSE, ordering = FALSE)
       )
     })
@@ -774,7 +803,17 @@ server <- function(input, output, session) {
   })
   
   # Growth factor inputs 
-  demographic_growth     <- reactive({ icb_weighted_demographic_change$weighted_perc_change[icb_weighted_demographic_change$residence_icb_name == input$icb] * 100})
+  demographic_growth <- reactive({
+    case_when(
+      !is.null(input$demographic_change_man) & !is.na(input$demographic_change_man) ~ input$demographic_change_man,
+      TRUE ~ icb_weighted_demographic_change$icb_proj_perc_chg[icb_weighted_demographic_change$icb_name == input$icb]
+    )
+  })
+  
+  observeEvent(input$demographic_change_man, {
+    updateNumericInput(session, "demographic_change_man", value = input$demographic_change_man)
+  })
+  
   incidence_change       <- reactive({ input$incidence_change })
   acuity_change          <- reactive({ input$acuity_change })
   social_care_pressures  <- reactive({ input$social_care_pressures })
@@ -1193,6 +1232,11 @@ server <- function(input, output, session) {
     updateNumericInput(session, "shift_to_ip", value = 0)
   })
   
+  # Reset manual demographic growth factor to ONS default
+  observeEvent(input$reset_man_demographic_growth, {
+    updateNumericInput(session, "demographic_change_man", value = NA)
+  })
+  
   # Export adjusted parameters
   output$downloadParameters <- downloadHandler(
     filename = function() {
@@ -1228,8 +1272,6 @@ server <- function(input, output, session) {
       write.csv(params, file, row.names = FALSE)
     }
   )
-  
-  
   
   # Occupancy rate table ----
   
@@ -1748,10 +1790,10 @@ server <- function(input, output, session) {
       scale_y_continuous(labels = scales::comma) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(strip.background = element_rect(fill = NA, colour = "grey"),
-            axis.text = element_text(size = 9),
-            axis.title.x = element_text(size = 15),
+            axis.text = element_text(size = 11),
+            axis.title.x = element_text(size = 12),
             axis.title.y = element_blank(),
-            strip.text = element_text(size = 16)
+            strip.text = element_text(size = 12)
       ) +
       labs(x =  "Sub-group",
            fill = "",
@@ -1767,7 +1809,7 @@ server <- function(input, output, session) {
     
     sub_group_plot()
   },
-  height = 600, width = 900)
+  height = 650, width = 1100)
   
   output$dataTable_subplot <- renderDT({
     req(baseline_growth())
