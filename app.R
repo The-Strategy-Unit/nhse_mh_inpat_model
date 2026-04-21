@@ -1661,7 +1661,14 @@ server <- function(input, output, session) {
       pivot_wider(id_cols = c(provider_type, Total), 
                   names_from = ooa_group,
                   values_from = count) |> 
-      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      #select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      select(any_of(c(
+        "provider_type",
+        "Not OAP",
+        "Outgoing placement",
+        "Incoming placement",
+        "Total"
+      ))) |>
       rename(" " = provider_type)
     })
   
@@ -1684,7 +1691,14 @@ server <- function(input, output, session) {
       pivot_wider(id_cols = c(provider_type, Total), 
                   names_from = ooa_group,
                   values_from = count) |> 
-      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      #select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      select(any_of(c(
+        "provider_type",
+        "Not OAP",
+        "Outgoing placement",
+        "Incoming placement",
+        "Total"
+      ))) |> 
       rename(" " = provider_type)
     })
   
@@ -1707,7 +1721,14 @@ server <- function(input, output, session) {
       pivot_wider(id_cols = c(provider_type, Total), 
                   names_from = ooa_group,
                   values_from = count) |> 
-      select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      #select(provider_type, `Not OAP`, `Outgoing placement`, `Incoming placement`, Total) |> 
+      select(any_of(c(
+        "provider_type",
+        "Not OAP",
+        "Outgoing placement",
+        "Incoming placement",
+        "Total"
+      ))) |>
       rename(" " = provider_type)
     
     })
