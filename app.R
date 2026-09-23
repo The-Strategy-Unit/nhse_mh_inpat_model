@@ -155,6 +155,10 @@ ui <- navbarPage(
       border-bottom: 1px solid #ddd !important;
       position: relative !important;
     }
+    
+    .navbar {
+    background-color: #f9bf07 !important;
+    }
 
     .logo {
       position: absolute !important;
@@ -181,7 +185,15 @@ ui <- navbarPage(
     });
   "))
   ),
-  tags$div(
+  #tags$div(
+  #  class = "top-panel",
+  #  tags$div(
+  #    class = "logo",
+  #    tags$img(src = "tsu_logo_black.png", height = 50)
+  #  )
+  #),
+  
+  header = tags$div(
     class = "top-panel",
     tags$div(
       class = "logo",
@@ -997,6 +1009,12 @@ server <- function(input, output, session) {
                          value < 0 ~ "#ec6555")) %>% 
       mutate(value = round(value,0))
     
+    data <- 
+      data %>%
+      mutate(
+        xpos = seq_len(n())
+      )
+    
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
@@ -1006,7 +1024,7 @@ server <- function(input, output, session) {
               fill_colours = data$colour
               ) +
       geom_label(data = data, 
-                 aes(x = name,
+                 aes(x = xpos,
                      #y = -100,
                      y = (max(value) * 0.07)*-1,
                      #y = max(value) + max(value)*0.7, 
@@ -1068,6 +1086,12 @@ server <- function(input, output, session) {
                          value < 0 ~ "#ec6555")) %>% 
       mutate(value = round(value,0))
     
+    data <- 
+      data %>%
+      mutate(
+        xpos = seq_len(n())
+      )
+    
     waterfall(data, 
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
@@ -1077,7 +1101,7 @@ server <- function(input, output, session) {
               fill_colours = data$colour
               ) +
       geom_label(data = data, 
-                  aes(x = name,
+                  aes(x = xpos,
                       #y = -100,
                       y = (max(value) * 0.07)*-1,
                       #y = max(value) + max(value)*0.7, 
@@ -1139,6 +1163,12 @@ server <- function(input, output, session) {
                          value < 0 ~ "#ec6555")) %>% 
       mutate(value = round(value,0))
     
+    data <- 
+      data %>%
+      mutate(
+        xpos = seq_len(n())
+      )
+    
     waterfall(data,
               calc_total = TRUE, 
               total_axis_text = "Projection (2028)", 
@@ -1148,7 +1178,7 @@ server <- function(input, output, session) {
               fill_colours = data$colour
               ) +
       geom_label(data = data, 
-                 aes(x = name,
+                 aes(x = xpos,
                      #y = -100,
                      y = (max(value) * 0.07)*-1,
                      #y = max(value) + max(value)*0.7, 
