@@ -358,6 +358,12 @@ data <-
          ) 
   
   # v2 - moved axis labels
+  
+  data <- data %>%
+    mutate(
+      xpos = seq_len(n())
+    )
+  
   waterfall(data,
             calc_total = TRUE,
             total_axis_text = "Projection (2028)",
@@ -367,7 +373,8 @@ data <-
             fill_colours = data$colour
             ) +
     geom_label(data = data, 
-               aes(x = name,
+               aes(#x = name,
+                   x = xpos,
                    #y = -100,
                    y = (max(value) * 0.07)*-1,
                    #y = max(value) + max(value)*0.7, 
@@ -392,7 +399,7 @@ data <-
          title = "Example waterfall plot"
          )
   
-  
+  data$name <- factor(data$name, levels = data$name)
 # Plot waterfall for bed days:
 waterfall_data |>
   select(-icb_dummy) %>%
