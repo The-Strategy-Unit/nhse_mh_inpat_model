@@ -1,0 +1,625 @@
+residence_icb_code,residence_icb_name,provider_icb_code,provider_icb_name,age_group_admission,gender,ethnic_category_2,imd_quintile,provider_type,legal_status_group,lda_flag,der_ward_type_desc_first,oap_flag,spell_count,bed_days,bed_days_exHL,bed_days_delayed_days
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,141,139,0
+AT4,AT4: Anytown ICB_4,AT1,AT1: Anytown ICB_1,65+,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,26,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,2,133,132,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,68,68,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Other ethnic groups,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,147,135,62
+AT25,AT25: Anytown ICB_25,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,178,189,0
+AT5,AT5: Anytown ICB_5,AT1,AT1: Anytown ICB_1,18-24,1,NA,5,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,7,6,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,12,621,571,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,White,3,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,20,21,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,1,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,1,2,400,400,244
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,NA,4,NHS,Not formally detained,No,Learning Disabilities Ward,0,4,190,178,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,85,87,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,592,561,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,31,30,0
+AT8,AT8: Anytown ICB_8,AT1,AT1: Anytown ICB_1,25-64,2,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,25,26,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,1,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,42,42,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Mixed,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,4,582,592,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,61,61.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,58,58,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,26,27,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,NA,4,NHS,Not formally detained,No,Learning Disabilities Ward,0,4,717,865,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,1,NHS,Formally detained,No,Learning Disabilities Ward,0,9,416,423,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,1,2,84,87,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,White,3,Independent,Formally detained,No,Adult Mental Health Ward,1,1,18,18,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,3,NHS,Formally detained,No,Adult Mental Health Ward,0,9,865,690,29
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,97,97,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Asian or Asian British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,152,152,0
+AT6,AT6: Anytown ICB_6,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,1,1,10,10,0
+AT19,AT19: Anytown ICB_19,AT1,AT1: Anytown ICB_1,25-64,2,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,14,14,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Asian or Asian British,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,28,27,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,1,White,5,NHS,Not formally detained,No,Learning Disabilities Ward,1,21,63,63,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,Other ethnic groups,4,Independent,Formally detained,No,NA,1,1,1,1,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,White,2,Independent,Not formally detained,No,Adult Mental Health Ward,1,2,175,184,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,1,2,131,132,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Other ethnic groups,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,13,14,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,White,4,NHS,Not formally detained,No,Learning Disabilities Ward,1,14,64,64,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,25-64,1,NA,2,Independent,Not formally detained,No,NA,1,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,19,744,685,63
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,15,744,725,84
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,3,257,244,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,7,7,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,208,202,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,6,157,157,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,9,63,50,0
+AT7,AT7: Anytown ICB_7,AT1,AT1: Anytown ICB_1,25-64,2,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,120,113,0
+AT32,AT32: Anytown ICB_32,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,11,12,0
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,46,46,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,74,76,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Other ethnic groups,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,35,35,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,353,365,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,117,113,19
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,7,7,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,6,208,192.5,0
+AT19,AT19: Anytown ICB_19,AT1,AT1: Anytown ICB_1,25-64,2,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,34,34,0
+AT1,AT1: Anytown ICB_1,AT16,AT16: Anytown ICB_16,25-64,1,Other ethnic groups,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,4,5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Other ethnic groups,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,61,61,0
+AT1,AT1: Anytown ICB_1,AT31,AT31: Anytown ICB_31,65+,2,White,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,1,0.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,379,357,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,2,3,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,498,465,12
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,31,30,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,7,933,1032,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Mixed,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,1,221,236,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,25-64,2,NA,2,Independent,Not formally detained,No,NA,1,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,8,841,811,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,6,98,94,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,2,61,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,417,381,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Other ethnic groups,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,34,35,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,3,94.5,82,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,3,457,489,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,311,334,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,2,Other ethnic groups,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,1,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,213,206,0
+AT1,AT1: Anytown ICB_1,NA,NA,18-24,2,White,5,Independent,Not formally detained,No,Adult Mental Health Ward,NA,1,327,328,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,173,165,0
+AT24,AT24: Anytown ICB_24,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,178,178,0
+AT32,AT32: Anytown ICB_32,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,46,42,0
+AT4,AT4: Anytown ICB_4,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,70,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Mixed,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,7,7,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,5,NHS,Formally detained,No,Adult Mental Health Ward,0,2,184,189,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,18-24,1,NA,3,Independent,Not formally detained,No,NA,1,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,46,6811,3874,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,4,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,20,15,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,18,592,576,0
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,65+,2,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,104,100,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,30,232,226,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,7,7,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,5,214,202,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,2,184,190,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,NA,2,NHS,Not formally detained,Yes,NA,0,3,150,145,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Asian or Asian British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,52,52,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,16,878,858,0
+AT4,AT4: Anytown ICB_4,AT1,AT1: Anytown ICB_1,25-64,2,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,40,38,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,4,NHS,Formally detained,No,Adult Mental Health Ward,0,2,75,74,0
+AT1,AT1: Anytown ICB_1,AT18,AT18: Anytown ICB_18,25-64,1,Black or Black British,4,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,0.5,1,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,1,White,5,NHS,Not formally detained,No,Learning Disabilities Ward,1,10,36,39,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,18-24,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,115,113,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,52,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Formally detained,No,Adult Mental Health Ward,0,34,1244,1928,12
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,5,425,448,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,4,431,448,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,9,9,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,65+,2,Other ethnic groups,2,NHS,Formally detained,No,Adult Mental Health Ward,1,1,173,163,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,23,23,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,NA,NHS,Formally detained,No,Adult Mental Health Ward,0,3,14,13,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,34,32,0
+AT1,AT1: Anytown ICB_1,AT6,AT6: Anytown ICB_6,25-64,2,Other ethnic groups,3,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,32,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,8,509,423,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,18-24,1,Other ethnic groups,2,Independent,Formally detained,No,Adult Mental Health Ward,1,1,75,75,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,1,White,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,6,7,63
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,306,296,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,117,117,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,28,25,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,9,9,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,NA,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,31,30,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,8,548,514,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,117,116,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Mixed,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,12,2642,2292,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,56,58,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,Other ethnic groups,3,Independent,Not formally detained,Yes,NA,1,1,25,25,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,10,128,133,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,13,573,583,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,8,1055,1006,127
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,156,157,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,25-64,2,White,5,Independent,Not formally detained,Yes,NA,1,1,64,68,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,5,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,87,87,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,4,NHS,Formally detained,Yes,Learning Disabilities Ward,1,27,63,64,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,No,Adult Mental Health Ward,0,14,633,568,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,2,NHS,Formally detained,No,Adult Mental Health Ward,0,4,314,340,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,16,15,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,25,27,0
+AT8,AT8: Anytown ICB_8,AT1,AT1: Anytown ICB_1,65+,2,Black or Black British,5,NHS,Not formally detained,No,Adult Mental Health Ward,1,2,97,94,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Not formally detained,No,Learning Disabilities Ward,0,21,725,707,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,54,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,2,102,110,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,10,9,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,4,235,219,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,4,275,272,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,18-24,2,Black or Black British,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,2,68,67,0
+AT17,AT17: Anytown ICB_17,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,10,9,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,10,2642,3426,26
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,33,32,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,42,44,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Asian or Asian British,5,NHS,Not formally detained,No,Learning Disabilities Ward,0,9,60.5,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,46,45,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Other ethnic groups,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,26,25,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,21,20,0
+AT6,AT6: Anytown ICB_6,AT1,AT1: Anytown ICB_1,18-24,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,9,37,39,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,32,1726.5,1928,12
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,8,61.5,61,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,1,83,83,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,4,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,11,11,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,Black or Black British,2,Independent,Formally detained,No,Adult Mental Health Ward,1,1,43,42,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,29,139,131,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,Asian or Asian British,5,Independent,Not formally detained,No,NA,1,1,18,6,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,116,121,26
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Formally detained,No,Adult Mental Health Ward,0,7,389,418,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,10,140,140,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,NA,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,2,102,100,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,4,NHS,Not formally detained,No,Learning Disabilities Ward,1,11,44,43,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,59,60.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,266,257,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,22,77,79,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,336,292,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,2,3,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,131,126,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,20,2912,2144,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,2,Black or Black British,2,NHS,Not formally detained,No,Learning Disabilities Ward,1,2,97,90,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,12,29,29,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Asian or Asian British,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,13,2969,2222,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,57,58,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,18,1262,1215,25
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,65+,2,NA,1,Independent,Formally detained,No,Adult Mental Health Ward,1,1,52,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,52,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,4,NHS,Formally detained,No,Learning Disabilities Ward,0,2,75,75,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Black or Black British,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,26,20,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,163,165,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,10,9,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Other ethnic groups,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,34,35,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,9,525,465,12
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,266,257,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,19,592,576,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,65+,2,White,2,NHS,Formally detained,No,Older People's Mental Health Ward,1,1,26,27,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,7,884,707,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,4,52.5,51,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,25-64,1,NA,2,Independent,Not formally detained,No,NA,1,1,53,53,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,27,1244,1558.5,25
+AT5,AT5: Anytown ICB_5,AT1,AT1: Anytown ICB_1,18-24,2,White,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,131,130,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,61,59,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Mixed,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,2,3,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,18-24,1,NA,2,Independent,Formally detained,Yes,NA,1,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,Other ethnic groups,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,19,18,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,30,232,215,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,2,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,44,41,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Asian or Asian British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,305,276,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,116,113,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,0,3,110,110,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,34,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,68,28,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Asian or Asian British,1,NHS,Formally detained,No,NA,0,1,18,18,0
+AT24,AT24: Anytown ICB_24,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,65,59,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,115,111,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,19,73.5,76,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,NA,NHS,Not formally detained,No,Learning Disabilities Ward,0,20,3874,5403,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,97,94,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,13,14,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,53,31,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,59,60,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Other ethnic groups,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,75,74,0
+AT6,AT6: Anytown ICB_6,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,10,39,37,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Other ethnic groups,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,68,59,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,152,157,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,110,93,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,115,112,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,18-24,2,White,3,Independent,Formally detained,No,NA,1,1,14,14,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,131,130,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,249,254,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,4,275,228,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,X,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,16,878,846,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,White,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,2,39,39,0
+AT26,AT26: Anytown ICB_26,AT1,AT1: Anytown ICB_1,18-24,1,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,58,56,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,183,183,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Other ethnic groups,5,NHS,Formally detained,No,Adult Mental Health Ward,0,2,152,156,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,405,400,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,214,214,7
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,25-64,1,White,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,37,37,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,107,95,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,2,Black or Black British,4,Independent,Formally detained,No,Adult Mental Health Ward,1,1,26,21,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,106,110,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,79,79,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,65+,1,White,4,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,250,264,100
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,4,707,811,79
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,5,306,272,154
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,NA,3,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,5,5,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Formally detained,No,Adult Mental Health Ward,1,1,21,23,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,Other ethnic groups,1,Independent,Not formally detained,Yes,Adult Mental Health Ward,1,2,61,59,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,525,466,69
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,NA,5,NHS,Not formally detained,No,Learning Disabilities Ward,1,4,274,272,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Asian or Asian British,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,24,19,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Other ethnic groups,NA,NHS,Formally detained,No,Adult Mental Health Ward,0,1,166,161,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,5,342,340,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,22,64.5,67,0
+AT7,AT7: Anytown ICB_7,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,256,244,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,156,157,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,1,Black or Black British,2,Independent,Formally detained,Yes,NA,1,1,41,42,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,0,4,98,82,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,18,633,609,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,20,60,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,466,496,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,4,NHS,Not formally detained,No,Learning Disabilities Ward,0,9,1032,844,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,121,115.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,54,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,16,1371,1552,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,2,Asian or Asian British,2,Independent,Formally detained,No,Adult Mental Health Ward,1,2,32,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,9,362,361,0
+AT20,AT20: Anytown ICB_20,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Formally detained,No,Adult Mental Health Ward,1,2,86,82,23
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,1,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,12,27,28,22
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,8,340,275,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,2,White,3,Independent,Formally detained,Yes,Adult Mental Health Ward,1,1,236,219,0
+AT27,AT27: Anytown ICB_27,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,35,34,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,65+,1,White,NA,Independent,Formally detained,No,Adult Mental Health Ward,1,1,163,166,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,18-24,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,1,2,61,61,0
+AT32,AT32: Anytown ICB_32,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Formally detained,No,Adult Mental Health Ward,1,1,11,12,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,5,94,94,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,18-24,1,Other ethnic groups,5,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,38,36,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,15,633,592,36
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,X,White,3,NHS,Formally detained,Yes,Learning Disabilities Ward,0,15,592,633,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,2,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,44,42,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,379,361,0
+AT2,AT2: Anytown ICB_2,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,25,22,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,31,31,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,5,NHS,Formally detained,No,Adult Mental Health Ward,0,9,576,562,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Other ethnic groups,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,26,22,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,0,8,206,203,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,25-64,2,White,2,NHS,Formally detained,Yes,NA,1,1,226,226,0
+AT1,AT1: Anytown ICB_1,NA,NA,25-64,2,White,4,Independent,Not formally detained,No,Adult Mental Health Ward,NA,6,497,498,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,241,238,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Mixed,3,NHS,Not formally detained,No,NA,0,2,75,75,0
+AT1,AT1: Anytown ICB_1,AT10,AT10: Anytown ICB_10,25-64,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,4,4,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,5,157,152,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,9,450,380,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,1,White,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,1,83,66,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,1,8,37,40,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Asian or Asian British,4,NHS,Not formally detained,No,Learning Disabilities Ward,0,15,4918,7697,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,4,NHS,Formally detained,Yes,Adult Mental Health Ward,0,3,242,238,7
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,Other ethnic groups,NA,Independent,Not formally detained,No,Adult Mental Health Ward,1,5,262,262,7
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Black or Black British,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,328,332,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Mixed,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,134,130,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,12,353,366,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,20,21,0
+AT1,AT1: Anytown ICB_1,AT20,AT20: Anytown ICB_20,25-64,1,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,6,7,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,131,132,0
+AT20,AT20: Anytown ICB_20,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,4,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,25,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Mixed,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,27,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,4,83,77,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,White,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,39,40,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,5,214,182,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,276,284,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,2,195,199,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,296,274,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,1,NA,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,1,1,74,74,63
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,4,173,163,0
+AT1,AT1: Anytown ICB_1,AT20,AT20: Anytown ICB_20,25-64,1,White,2,NHS,Formally detained,No,Adult Mental Health Ward,1,1,32,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,2,2,0
+AT20,AT20: Anytown ICB_20,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,2,75,75,63
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,163,166,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,57,58,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,21,79,82,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,257,244,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,5,5,0
+AT21,AT21: Anytown ICB_21,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,60,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,3,238,236,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,59,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,116,115.5,28
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,NA,2,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,20,23,0
+AT15,AT15: Anytown ICB_15,AT1,AT1: Anytown ICB_1,65+,2,Other ethnic groups,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,0.5,1,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,331,275,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,101,102,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,0.5,0.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,4,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,3,242,219,0
+AT1,AT1: Anytown ICB_1,AT22,AT22: Anytown ICB_22,25-64,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,27,26,0
+AT26,AT26: Anytown ICB_26,AT1,AT1: Anytown ICB_1,18-24,2,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,74,73.5,0
+AT1,AT1: Anytown ICB_1,AT8,AT8: Anytown ICB_8,65+,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,1,2,121,113,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,91,94,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,310,311,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,18-24,1,Mixed,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,26,26,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,2,NHS,Not formally detained,No,Learning Disabilities Ward,1,11,39,40,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,11,1080,384,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,51,49,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,342,292,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,34,35,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,213,204.5,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,Black or Black British,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,51,52.5,0
+AT1,AT1: Anytown ICB_1,AT7,AT7: Anytown ICB_7,25-64,1,Other ethnic groups,4,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,164,163,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,53,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,No,Adult Mental Health Ward,0,32,1726.5,1458,75
+AT17,AT17: Anytown ICB_17,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,120,117,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,76,74,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,White,4,Independent,Formally detained,No,Adult Mental Health Ward,1,1,267,251,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,NA,NHS,Formally detained,No,Adult Mental Health Ward,0,1,254,266,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,65+,1,NA,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,151,145,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,42,6352.5,6352.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,7,2,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,3,257,250,113
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,223,219,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,19,58,56,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,18,18,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,4,157,157,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,76,74,0
+AT1,AT1: Anytown ICB_1,AT16,AT16: Anytown ICB_16,25-64,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,19,19,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,156,152,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,Yes,Learning Disabilities Ward,0,24,573,561,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,270,244,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,65+,2,White,4,Independent,Not formally detained,No,NA,1,1,9,10,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Learning Disabilities Ward,0,31,592,573,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Asian or Asian British,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,10,93.5,85.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,157,152,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,450,428,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,223,236,0
+AT28,AT28: Anytown ICB_28,AT1,AT1: Anytown ICB_1,18-24,1,NA,4,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,25,28,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,116,97,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Mixed,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,19,2292,2912,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,7,351,357,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,75,74,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,72,53,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Asian or Asian British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,305,283,0
+AT1,AT1: Anytown ICB_1,AT30,AT30: Anytown ICB_30,25-64,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,24,24,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,5,4.5,0
+AT14,AT14: Anytown ICB_14,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,146,114,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Black or Black British,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,97,93.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,1,NHS,Formally detained,No,Learning Disabilities Ward,0,8,1080,844,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,400,448,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,100,104,16
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,3,3,0
+AT1,AT1: Anytown ICB_1,AT19,AT19: Anytown ICB_19,25-64,1,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,1,1,1,0.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,NA,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,94,97,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,164,146,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,Other ethnic groups,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,2,151,150,0
+AT11,AT11: Anytown ICB_11,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,247,243,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,65+,1,Asian or Asian British,3,Independent,Formally detained,No,Adult Mental Health Ward,1,1,29,29,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Formally detained,Yes,Adult Mental Health Ward,0,8,933,1006,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,1,Black or Black British,2,Independent,Formally detained,Yes,NA,1,1,41,39,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,26,25,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Not formally detained,No,Learning Disabilities Ward,1,1,45,47,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,3,NHS,Formally detained,No,Adult Mental Health Ward,0,7,1018,1173,49
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,5,282,279,9
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,35,35,0
+AT15,AT15: Anytown ICB_15,AT1,AT1: Anytown ICB_1,18-24,2,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,22,21,0
+AT1,AT1: Anytown ICB_1,AT36,AT36: Anytown ICB_36,65+,1,White,2,NHS,Formally detained,No,Adult Mental Health Ward,1,1,24,24,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Other ethnic groups,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,215,207,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,18-24,2,White,4,Independent,Not formally detained,Yes,Adult Mental Health Ward,1,1,96,90,32
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,31,31,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,NA,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,37,37,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,151,126,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,White,1,Independent,Not formally detained,Yes,Adult Mental Health Ward,1,1,163,151,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,3,NHS,Formally detained,No,Adult Mental Health Ward,0,2,73,68,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,10,9,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,275,272,113
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,61,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,400,388,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Black or Black British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,21,22,0
+AT1,AT1: Anytown ICB_1,AT7,AT7: Anytown ICB_7,25-64,1,Asian or Asian British,4,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,37,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,1032,1006,29
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,10,93.5,93.5,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,2,26,26,15
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,31,31,0
+AT16,AT16: Anytown ICB_16,AT1,AT1: Anytown ICB_1,18-24,1,NA,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,1,1,74,74,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,NA,5,Independent,Not formally detained,No,NA,1,1,14,14,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Black or Black British,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,7,509,423,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,59,61,0
+AT1,AT1: Anytown ICB_1,AT8,AT8: Anytown ICB_8,65+,2,NA,2,NHS,Formally detained,No,Older People's Mental Health Ward,1,1,0.5,0.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,53,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,576,647,84
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,7,1055,1057,48
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,104,108,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Asian or Asian British,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,37,37,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,X,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,104,103,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,10,230,230,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,NA,3,Independent,Not formally detained,No,NA,1,1,49,31,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,16,1262,1694,46
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,Other ethnic groups,5,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,19,18,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,310,332,0
+AT11,AT11: Anytown ICB_11,AT1,AT1: Anytown ICB_1,18-24,1,Other ethnic groups,4,NHS,Formally detained,No,Adult Mental Health Ward,1,1,247,257,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,72,73,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,11,11,0
+AT7,AT7: Anytown ICB_7,AT1,AT1: Anytown ICB_1,25-64,1,NA,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,101,109,19
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,1,1,83,77,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,1,Black or Black British,1,Independent,Not formally detained,Yes,NA,1,1,5,4,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,283,279,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,30,5403,5403,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Asian or Asian British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,18,17,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,2,Black or Black British,5,Independent,Formally detained,No,NA,1,1,25,20,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,NA,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,5,26,27,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,4,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,115,111,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,21,4381,5662.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,15,878,717,46
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,12,525,505,69
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,2,Asian or Asian British,5,Independent,Formally detained,No,Adult Mental Health Ward,1,1,28,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,21,23,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,NA,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,2,59,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Other ethnic groups,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,116,116,8
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,NA,NA,NHS,Formally detained,No,Adult Mental Health Ward,1,1,70,69,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Asian or Asian British,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,10,2144,2144,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,10,34,35,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,9,140,137.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,466,485.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,16,1371,1458,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,16,2969,2642,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,6,357,365,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,4,335,275,0
+AT7,AT7: Anytown ICB_7,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,320,331,0
+AT1,AT1: Anytown ICB_1,AT9,AT9: Anytown ICB_9,65+,1,NA,2,Independent,Not formally detained,No,NA,1,1,110,109,16
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,417,412,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,42,44,22
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,1,White,3,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,38,38,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,4,405,396,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,X,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,134,128,28
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,115,115,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Formally detained,Yes,Adult Mental Health Ward,0,5,405,372,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,24,72.5,64,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,5,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,28,28,0
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,1,Black or Black British,2,NHS,Formally detained,Yes,NA,1,1,25,25,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,24,725,707,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Black or Black British,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,8,841,846,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,20,82,83,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Formally detained,No,Learning Disabilities Ward,0,11,905,831,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,53,53,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Other ethnic groups,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,35,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,3,2,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,Mixed,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,97,94,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,119,121,0
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,11,11,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,102,103,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,6,647,561,36
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Formally detained,No,Adult Mental Health Ward,0,34,1615.5,1969,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,405,428,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,4,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,182,178,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,9,230,241,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,405,381,0
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,156,152,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,11,128,132,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Black or Black British,5,NHS,Formally detained,No,Older People's Mental Health Ward,0,1,30,31,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,275,228,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,86,87,32
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,56,53,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,4,NHS,Formally detained,Yes,Adult Mental Health Ward,0,1,42,42,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,106,102,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,White,3,NHS,Formally detained,Yes,Learning Disabilities Ward,1,18,61,60,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Formally detained,No,Adult Mental Health Ward,0,35,1726.5,1969,12
+AT20,AT20: Anytown ICB_20,AT1,AT1: Anytown ICB_1,25-64,1,NA,5,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,29,29,23
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,79,83,0
+AT1,AT1: Anytown ICB_1,AT6,AT6: Anytown ICB_6,65+,2,Other ethnic groups,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,13,13,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,White,NA,NHS,Not formally detained,No,Learning Disabilities Ward,1,19,64,64.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,357,365,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,3,94.5,89,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Asian or Asian British,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,1,56,56,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,12,12,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,44,39,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,97,97,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,1,NHS,Formally detained,No,Adult Mental Health Ward,0,2,283,272,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,4,NHS,Formally detained,No,Adult Mental Health Ward,0,6,244,247,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,0,5,262,218,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,2,White,2,Independent,Formally detained,No,Adult Mental Health Ward,1,2,32,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,30,30,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,NA,NHS,Not formally detained,No,Learning Disabilities Ward,0,29,5403,13461.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Other ethnic groups,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,5,1917,1458,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Asian or Asian British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,26,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,4,NHS,Not formally detained,No,Learning Disabilities Ward,0,51,13739.5,13461.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,Other ethnic groups,3,NHS,Not formally detained,Yes,NA,0,2,68,59,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Formally detained,No,Adult Mental Health Ward,0,29,2196.5,2285,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,8,450,423,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,2,55,50,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,4,NHS,Formally detained,No,Adult Mental Health Ward,0,8,1055,384,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,17,58,44,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,4,717,846,78
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Mixed,2,NHS,Formally detained,No,Adult Mental Health Ward,0,1,178,183,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,NA,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,20,5403,5276,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,24,690,865,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Not formally detained,No,Learning Disabilities Ward,1,26,115.5,119,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,5,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,243,250,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,9,255,218,113
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,119,116,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,NA,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,4,425,396,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,10,255,250,0
+AT1,AT1: Anytown ICB_1,AT37,AT37: Anytown ICB_37,25-64,2,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,15,5403,6352.5,0
+AT15,AT15: Anytown ICB_15,AT1,AT1: Anytown ICB_1,25-64,2,Black or Black British,1,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,18,18,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,18-24,2,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,4,5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,4,428,380,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,5,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,13,82,83,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Other ethnic groups,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,61,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,11,11,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,296,305,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,NA,2,NHS,Formally detained,No,Adult Mental Health Ward,0,5,314,292,9
+AT1,AT1: Anytown ICB_1,AT5,AT5: Anytown ICB_5,25-64,1,Asian or Asian British,4,Independent,Formally detained,No,NA,1,1,4,4,0
+AT13,AT13: Anytown ICB_13,AT1,AT1: Anytown ICB_1,25-64,1,NA,NA,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,70,69,0
+AT1,AT1: Anytown ICB_1,AT6,AT6: Anytown ICB_6,25-64,2,NA,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,24,24,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,12,389,372,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,Other ethnic groups,1,NHS,Formally detained,No,Adult Mental Health Ward,1,7,884,765,37
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,76,75,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,114,114,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,379,350,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,2,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,3,215,214,0
+AT2,AT2: Anytown ICB_2,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Other ethnic groups,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,22,20,0
+AT1,AT1: Anytown ICB_1,AT6,AT6: Anytown ICB_6,18-24,1,Asian or Asian British,1,NHS,Not formally detained,No,Older People's Mental Health Ward,1,2,59,61,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,18-24,2,Other ethnic groups,3,Independent,Formally detained,No,Adult Mental Health Ward,1,1,251,262,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,219,219,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,26,28,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Black or Black British,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,5,4,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,12,140,139,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Mixed,3,NHS,Formally detained,No,Learning Disabilities Ward,0,9,255,243,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,13,14,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,28,2969,2642,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,NA,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,26,15,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,28,2912,2112,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,NA,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,53,53,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,NA,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,12,11,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,1,8,39,37,0
+AT10,AT10: Anytown ICB_10,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,Yes,Adult Mental Health Ward,1,1,223,241,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,18-24,1,NA,1,NHS,Not formally detained,No,Older People's Mental Health Ward,1,1,151,140,0
+AT1,AT1: Anytown ICB_1,AT12,AT12: Anytown ICB_12,25-64,2,White,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,37,38,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,44,44,0
+AT1,AT1: Anytown ICB_1,AT3,AT3: Anytown ICB_3,25-64,1,Asian or Asian British,5,NHS,Formally detained,No,Adult Mental Health Ward,1,1,18,19,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,1,48,46,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,20,20,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,11,439,416,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,276,296,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,65+,1,NA,1,Independent,Not formally detained,No,Adult Mental Health Ward,1,2,59,60,0
+AT1,AT1: Anytown ICB_1,AT2,AT2: Anytown ICB_2,25-64,2,White,3,NHS,Formally detained,No,Adult Mental Health Ward,1,1,103,102,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,5,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,5,405,423,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,18-24,1,NA,3,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Black or Black British,1,NHS,Formally detained,No,Adult Mental Health Ward,0,3,184,189,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,27,27,0
+AT7,AT7: Anytown ICB_7,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,2,61,61,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,1,0.5,1,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Mixed,3,NHS,Not formally detained,No,Learning Disabilities Ward,0,13,72.5,73,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,3,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,68,71,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,10,10,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Mixed,1,NHS,Formally detained,No,Adult Mental Health Ward,0,2,78,82,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,18,592,609,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,1,NHS,Not formally detained,No,Adult Mental Health Ward,0,35,1726.5,1694,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,17,54,55,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,26,26,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Other ethnic groups,2,NHS,Not formally detained,No,Learning Disabilities Ward,0,1,5,4,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,592,561,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Asian or Asian British,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,3,209,204.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,NA,NHS,Not formally detained,Yes,Adult Mental Health Ward,0,2,89,87,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,0.5,1,0
+AT2,AT2: Anytown ICB_2,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,70,64,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Black or Black British,3,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,219,227,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,White,5,NHS,Not formally detained,No,Adult Mental Health Ward,0,10,2058,2504,48
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,4,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,34,34,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,9,189,183,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,5,NHS,Formally detained,No,Adult Mental Health Ward,0,3,73,50,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,White,1,NHS,Formally detained,No,Adult Mental Health Ward,1,1,39,40,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,White,2,NHS,Formally detained,Yes,Adult Mental Health Ward,0,4,405,393,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,1,10,10,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,1,20,13,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,2,Mixed,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,9,1458,1969,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,Black or Black British,3,NHS,Formally detained,No,Adult Mental Health Ward,0,4,497,505,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,25-64,1,Mixed,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,10,38,38,0
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,18-24,1,Asian or Asian British,3,NHS,Not formally detained,Yes,Learning Disabilities Ward,1,6,44,42,0
+AT20,AT20: Anytown ICB_20,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,1,1,29,29,40
+AT3,AT3: Anytown ICB_3,AT1,AT1: Anytown ICB_1,00-17,2,White,2,NHS,Not formally detained,No,Learning Disabilities Ward,1,17,64,63,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,1,NHS,Formally detained,No,Adult Mental Health Ward,0,1,254,266,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,2,84,84,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,1,Asian or Asian British,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,21,21,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,65+,2,Black or Black British,5,NHS,Formally detained,No,Adult Mental Health Ward,0,1,104,101,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,11,336,340,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,Asian or Asian British,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,208,204.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,Asian or Asian British,2,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,7,94,87,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,1,NA,3,NHS,Formally detained,No,Adult Mental Health Ward,0,4,147,137.5,0
+AT1,AT1: Anytown ICB_1,AT4,AT4: Anytown ICB_4,25-64,1,White,3,Independent,Not formally detained,No,Adult Mental Health Ward,1,1,51,52,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,2,White,4,NHS,Not formally detained,Yes,Learning Disabilities Ward,0,9,230,226,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,00-17,1,White,1,NHS,Not formally detained,No,Learning Disabilities Ward,0,42,3426,2196.5,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,18-24,2,White,4,NHS,Formally detained,No,Adult Mental Health Ward,0,1,33,33,0
+AT1,AT1: Anytown ICB_1,AT1,AT1: Anytown ICB_1,25-64,1,NA,2,NHS,Not formally detained,No,Adult Mental Health Ward,0,5,147,145,0
